@@ -1,0 +1,231 @@
+\documentclass{mcmthesis}
+\mcmsetup{CTeX = false,    % 使用 CTeX 套装时，设置为 true
+	tcn = {2504496}, problem = \textcolor{red}{A},
+	sheet = true, titleinsheet = true, keywordsinsheet = true,
+	titlepage = false, abstract = false}
+
+\usepackage{newtxtext}     % \usepackage{palatino}
+\usepackage[style=apa,backend=biber]{biblatex}
+\addbibresource{reference.bib}
+
+\usepackage{tocloft}
+\setlength{\cftbeforesecskip}{6pt}
+\renewcommand{\contentsname}{\hspace*{\fill}\Large\bfseries Contents \hspace*{\fill}}
+
+\title{Enjoy a Cozy and Green Bath}
+% \author{\small \href{http://www.latexstudio.net/}
+	%   {\includegraphics[width=7cm]{mcmthesis-logo}}}
+\date{\today}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% 摘要 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+
+abstract...
+
+\begin{keywords}
+	Keyword one, Keyword two, Keyword three
+\end{keywords}
+
+\end{abstract}
+
+
+\maketitle
+\tableofcontents        % 若不想要目录, 注释掉该句
+\thispagestyle{empty}
+\newpage
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% 引言 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Introduction}
+\subsection{Background}
+\subsection{Restatement and Analysis of the Problem}
+\subsection{Ovirview of Our Work}
+
+\begin{itemize}
+	\item {\bf 111}. ...
+	\item {\bf 222}. ...
+	
+	\begin{itemize}
+		\item[1)] ... 
+		\item[2)] ...
+		\item[3)] ...
+		\item[4)] ...
+	\end{itemize}
+	
+\end{itemize}
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% 模型假设 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Assumptions and Justification}
+
+To simplify the problem and make it convenient for us to simulate real-life 
+conditions, we make the following basic assumptions, each of which is properly 
+justified.
+
+\begin{itemize}
+	\item {\bf 111}. ...
+	\item {\bf 222}. ...	
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% 符号说明 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{List of Notations}
+\begin{center}
+\begin{tabular}{clc}
+	\toprule
+	{\bf Symbols} & {\bf Description} & \quad {\bf Unit} \\
+	\midrule 
+	$h$ & Convection heat transfer coefficient & \quad W/(m$^2 \cdot$ K) \\[0.2cm]
+	$A$ & Aera & \quad m$^2$ \\[0.2cm]
+	$a,\,b,\,c$ & The size of a bathtub  & \quad m$^3$ \\
+	\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent where we define the main parameters while specific value of those 
+parameters will be given later.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% 数据预处理 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Data Pre-processing}
+\subsection{Outlier Handling}
+\subsection{Missing Value Handling}
+\subsection{Tag Encoding of String Type Data}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% Task 1 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Task 1: xxx}
+
+\section{Task 2: xxx}
+
+\section{Task 3: xxx}
+
+\section{Task 4: xxx}
+
+\section{Sensitivity Analysis}
+
+\section{Strength and Weakness}
+\subsection{Strength}
+\subsection{Weakness}
+
+\section{Further Discussion}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% Memo信 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section*{Memo} % 无编号标题
+\addcontentsline{toc}{section}{Memorandum} % 手动添加到目录
+
+\begin{letter}{Enjoy Your Bath Time!}
+
+
+\vspace{\parskip}
+
+Sincerely yours,
+
+Your friends
+
+\end{letter}
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% 文献条目 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section*{Reference} % 无编号标题
+\addcontentsline{toc}{section}{References} % 手动添加到目录
+\printbibliography
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% 附录 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{appendices}
+\section{First appendix}
+\section{Second appendix}
+\end{appendices}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% AI使用 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\newcounter{lastpage}
+\setcounter{lastpage}{\value{page}}
+\thispagestyle{empty} 
+
+\section*{Report on Use of AI}
+
+\begin{enumerate}
+\item OpenAI ChatGPT (Nov 5, 2023 version, ChatGPT-4,) 
+\begin{description}
+	\item[Query1:] <insert the exact wording you input into the AI tool> 
+	\item[Output:] <insert the complete output from the AI tool>
+\end{description}
+	
+\item OpenAI ChatGPT (Nov 5, 2023 version, ChatGPT-4,) 
+\begin{description}
+	\item[Query1:] <insert the exact wording you input into the AI tool> 
+	\item[Output:] <insert the complete output from the AI tool>
+\end{description}
+
+\end{enumerate}
+
+% 重置页码
+\clearpage
+\setcounter{page}{\value{lastpage}}
+
+
+
+
+
+
+\end{document}
