@@ -51,3 +51,6 @@
 .vscode/
 .idea/
 *.bak
+
+
+__pycache__/
