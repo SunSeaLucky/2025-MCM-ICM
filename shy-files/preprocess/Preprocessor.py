@@ -1,8 +1,13 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 
 class Preprocessor:
+    '''
+    1. 特征增强（数据清洗）
+        1. 缺失值填充
+        1. 冗余删除
+        1. 错误修正
+        1. 归一化
+    '''
     def __init__(self, file_name, test_mode=True):
         self.dir = "E:\\Personal\\Contests\\2025-MCM-ICM\\public\\赛题\\2025_MCM-ICM_Problems\\2025_Problem_C_Data\\" + file_name
         self.encoding = "Windows-1252"
@@ -17,7 +22,7 @@ class Preprocessor:
     
     def __preprocess_info__(self):
         na_num = self.csv_file.isnull().sum().sum()
-        print("%s 的空值数量：%d" % (self.file_name, na_num))
+        print("%s null value number: %d" % (self.file_name, na_num))
         
     def save_csv(self):
         self.csv_file.to_csv(self.file_name + "_preprocessed.csv", index=False, encoding="utf-8")
@@ -59,4 +64,4 @@ class Program(Preprocessor):
         self.csv_file.fillna(0, inplace=True)
         self.csv_file.replace('•', 0, inplace=True)
 
-        self.csv_file.drop(columns=['Sport', 'Discipline', 'Sports Governing Body'], inplace=True)
+        self.csv_file.drop(columns=['Discipline', 'Sports Governing Body'], inplace=True)
