@@ -2,6 +2,10 @@
 
 这是孙海洋的文件存放处。
 
+## 数据预处理记录
+
+1. 四个文件中，只有 `summerlyOly_programs.csv` 中有缺失值，使用 0 填充。 
+
 ## 画图
 
 1. [Draw.io](https://app.diagrams.net/)
