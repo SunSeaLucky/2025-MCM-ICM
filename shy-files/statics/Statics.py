@@ -39,7 +39,6 @@ class Statics:
 
         assert len(strong_points) <= 3, "Most 3 strong points."
         return len(strong_points.intersection(cur_year_events))     
-
         
     def get_hhi_index(self, year: int = 2024):
         '''
@@ -151,8 +150,73 @@ class Statics:
         
         return medal_count.groupby('NOC').head(head) 
 
-    def get_award_rate(self, year: int = 2024, country: str = 'USA'):
+    def get_award_rate(self, year: int = 2024):
         df = self.athlete.csv_file
-        awarded = float(len(set(df[ (df['Medal'] != "No medal") & (df['Year']==year) & (df['NOC']==country) ]['Name'])))
-        all = float(len(set(df[ (df['Year']==year) & (df['NOC']==country) ]['Name'])))
+        awarded = float(len(set(df[ (df['Medal'] != "No medal") & (df['Year']==year)]['Name'])))
+        all = float(len(set(df[ (df['Year']==year) ]['Name'])))
         return awarded / all
+    
+    def get_host(self, year: int = 2024):
+        return self.host.csv_file[ self.host.csv_file['Year']==year ].iloc[0,1]
+    
+    def get_participate_num(self, year: int = 2024):
+        df = self.athlete.csv_file
+        return len(set(df[ (df['Year']==year) ]['Name']))
+
+    def get_history_performance(self, year: int = 2024, country:str =  'USA'):
+        years = self.get_valid_years(end_year=2024)[:-3]
+        cnt = 0
+        sum = 0
+        
+        for year in years:
+            cnt += 1
+            sum += self.get_total_medal(year=year, country=country).shape[0]
+            
+        return float(sum) / cnt
+    
+    def get_total_medal(self, year: int = 2024, country: str = None):
+        df = self.athlete.csv_file
+        df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
+        
+        if country:        
+            df = df[ (df['Medal'] != "No medal") & (df['Year']==year) & (df['NOC']==country) ]
+        else:
+            df = df[ (df['Medal'] != "No medal") & (df['Year']==year)]
+        
+        return df
+    
+    def get_gold_medal(self, year: int = 2024, country: str = None):
+        df = self.athlete.csv_file
+        df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
+        
+        if country:        
+            df = df[ (df['Medal'] == "Gold") & (df['Year']==year) & (df['NOC']==country) ]
+        else:
+            df = df[ (df['Medal'] == "Gold") & (df['Year']==year)]
+        
+        return df
+    
+    def get_silver_medal(self, year: int = 2024, country: str = None):
+        df = self.athlete.csv_file
+        df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
+        
+        if country:        
+            df = df[ (df['Medal'] == "Silver") & (df['Year']==year) & (df['NOC']==country) ]
+        else:
+            df = df[ (df['Medal'] =="Silver") & (df['Year']==year)]
+        
+        return df
+    
+    def get_bronze_medal(self, year: int = 2024, country: str = None):
+        df = self.athlete.csv_file
+        df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
+        
+        if country:        
+            df = df[ (df['Medal'] == "Bronze") & (df['Year']==year) & (df['NOC']==country) ]
+        else:
+            df = df[ (df['Medal'] == "Bronze") & (df['Year']==year)]
+        
+        return df
+    
+    def get_all_countries(self):
+        return sorted(list(set(self.athlete.csv_file['NOC'])))

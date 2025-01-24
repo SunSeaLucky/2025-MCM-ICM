@@ -8,17 +8,17 @@ class Preprocessor:
         1. 错误修正
         1. 归一化
     '''
-    def __init__(self, file_name, test_mode=True):
+    def __init__(self, file_name, encoding="Windows-1252" ,test_mode=True):
         self.dir = "E:\\Personal\\Contests\\2025-MCM-ICM\\public\\赛题\\2025_MCM-ICM_Problems\\2025_Problem_C_Data\\" + file_name
-        self.encoding = "Windows-1252"
+        self.encoding = encoding
         self.test_mode = test_mode
         self.file_name = file_name
-        
-        self.csv_file = self.__read__()
+        self.csv_file = self.__read__(self.encoding)
+
         self.__preprocess_info__()
         
-    def __read__(self):
-        return pd.read_csv(self.dir, encoding=self.encoding)
+    def __read__(self, encoding="Windows-1252"):
+        return pd.read_csv(self.dir, encoding=encoding)
     
     def __preprocess_info__(self):
         na_num = self.csv_file.isnull().sum().sum()
@@ -33,8 +33,16 @@ class Athlete(Preprocessor):
 
 class Host(Preprocessor):
     def __init__(self, test_mode=True):
-        super().__init__(file_name="summerOly_hosts.csv", test_mode=test_mode)
-        
+        super().__init__(file_name="summerOly_hosts.csv", 
+                         encoding="utf-8", # Fuck host
+                         test_mode=test_mode)
+        self.__preprocess__()
+    
+    def __preprocess__(self):
+        self.csv_file.drop(index=[5, 11, 12], inplace=True)
+        self.csv_file['Host'] = self.csv_file['Host'].apply(lambda x: x.split(',')[1][1:])
+        self.csv_file.iloc[28, 1] = 'Japan'
+    
 class Medal(Preprocessor):
     def __init__(self, test_mode=True):
         super().__init__(file_name="summerOly_medal_counts.csv", test_mode=test_mode)
