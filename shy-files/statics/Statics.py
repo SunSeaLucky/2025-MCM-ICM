@@ -150,3 +150,9 @@ class Statics:
         medal_count['Rate'] = medal_count['MedalCount'] / medal_count['TotalMedals']  
         
         return medal_count.groupby('NOC').head(head) 
+
+    def get_award_rate(self, year: int = 2024, country: str = 'USA'):
+        df = self.athlete.csv_file
+        awarded = float(len(set(df[ (df['Medal'] != "No medal") & (df['Year']==year) & (df['NOC']==country) ]['Name'])))
+        all = float(len(set(df[ (df['Year']==year) & (df['NOC']==country) ]['Name'])))
+        return awarded / all
