@@ -11,35 +11,30 @@ self = Statics()
 # print(self.history_performance(2024, country='China'))
 
 countries = self.get_all_countries()
-valid_years = self.get_valid_years()
+valid_years = self.get_valid_years(end_year=2024)
 
 dataset = []
 
 cnt = 0
 
-for year in valid_years:
-    for country in countries:
-        print("Processing: %d year, %s country" % (year, country))
+for country in countries:
+    for year in valid_years:
         cnt += 1
-        if cnt >= 15:
+        if cnt >= 30:
             dataset = pd.DataFrame(data=dataset, columns=['Year','NOC', 'strong_point', 'hhi', 'award_rate', 'host', 'participate_num', 'history_performance'])
-            dataset.to_csv('statics.csv', index=False)
+            dataset.to_csv('./shy-files/statics.csv', index=False) 
             exit()
+        print("Processing: %d year, %s country" % (year, country))
         arr = []
         arr.append(year)
         arr.append(country)
         arr.append(self.get_strong_point_num(year=year, country=country))
-        arr.append(self.get_hhi_index(year))
-        arr.append(self.get_award_rate(year))
-        arr.append(self.get_host(year))
-        arr.append(self.get_participate_num(year))
-        arr.append(self.get_history_performance(year, country=country))
+        arr.append(self.get_hhi_index_by_country(year=year, country=country))
+        arr.append(self.get_award_rate(year=year, country=country))
+        arr.append(self.get_host(year))        
+        arr.append(len(set(self.get_participates(year=year, country=country)['Name'])))
+        arr.append(self.get_history_performance(year=year, country=country))
         dataset.append(arr)
 
-# print(countries)
-# print(valid_years)
-
-
-
-
-        
+dataset = pd.DataFrame(data=dataset, columns=['Year','NOC', 'strong_point', 'hhi', 'award_rate', 'host', 'participate_num', 'history_performance'])
+dataset.to_csv('./shy-files/statics.csv', index=False)        

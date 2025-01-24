@@ -30,6 +30,10 @@ class Preprocessor:
 class Athlete(Preprocessor):
     def __init__(self, test_mode=True):
         super().__init__(file_name="summerOly_athletes.csv", test_mode=test_mode)
+        self.__preprocess__()
+
+    def __preprocess__(self):
+        self.csv_file = self.csv_file[ self.csv_file['Year'] != 1906 ]
 
 class Host(Preprocessor):
     def __init__(self, test_mode=True):

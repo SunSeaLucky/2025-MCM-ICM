@@ -150,30 +150,50 @@ class Statics:
         
         return medal_count.groupby('NOC').head(head) 
 
-    def get_award_rate(self, year: int = 2024):
-        df = self.athlete.csv_file
-        awarded = float(len(set(df[ (df['Medal'] != "No medal") & (df['Year']==year)]['Name'])))
-        all = float(len(set(df[ (df['Year']==year) ]['Name'])))
-        return awarded / all
+    def get_award_rate(self, year: int = 2024, country: str = 'USA'):
+        awarded = self.get_total_medal(year=year, country=country)
+        all = self.get_participates(year=year, country=country)
+        
+        awarded = float(len(set(awarded['Name'])))
+        all = float(len(set(all['Name'])))
+
+        assert awarded <= all
+        
+        return 0 if all == 0 else awarded / all
     
     def get_host(self, year: int = 2024):
-        return self.host.csv_file[ self.host.csv_file['Year']==year ].iloc[0,1]
-    
-    def get_participate_num(self, year: int = 2024):
-        df = self.athlete.csv_file
-        return len(set(df[ (df['Year']==year) ]['Name']))
+        df1 = self.athlete.csv_file
+        df1 = df1[['Team','NOC']]
+        df1 = df1.drop_duplicates()
+        full_name = self.host.csv_file[ self.host.csv_file['Year']==year ].iloc[0,1]
+        
+        if full_name in ['United Kingdom']:
+            full_name = 'England'
 
-    def get_history_performance(self, year: int = 2024, country:str =  'USA'):
-        years = self.get_valid_years(end_year=2024)[:-3]
-        cnt = 0
+        short_name = df1[ df1['Team'] == full_name ]    
+        
+        assert len(short_name) == 1, "Test year is %d, full name is %s." % (year, full_name)
+
+        return short_name.iloc[0,1]
+    
+    def get_history_performance(self, year: int = 2024, country:str = 'USA'):
+        years = self.get_valid_years(end_year=year)[-3:]
+        cnt = len(years)
         sum = 0
         
-        for year in years:
-            cnt += 1
-            sum += self.get_total_medal(year=year, country=country).shape[0]
+        for y in years:
+            sum += self.get_total_medal(year=y, country=country).shape[0]
             
         return float(sum) / cnt
-    
+
+    def get_participates(self, year: int = 2024, country: str = None):
+        df = self.athlete.csv_file
+        if country is not None:
+            df = df[ (df['Year']==year) & (df['NOC']==country) ]
+        else:            
+            df = df[ (df['Year']==year) ]
+        return df
+
     def get_total_medal(self, year: int = 2024, country: str = None):
         df = self.athlete.csv_file
         df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
