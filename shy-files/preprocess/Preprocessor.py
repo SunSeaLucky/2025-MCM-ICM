@@ -17,7 +17,7 @@ class Preprocessor:
     
     def __preprocess_info__(self):
         na_num = self.csv_file.isnull().sum().sum()
-        print("空值数量：%d" % (na_num))
+        print("%s 的空值数量：%d" % (self.file_name, na_num))
         
     def save_csv(self):
         self.csv_file.to_csv(self.file_name + "_preprocessed.csv", index=False, encoding="utf-8")
