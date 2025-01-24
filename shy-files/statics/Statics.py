@@ -1,11 +1,9 @@
-import sys  
-sys.path.append('../')
-
 from preprocess.Preprocessor import Athlete
 from preprocess.Preprocessor import Host
 from preprocess.Preprocessor import Medal
 from preprocess.Preprocessor import Program
 import matplotlib.pyplot as plt
+import pandas as pd
 
 class Statics:
     def __init__(self):
@@ -13,47 +11,51 @@ class Statics:
         self.host = Host()
         self.medal = Medal()
         self.program = Program()
+        self.matlab_dir = './matlab-plotter/'
         
-    def get_hhl_index(self, year: int = 2024):
+    def get_hhi_index(self, year: int = 2024):
         '''
-        按照年份计算 HHL
+        按照年份计算 hhi
         '''
         df = self.athlete.csv_file
 
-        # hhl_df = df.query('Medal != "No medal" and Year == %d' % year)
-        hhl_df = df[ (df['Medal']!="No medal") & (df['Year']==year) ]
-        hhl_df = hhl_df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
-        hhl_count = hhl_df.groupby(['Sport']).size().reset_index(name='MedalCount')
+        # hhi_df = df.query('Medal != "No medal" and Year == %d' % year)
+        hhi_df = df[ (df['Medal']!="No medal") & (df['Year']==year) ]
+        hhi_df = hhi_df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
+        hhi_count = hhi_df.groupby(['Sport']).size().reset_index(name='MedalCount')
 
         # 计算总奖牌数  
-        total_medals = hhl_count["MedalCount"].sum()  
+        total_medals = hhi_count["MedalCount"].sum()  
 
         # 计算每个项目的份额  
-        hhl_count["Share"] = hhl_count["MedalCount"] / total_medals  
+        hhi_count["Share"] = hhi_count["MedalCount"] / total_medals  
 
-        # 计算 HHL 值  
-        return (hhl_count["Share"] ** 2).sum()
+        # 计算 hhi 值  
+        return (hhi_count["Share"] ** 2).sum()
     
-    def get_hhl_index_by_country(self, year: int = 2024, country: str = "USA"):
+    def get_hhi_index_by_country(self, year: int = 2024, country: str = "USA"):
         '''
-        按照年份和国家计算 HHL
+        按照年份和国家计算 HHI
         '''
         df = self.athlete.csv_file
         
-        hhl_df = df[ (df['Medal']!="No medal") & (df['Year']==year) & (df['NOC']==country) ]
-        hhl_df = hhl_df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
-        hhl_count = hhl_df.groupby(['Sport']).size().reset_index(name='MedalCount')
+        hhi_df = df[ (df['Medal']!="No medal") & (df['Year']==year) & (df['NOC']==country) ]
+        hhi_df = hhi_df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
+        hhi_count = hhi_df.groupby(['Sport']).size().reset_index(name='MedalCount')
 
         # 计算总奖牌数  
-        total_medals = hhl_count["MedalCount"].sum()  
+        total_medals = hhi_count["MedalCount"].sum()  
 
         # 计算每个项目的份额  
-        hhl_count["Share"] = hhl_count["MedalCount"] / total_medals  
+        hhi_count["Share"] = hhi_count["MedalCount"] / total_medals  
 
-        # 计算 HHL 值  
-        return (hhl_count["Share"] ** 2).sum()
+        # 计算 hhi 值  
+        return (hhi_count["Share"] ** 2).sum()
     
-    def draw_hhl_index(self,start_year: int = 1950, end_year: int = 2024):
+    def draw_hhi_index(self,start_year: int = 1950, end_year: int = 2024):
+        '''
+        绘制 HHI 指数变化图，默认从 1950 年到 2024 年
+        '''
         k = set(self.athlete.csv_file['Year'])
 
         k = k.intersection(range(start_year, end_year+1))
@@ -65,11 +67,15 @@ class Statics:
 
         for i in k:
             X.append(i)
-            y.append(self.get_hhl_index(i))
+            y.append(self.get_hhi_index(i))
 
         plt.xlabel('Year')
-        plt.ylabel('HHL Index')
+        plt.ylabel('HHI Index')
+        plt.title('HHI Index Change')
         plt.plot(X, y)
+        
+        data = pd.DataFrame({"Year": X, "HHIndex": y})
+        data.to_csv(self.matlab_dir + 'data_hhi.csv', index=False)
     
     def get_event_relative(self, year: int = 2024, head: int = 3):
         '''
