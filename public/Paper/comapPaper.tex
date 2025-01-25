@@ -12,6 +12,9 @@
 \setlength{\cftbeforesecskip}{6pt}
 \renewcommand{\contentsname}{\hspace*{\fill}\Large\bfseries Contents \hspace*{\fill}}
 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
 
 \title{Enjoy a Cozy and Green Bath}
 % \author{\small \href{http://www.latexstudio.net/}
@@ -337,15 +340,20 @@ where $N_{\text{participate}}(t,i)$ is the number of athletes from country $i$ i
 
 
 \subsubsection{Participation in new events compared to previous years} 
-\[
-N_{\text{new}}(t,i) =
-\begin{cases}
-	1 & \text{if } N_{\text{new}}(k,i) > 0, \quad k = t-8\ or\ t-4\ or\ t \\
-	0 & \text{if } N_{\text{new}}(k,i) = 0, \quad k = t-8, t-4, t
-\end{cases}
-\]
+\begin{algorithm}
+	\caption{Participation in new events compared to previous years}
+	\begin{algorithmic}[1]
+		\State \textbf{Input:} Year \( t \), Country \( i \), Matrices \( N_{\text{new}} \), \( P_{\text{new}} \)
+		\For {each \( k \in \{t-8, t-4, t\} \)}
+		\If {$N_{\text{new}}[k][i] > 0$ \textbf{and} $P_{\text{new}}[t][i] > 0$}
+		\State \textbf{Return} $\min(N_{\text{new}}[t][i], P_{\text{new}}[t][i])$
+		\EndIf
+		\EndFor
+		\State \textbf{Return} 0
+	\end{algorithmic}
+\end{algorithm}
 
-where $N_{\text{new}}(t,i)$ represents the number of new events that country $i$ participated in during year $t$. The term $\Delta N_{\text{new}}(t,i)$ indicates the change in the number of new events from the past three years to year $t$.
+where \( N_{\text{new}}(t,i) \) represents the number of new events that country \( i \) participated in during year \( t \), and \( P_{\text{new}}(t,i) \) indicates whether country \( i \) participated in any new events in year \( t \) (if participated, \( P_{\text{new}}(t,i) > 0 \), otherwise \( P_{\text{new}}(t,i) = 0 \)).
 
 
 
