@@ -8,8 +8,12 @@ class Preprocessor:
         1. 错误修正
         1. 归一化
     '''
-    def __init__(self, file_name, encoding="Windows-1252" ,test_mode=True):
-        self.dir = "../public/赛题/2025_MCM-ICM_Problems/2025_Problem_C_Data/" + file_name
+    def __init__(self, 
+                 file_name, 
+                 file_dir="../public/赛题/2025_MCM-ICM_Problems/2025_Problem_C_Data/", 
+                 encoding="Windows-1252", 
+                 test_mode=True):
+        self.dir = file_dir + file_name
         self.encoding = encoding
         self.test_mode = test_mode
         self.file_name = file_name
@@ -77,3 +81,15 @@ class Program(Preprocessor):
         self.csv_file.replace('•', 0, inplace=True)
 
         self.csv_file.drop(columns=['Discipline', 'Sports Governing Body'], inplace=True)
+
+class RawDataset(Preprocessor):
+    def __init__(self, test_mode=True):
+        super().__init__(file_name="statics-1.csv", 
+                         file_dir="./mid_data/",
+                         encoding="utf-8", 
+                         test_mode=test_mode)
+        
+        self.__preprocess__()
+
+    def __preprocess__(self):
+        pass
