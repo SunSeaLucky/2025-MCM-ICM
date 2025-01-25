@@ -154,9 +154,6 @@ justified.
 	$N_{award}(t,i)$ & Number of athletes who won medals from country $i$ in year $t$. \\
 	$H(t,i)$ & Host effect. \\
 	$y(t,i,j,k)$ &  Logical variable of event $j$ of sport $i$ from $i$ in year $t$. \\
-	$G_{\text{growth}}(t,i)$ & Growth rate of the number of athletes from country $i$ in year $t$.\\
-	$P_{Medal}(t,i)$ & Probability of country $i$ winning a medal in year $t$ based on the prediction model.\\
-	$P_{Gold}(t,i)$ & Based on the prediction model, the probability that country $i$ wins a gold medal in year $t$.\\
 	\bottomrule
 \end{tabular}
 \end{center}
@@ -243,41 +240,10 @@ where $t\in A_{T}$, $i\in A_{C}$.
 
 
 
-\subsubsection{Events}
-The event vector \( V(t) \) is defined as:
-
-\[
-V(t) = [v_1(t), v_2(t), \dots, v_M(t)],
-\]
-
-where: \( v_i(t) = 1 \) if event \( i \) is held in year \( t \),
- \( v_i(t) = 0 \) if event \( i \) is not held in year \( t \).
-
-Here, \( M \) represents the total number of distinct Olympic events considered up to year \( t \), and the elements of \( V(t) \) are binary values indicating the participation of each event in year \( t \).
-
-\subsection{Formal Definition}
-
-For any event \( i \) and year \( t \), we define \( v_i(t) \) as follows:
-
-\[
-v_i(t) =
-\begin{cases}
-	1 & \text{if event } i \text{ is held in year } t, \\
-	0 & \text{if event } i \text{ is not held in year } t.
-\end{cases}
-\]
+\subsubsection{Other indexes}
 
 
-\subsection{Definition of Dominant Event}
 
-Let \( M_j(t) \) represent the dominance of event \( j \) in year \( t \), where the dominance is calculated based on the medal count over the past three years and the total number of medals in year \( t \).
-
-\[
-M_j(t) = \frac{\sum_{q=t-3}^{t-1} n_{\text{Total}}(q,i,k,j)}{\sum_{q=t-3}^{t-1}V_j(q) \cdot n_{\text{Total}}(q,i,j,k)} 
-\]
-
-Where:
-The formula calculates the dominant position of country $i$ in year  $t$  for event  $j$ , determined by the ratio of past medal performance to the total number of medals in that year, adjusted for the presence of the event in the last three years.
 
 \subsection{LSTM Model}
 
@@ -288,62 +254,6 @@ The formula calculates the dominant position of country $i$ in year  $t$  for ev
 
 
 \section{Model 2: Prediction of Maiden Medal for Medal-Less Countries}
-\subsection{Problem Overview}
-The objective of this model is to predict whether countries that have never won a medal in the past (i.e., "first-time winning countries") will be able to win a medal in future Olympic Games. For these countries, traditional medal prediction models (which usually rely on historical medal data) may not effectively predict their future performance. Therefore, we need to consider other potential factors, such as the host country effect, athlete participation growth, and the addition of new events.
-
-
-\subsection{Index Analysis}
-
-
-\subsubsection{Target variable}
-	\[
-	y(t,i) = 
-	\begin{cases} 
-		1 & \text{if country } i \text{ wins a medal in year } t \\ 
-		0 & \text{if country } i \text{ does not win a medal in year } t 
-	\end{cases}
-	\]
-\subsubsection{Athlete growth rate}
-        The growth rate of athletes from country $i$ in year $t$, calculated by the following formula:
-		\[
-		G_{\text{growth}}(t,i) = \frac{N_{\text{participate}}(t,i) - N_{\text{participate}}(t-1,i)}{N_{\text{participate}}(t-1,i)}
-		\]
-		where $N_{\text{participate}}(t,i)$ is the number of athletes from country $i$ in year $t$.
-		
-\subsubsection{Participation in new events compared to previous years} 
-The number of new Olympic events that country $i$ participates in during year $t$, compared to the previous three years. 
-\subsubsection{Participation in new events compared to previous years} 
-\[
-N_{\text{new}}(t,i) =
-\begin{cases}
-	1 & \text{if } N_{\text{new}}(k,i) > 0, \quad k = t-3\ or\ t-2\ or\ t-1 \\
-	0 & \text{if } N_{\text{new}}(k,i) = 0, \quad k = t-3, t-2, t-1
-\end{cases}
-\]
-
-where $N_{\text{new}}(t,i)$ represents the number of new events that country $i$ participated in during year $t$. The term $\Delta N_{\text{new}}(t,i)$ indicates the change in the number of new events from the past three years to year $t$.
-	
-	
-	
-	
-	
-	 \textbf{Prediction model}:
-	We use a Support Vector Machine (SVM) model to predict whether first-time winning countries will win medals. The model’s input is the feature vector of the country $X(t,i)$:
-	\[
-	X(t,i) = [G_{\text{growth}}(t,i), H(t,i), N_{\text{new}}(t,i)]
-	\]
-	By training the SVM model, we can obtain the probability that country $i$ will win a medal in year $t$:
-	\[
-	P(\text{Medal}(t,i)) = f(X(t,i), \theta)
-	\]
-	where $f(\cdot)$ is the decision function learned through SVM, and $\theta$ is the parameter learned during training.
-	
-	\textbf{Prediction of first-time medal probability}:
-	If country $i$ has never won a medal (i.e., no historical medals), we use the prediction model to calculate the probability of winning a medal. If the probability exceeds a certain threshold, we predict that the country may win a medal in the future, especially a first-time medal:
-	\[
-	P_{\text{first medal}}(t,i) = P(\text{Medal}(t,i)) > \text{Threshold}
-	\]
-	where the threshold is determined based on the results of model evaluation.
 
 
 
