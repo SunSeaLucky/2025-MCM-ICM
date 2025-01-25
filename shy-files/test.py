@@ -32,8 +32,9 @@ def test_get_host():
     short_name = df1[ df1['Team'] == full_name ]    
     # print(short_name)
     assert len(short_name) == 1, "Test year is %d, full name is %s." % (year, full_name)
-    print(short_name.iloc[0,1])
+    # print(short_name.iloc[0,1])
     
+
 
 if __name__ == '__main__':
     test_six_idx()

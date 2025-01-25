@@ -2,6 +2,7 @@ from preprocess.Preprocessor import Athlete
 from preprocess.Preprocessor import Host
 from preprocess.Preprocessor import Medal
 from preprocess.Preprocessor import Program
+from preprocess.Preprocessor import RawDataset
 import matplotlib.pyplot as plt
 import pandas as pd
 
@@ -11,6 +12,7 @@ class Statics:
         self.host = Host()
         self.medal = Medal()
         self.program = Program()
+        self.raw_dataset = RawDataset()
         self.matlab_dir = './matlab-plotter/'
         
     def get_valid_years(self, start_year: int = 1896, end_year: int = 2024):
