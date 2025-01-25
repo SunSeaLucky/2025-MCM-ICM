@@ -1,0 +1,174 @@
+{
+  "main": {
+    "id": "7899f4188ea54b18",
+    "type": "split",
+    "children": [
+      {
+        "id": "d3b05d6d0402362b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3845ef1ff716cb58",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/Drawing 2025-01-25 21.09.50.excalidraw.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "Drawing 2025-01-25 21.09.50.excalidraw"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "69767eee6b52b05f",
+    "type": "split",
+    "children": [
+      {
+        "id": "bc2c6d5c76da9fae",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "96b322820e32a533",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "5ef2b378a73af433",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "4d495fd2f71e102f",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "f8ddb5d78ddccaeb",
+    "type": "split",
+    "children": [
+      {
+        "id": "a3b02a182feb1e49",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bbadfc629f20b2be",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Excalidraw/Drawing 2025-01-25 21.09.50.excalidraw.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Drawing 2025-01-25 21.09.50.excalidraw 的反向链接列表"
+            }
+          },
+          {
+            "id": "e9b80804ce12bba8",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Excalidraw/Drawing 2025-01-25 21.09.50.excalidraw.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Drawing 2025-01-25 21.09.50.excalidraw 的出链列表"
+            }
+          },
+          {
+            "id": "172b76c33d5e702a",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "d86a694a84919ac1",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Excalidraw/Drawing 2025-01-25 21.09.50.excalidraw.md"
+              },
+              "icon": "lucide-list",
+              "title": "Drawing 2025-01-25 21.09.50.excalidraw 的大纲"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "obsidian-excalidraw-plugin:Create new drawing": false
+    }
+  },
+  "active": "3845ef1ff716cb58",
+  "lastOpenFiles": [
+    "LSTM-MCD.svg",
+    "LSTM-MCD.eps",
+    "新建 文本文档.txt",
+    "641.webp",
+    "Excalidraw/Drawing 2025-01-25 21.09.50.excalidraw.md",
+    "Excalidraw",
+    "欢迎.md"
+  ]
+}
