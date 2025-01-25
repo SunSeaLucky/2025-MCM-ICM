@@ -13,17 +13,19 @@ self = Statics()
 countries = self.get_all_countries()
 valid_years = self.get_valid_years(end_year=2024)
 
-dataset = []
+arr_dataset = []
 
 cnt = 0
 
 for country in countries:
+    dataset = pd.DataFrame(data=arr_dataset, columns=['Year','NOC', 'strong_point', 'hhi', 'award_rate', 'host', 'participate_num', 'history_performance'])
+    dataset.to_csv('./statics-gen.csv', index=False)     
     for year in valid_years:
         cnt += 1
-        if cnt >= 30:
-            dataset = pd.DataFrame(data=dataset, columns=['Year','NOC', 'strong_point', 'hhi', 'award_rate', 'host', 'participate_num', 'history_performance'])
-            dataset.to_csv('./shy-files/statics.csv', index=False) 
-            exit()
+        # if cnt >= 100:
+        #     dataset = pd.DataFrame(data=arr_dataset, columns=['Year','NOC', 'strong_point', 'hhi', 'award_rate', 'host', 'participate_num', 'history_performance'])
+        #     dataset.to_csv('./statics.csv', index=False) 
+        #     exit()
         print("Processing: %d year, %s country" % (year, country))
         arr = []
         arr.append(year)
@@ -34,7 +36,7 @@ for country in countries:
         arr.append(self.get_host(year))        
         arr.append(len(set(self.get_participates(year=year, country=country)['Name'])))
         arr.append(self.get_history_performance(year=year, country=country))
-        dataset.append(arr)
+        arr_dataset.append(arr)
 
-dataset = pd.DataFrame(data=dataset, columns=['Year','NOC', 'strong_point', 'hhi', 'award_rate', 'host', 'participate_num', 'history_performance'])
-dataset.to_csv('./shy-files/statics.csv', index=False)        
+dataset = pd.DataFrame(data=arr_dataset, columns=['Year','NOC', 'strong_point', 'hhi', 'award_rate', 'host', 'participate_num', 'history_performance'])
+dataset.to_csv('./statics.csv', index=False)        

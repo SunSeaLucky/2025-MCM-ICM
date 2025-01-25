@@ -9,7 +9,7 @@ class Preprocessor:
         1. 归一化
     '''
     def __init__(self, file_name, encoding="Windows-1252" ,test_mode=True):
-        self.dir = "E:\\Personal\\Contests\\2025-MCM-ICM\\public\\赛题\\2025_MCM-ICM_Problems\\2025_Problem_C_Data\\" + file_name
+        self.dir = "../public/赛题/2025_MCM-ICM_Problems/2025_Problem_C_Data/" + file_name
         self.encoding = encoding
         self.test_mode = test_mode
         self.file_name = file_name
