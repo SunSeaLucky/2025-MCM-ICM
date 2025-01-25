@@ -149,11 +149,14 @@ justified.
 	$MG_{t,i,j,k}$ & Number of gold medals country $i$ won in sport $j$ at event $k$ in year t. \\
 	$MS_{t,i,j,k}$ & Number of silver medals country $i$ won in sport $j$ at event $k$ in year t. \\
 	$MB_{t,i,j,k}$ & Number of bronze medals country $i$ won in sport $j$ at event $k$ in year t. \\
-	$NT_{t,i}$ & Number of total medals country $i$ won in year $t$. \\
-	$NP_{t,i}$ & Total number of athletes from country $i$ in year $t$. \\
-	$NA_{t,i}$ & Number of athletes who won medals from country $i$ in year $t$. \\
+	$MT_{t,i}$ & Number of total medals country $i$ won in year $t$. \\
+	$N_{athletes}(t,i)$ & Total number of athletes from country $i$ in year $t$. \\
+	$N_{award}(t,i)$ & Number of athletes who won medals from country $i$ in year $t$. \\
 	$H(t,i)$ & Host effect. \\
-	$y(t,i,j,k)$ &  Logical variable of event $j$ of sport $i$ from $i$ in year $t$. \\
+	$y_{t,i,j,k}$ &  Logical variable of event $j$ of sport $i$ from $i$ in year $t$. \\
+	$G_{\text{growth}}(t,i)$ & Growth rate of the number of athletes from country $i$ in year $t$.\\
+	$P_{Medal}(t,i)$ & Probability of country $i$ winning a medal in year $t$ based on the prediction model.\\
+	$P_{Gold}(t,i)$ & Based on the prediction model, the probability that country $i$ wins a gold medal in year $t$.\\
 	\bottomrule
 \end{tabular}
 \end{center}
@@ -211,26 +214,28 @@ It was noticed that \textbf{Jeu de Paume} and \textbf{Roque} sports in the {\bf 
 
 %为了验证东道主效应的显著性，我们采用了成对样本t检验。首先，我们选取每年的东道主的奖牌数$MT_{ti}$作为第一个样本，其次，为了消除奖牌数量的整体增长趋势的影响，选取东道主国家在前后两届奥运会中获得的奖牌数的平均值
 
-To verify the significance of the host effect, we employed a paired samples t-test. Firstly, we selected the medal count of the host country in each year, denoted as $MT_{t}$, as the first sample. Secondly, to eliminate the influence of the overall growth trend in medal counts, we took the average of the medal counts obtained by the host country in the two consecutive Olympic Games as the second sample, shown as (\ref{eq:H_t-test_MT_bar}),
+To verify the significance of the host effect, we employed a paired samples \textbf{t-Test}. Firstly, we selected the medal count of the host country in each year, denoted as $MT_{t}$, as the first sample. Secondly, to eliminate the influence of the overall growth trend in medal counts, we took the average of the medal counts obtained by the host country in the two consecutive Olympic Games as the second sample, shown as (\ref{eq:H_t-test_MT_bar}),
 \begin{equation}
-MT^s_{t}=\frac{ MT_{t-1} + MT_{t+1} }{2}
+MT^H_{t}=\frac{ MT_{t-1} + MT_{t+1} }{2}
 \label{eq:H_t-test_MT_bar}
 \end{equation}
-where $t\in A_T^H = A_T \textbackslash \{1896,2024\}$, $i\in A_{C}$. Then $\{MT_{t},MT^s_{t}\}$ constitutes paired data with a sample size of 30. Define $d_t= MT_{t} - MT^s_{t}$, and assume that
+where $t\in A_T^H = A_T \textbackslash \{1896,2024\}$, $i\in A_{C}$. 
+
+Then $\{MT_{t},MT^s_{t}\}$ constitutes paired data with a sample size of 30. Define $d_t= MT_{t} - MT^s_{t}$, and assume that
 \begin{equation*}
-H_0: d_{1900}=\dots=d_{2020}, \quad vs \quad H_1:  \exists t_1, t_2\in A_T^H \text{ s.t. } d_{t_1}\ne d_{t_2}.
+H_0: \mu_d=0, \quad vs \quad H_1:  \mu_d \ne 0.
 \end{equation*}
 
 Select the t-test statistic as
 \begin{equation}
-t=\frac{ \bar{d} }{ s_d\slash 30 } \sim T(29)
+t=\frac{ \bar{d} }{ s_d\slash \sqrt{30} } \sim T(29)
 \end{equation}
 where $\bar{d}=\frac{1}{30} \sum_{t\in A_T^H} d_t$ is the mean of paired samples, 
 and $ s_d = \frac{1}{29} \sum_{t\in A_T^H}\big( d_t - \bar{d} \big)^2 $ is the sample variance of the differences of paired data, 
 
 For a given significance level $\alpha$, the rejection domain for the hypothesis test is
 \begin{equation}
-W_\alpha = \big\{ t \ge T_{1-\alpha}(29) \big\}
+W_\alpha = \big\{ |t| \ge T_{1-\frac{\alpha}{2}}(29) \big\}
 \end{equation}
 
 By following the described procedure, the results of the t-test were obtained and are summarized in Table \ref{table:H_t-test_result}.
@@ -243,9 +248,9 @@ By following the described procedure, the results of the t-test were obtained an
 为了
 \subsubsection{Host effect}
 
-Define Logical Variable $H(t,i)$ as equation (\ref{eq:H}),
+Define Logical Variable $H_{t,i}$ as equation (\ref{eq:H}),
 \begin{equation}
-	H(t,i)=
+	H_{t,i}=
 	\begin{cases}
 		1, \quad \text{Country } i \text{ is host in year } t, \\
 		0, \quad \text{others}.
@@ -255,12 +260,37 @@ Define Logical Variable $H(t,i)$ as equation (\ref{eq:H}),
 where $t\in A_{T}$, $i\in A_{C}$.
 
 
-\subsubsection{Dominant Event}
 
-A \textbf{Dominant Event} is defined as a discipline in which a National Olympic Committee (NOC) consistently achieves a high medal yield, contributing significantly to its overall medal tally. The dominance is quantified by the \textbf{medal ratio}, which is the proportion of medals earned in a specific event relative to the NOC's total medal count during a given Olympic Games.
-\begin{equation*}
-P(t,i)=\frac{ N_{award}(t,i) }{ N_{participate}(t,i) }
-\end{equation*}
+\subsubsection{Events}
+The event vector \( V(t) \) is defined as:
+
+\[
+V(t) = \big( v_1(t), v_2(t), \dots, v_M(t) \big)^T,
+\]
+where: \( v_i(t) = 1 \) if event \( i \) is held in year \( t \),
+\( v_i(t) = 0 \) if event \( i \) is not held in year \( t \). Here, \( M \) represents the total number of distinct Olympic events considered up to year \( t \), and the elements of \( V(t) \) are binary values indicating the participation of each event in year \( t \).
+
+\subsubsection{Formal Definition}
+
+For any event \( i \) and year \( t \), we define \( v_i(t) \) as follows:
+
+\[
+v_i(t) =
+\begin{cases}
+	1 & \text{if event } i \text{ is held in year } t, \\
+	0 & \text{if event } i \text{ is not held in year } t.
+\end{cases}
+\]
+
+
+\subsubsection{Definition of Dominant Event}
+
+Let \( I_j(t) \) represent the dominance of event \( j \) in year \( t \), where the dominance is calculated based on the medal count over the past three years and the total number of medals in year \( t \).
+\[
+I_j(t) = \frac{\sum_{q=t-3}^{t-1} MT_{q,i,k,j}}{\sum_{q=t-3}^{t-1}V_j(q) \cdot MT{q,i,j,k}} 
+\]
+where the formula calculates the dominant position of country $i$ in year  $t$  for event  $j$ , determined by the ratio of past medal performance to the total number of medals in that year, adjusted for the presence of the event in the last three years.
+
 
 
 
@@ -282,6 +312,62 @@ P(t,i)=\frac{ N_{award}(t,i) }{ N_{participate}(t,i) }
 
 \section{Model 2: Prediction of Maiden Medal for Medal-Less Countries}
 
+
+\subsection{Problem Overview}
+The objective of this model is to predict whether countries that have never won a medal in the past (i.e., "first-time winning countries") will be able to win a medal in future Olympic Games. For these countries, traditional medal prediction models (which usually rely on historical medal data) may not effectively predict their future performance. Therefore, we need to consider other potential factors, such as the host country effect, athlete participation growth, and the addition of new events.
+
+
+\subsection{Index Analysis}
+
+
+\subsubsection{Target variable}
+\[
+y(t,i) = 
+\begin{cases} 
+	1 & \text{if country } i \text{ wins a medal in year } t \\ 
+	0 & \text{if country } i \text{ does not win a medal in year } t 
+\end{cases}
+\]
+\subsubsection{Athlete growth rate}
+The growth rate of athletes from country $i$ in year $t$, calculated by the following formula:
+\[
+G_{\text{growth}}(t,i) = \frac{N_{\text{participate}}(t,i) - N_{\text{participate}}(t-1,i)}{N_{\text{participate}}(t-1,i)}
+\]
+where $N_{\text{participate}}(t,i)$ is the number of athletes from country $i$ in year $t$.
+
+
+\subsubsection{Participation in new events compared to previous years} 
+\[
+N_{\text{new}}(t,i) =
+\begin{cases}
+	1 & \text{if } N_{\text{new}}(k,i) > 0, \quad k = t-8\ or\ t-4\ or\ t \\
+	0 & \text{if } N_{\text{new}}(k,i) = 0, \quad k = t-8, t-4, t
+\end{cases}
+\]
+
+where $N_{\text{new}}(t,i)$ represents the number of new events that country $i$ participated in during year $t$. The term $\Delta N_{\text{new}}(t,i)$ indicates the change in the number of new events from the past three years to year $t$.
+
+
+
+
+
+\textbf{Prediction model}:
+We use a Support Vector Machine (SVM) model to predict whether first-time winning countries will win medals. The model’s input is the feature vector of the country $X(t,i)$:
+\[
+X(t,i) = [G_{\text{growth}}(t,i), H(t,i), N_{\text{new}}(t,i)]
+\]
+By training the SVM model, we can obtain the probability that country $i$ will win a medal in year $t$:
+\[
+P(\text{Medal}(t,i)) = f(X(t,i), \theta)
+\]
+where $f(\cdot)$ is the decision function learned through SVM, and $\theta$ is the parameter learned during training.
+
+\textbf{Prediction of first-time medal probability}:
+If country $i$ has never won a medal (i.e., no historical medals), we use the prediction model to calculate the probability of winning a medal. If the probability exceeds a certain threshold, we predict that the country may win a medal in the future, especially a first-time medal:
+\[
+P_{\text{first medal}}(t,i) = P(\text{Medal}(t,i)) > \text{Threshold}
+\]
+where the threshold is determined based on the results of model evaluation.
 
 
 
