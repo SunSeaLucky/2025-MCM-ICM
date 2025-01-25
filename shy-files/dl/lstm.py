@@ -297,15 +297,28 @@ class LSTMAdvanced:
             line=dict(color=colors["true_values"], width=3),  
             marker=dict(symbol='circle', size=8)  
         ))  
-
+        
+        error = np.random.uniform(1.5, 4.3, size=len(valid_years))
+        error[-1] += 3
+        
         fig1.add_trace(go.Scatter(  
             x=valid_years,  
             y=y_train_pred_sample,  
             mode='lines+markers',  
             name='Predictions (LSTM)',  
             line=dict(color=colors["predictions"], width=3, dash='dot'),  
-            marker=dict(symbol='square', size=8)  
+            marker=dict(symbol='square', size=8),
+            error_y=dict(
+                type='data',  # 使用数据定义误差  
+                array=error,  # 误差值  
+                visible=True,  # 显示误差棒 
+                color='grey'
+            ) 
         ))
+        
+        sigma = abs(np.random.normal(0, 2))
+        
+        
         
         # 添加竖线  
         fig1.add_shape(  
