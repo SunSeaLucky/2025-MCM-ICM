@@ -84,7 +84,19 @@ class Program(Preprocessor):
 
 class RawDataset(Preprocessor):
     def __init__(self, test_mode=True):
-        super().__init__(file_name="statics-1.csv", 
+        super().__init__(file_name="full_features.csv", 
+                         file_dir="./mid_data/",
+                         encoding="utf-8", 
+                         test_mode=test_mode)
+        
+        self.__preprocess__()
+
+    def __preprocess__(self):
+        pass
+
+class InputFuture(Preprocessor):
+    def __init__(self, test_mode=True):
+        super().__init__(file_name="input_future.csv", 
                          file_dir="./mid_data/",
                          encoding="utf-8", 
                          test_mode=test_mode)

@@ -198,47 +198,54 @@ class Statics:
 
     def get_total_medal(self, year: int = 2024, country: str = None):
         df = self.athlete.csv_file
-        df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
         
-        if country:        
+        if country is not None: 
             df = df[ (df['Medal'] != "No medal") & (df['Year']==year) & (df['NOC']==country) ]
-        else:
+            df = df.drop_duplicates(subset=['Sport', 'Event', 'Medal'])            
+        else:            
             df = df[ (df['Medal'] != "No medal") & (df['Year']==year)]
+            df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
         
         return df
     
     def get_gold_medal(self, year: int = 2024, country: str = None):
         df = self.athlete.csv_file
-        df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
         
         if country:        
             df = df[ (df['Medal'] == "Gold") & (df['Year']==year) & (df['NOC']==country) ]
+            df = df.drop_duplicates(subset=['Sport', 'Event', 'Medal'])
         else:
             df = df[ (df['Medal'] == "Gold") & (df['Year']==year)]
+            df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
         
         return df
     
     def get_silver_medal(self, year: int = 2024, country: str = None):
         df = self.athlete.csv_file
-        df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
         
         if country:        
             df = df[ (df['Medal'] == "Silver") & (df['Year']==year) & (df['NOC']==country) ]
+            df = df.drop_duplicates(subset=['Sport', 'Event', 'Medal'])
         else:
-            df = df[ (df['Medal'] =="Silver") & (df['Year']==year)]
+            df = df[ (df['Medal'] == "Silver") & (df['Year']==year)]
+            df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
         
         return df
     
     def get_bronze_medal(self, year: int = 2024, country: str = None):
         df = self.athlete.csv_file
-        df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
         
         if country:        
             df = df[ (df['Medal'] == "Bronze") & (df['Year']==year) & (df['NOC']==country) ]
+            df = df.drop_duplicates(subset=['Sport', 'Event', 'Medal'])
         else:
             df = df[ (df['Medal'] == "Bronze") & (df['Year']==year)]
+            df = df.drop_duplicates(subset=['NOC', 'Sport', 'Event', 'Medal'])
         
         return df
     
     def get_all_countries(self):
+        '''
+        返回排序后的所有国家缩写
+        '''
         return sorted(list(set(self.athlete.csv_file['NOC'])))
