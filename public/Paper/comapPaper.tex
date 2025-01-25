@@ -12,6 +12,7 @@
 \setlength{\cftbeforesecskip}{6pt}
 \renewcommand{\contentsname}{\hspace*{\fill}\Large\bfseries Contents \hspace*{\fill}}
 
+
 \title{Enjoy a Cozy and Green Bath}
 % \author{\small \href{http://www.latexstudio.net/}
 	%   {\includegraphics[width=7cm]{mcmthesis-logo}}}
@@ -48,22 +49,62 @@ abstract...
 
 
 \section{Introduction}
-\subsection{Background}
-\subsection{Restatement and Analysis of the Problem}
-\subsection{Ovirview of Our Work}
 
-\begin{itemize}
-	\item {\bf 111}. ...
-	\item {\bf 222}. ...
-	
-	\begin{itemize}
-		\item[1)] ... 
-		\item[2)] ...
-		\item[3)] ...
-		\item[4)] ...
-	\end{itemize}
-	
-\end{itemize}
+\subsection{Background}
+The medal table of the 2024 Paris Olympics shows that the United States and China each won 40 gold medals and tied for the top spot, but the United States led with a total of 126 medals. The host country France ranked fifth in gold medals (16) and fourth in total medals (64). Dominica, Saint Lucia and other countries won their first Olympic medals, while 60 countries still have not broken through for any medals.
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.7\linewidth]{fig/background}
+	\caption{The medals of the 2024 Paris Olympics}
+\end{figure}
+
+\subsection{Restatement and Analysis of the Problem}
+Based on the provided historical data-set of the Olympic Games from 1896 to 2024, we are employed to analyze and answer the following questions:
+\begin{enumerate}
+	\item 
+	Develop a \textbf{prediction model} to forecast the number of medals each country will win in 2028, and identify countries that may progress or regress. 
+	\item 
+	Provide \textbf{prediction intervals} and estimates of \textbf{uncertainty} and metrics to measure the model's performance.
+	\item 
+	Estimate the number of countries that will win their \textbf{first medal} and the probability of this happening.
+	\item 
+	Analyze the \textbf{relationship} between specific Olympic events (in terms of quantity and type) and the number of medals, explore which events are more important, and the impact of the host country's event selection strategy on the outcome.
+	\item 
+	Verify whether the \textbf{mobility of coaches} significantly enhances a country's performance in specific sports (such as Lang Ping and Bela Karolyi).
+	\item 
+	Quantify the contribution of\textbf{ coaching effectiveness} to the number of medals, and recommend key sports for investment and expected returns for the three countries.
+	\item 
+	Extract the less-attended-to patterns from the model and provide strategic \textbf{suggestions} for the Olympic Committee.
+\end{enumerate}
+
+For Task 1, we selected seven indicators and established an LSTM-based medal quantity prediction model, and provided interval predictions using Bayesian estimation. As for countries that have never won medals, we built an SVM-based "first medal breakthrough" prediction model based on the new events, the number of athletes, and historical participation trends.
+
+
+%对于Task1，我们选取7个指标，建立了基于LSTM的奖牌数量预测模型，并使用贝叶斯估计给出了区间预测，而对于从未获奖的国家，我们根据新增的event、运动员数量、历史参与趋势，建立了基于SVM的“首奖突破”预测模型。
+%对于Task2，我们分析了“伟大教练”效应的影响。
+
+
+
+
+
+
+
+
+
+\subsection{Overview of Our Work}
+
+%\begin{itemize}
+%	\item {\bf 111}. ...
+%	\item {\bf 222}. ...
+%	
+%	\begin{itemize}
+%		\item[1)] ... 
+%		\item[2)] ...
+%		\item[3)] ...
+%		\item[4)] ...
+%	\end{itemize}
+%	
+%\end{itemize}
 
 
 
@@ -82,8 +123,8 @@ conditions, we make the following basic assumptions, each of which is properly
 justified.
 
 \begin{itemize}
-	\item {\bf 111}. ...
-	\item {\bf 222}. ...	
+	\item {\bf 1}. ...
+	\item {\bf 2}. ...	
 \end{itemize}
 
 
@@ -100,34 +141,141 @@ justified.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{List of Notations}
 \begin{center}
-\begin{tabular}{clc}
+\begin{tabular}{ll}
 	\toprule
-	{\bf Symbols} & {\bf Description} & \quad {\bf Unit} \\
+	{\bf Symbols} & {\bf Description}  \\
 	\midrule 
-	$h$ & Convection heat transfer coefficient & \quad W/(m$^2 \cdot$ K) \\[0.2cm]
-	$A$ & Aera & \quad m$^2$ \\[0.2cm]
-	$a,\,b,\,c$ & The size of a bathtub  & \quad m$^3$ \\
+	$A_{C},A_{T},A_{S}$ & Set of country, years and all sports.\\
+	$n_{Gold}(t,i,j,k)$ & Number of gold medals country $i$ won in sport $j$ at event $k$ in year t. \\
+	$n_{Silver}(t,i,j,k)$ & Number of silver medals country $i$ won in sport $j$ at event $k$ in year t. \\
+	$n_{Bronze}(t,i,j,k)$ & Number of bronze medals country $i$ won in sport $j$ at event $k$ in year t. \\
+	$n_{Total}(t,i)$ & Number of total medals country $i$ won in year $t$. \\
+	$N_{participate}(t,i)$ & Total number of athletes from country $i$ in year $t$. \\
+	$N_{award}(t,i)$ & Number of athletes who won medals from country $i$ in year $t$. \\
+	$H(t,i)$ & Host effect. \\
+	$y(t,i,j,k)$ &  Logical variable of event $j$ of sport $i$ from $i$ in year $t$. \\
 	\bottomrule
 \end{tabular}
 \end{center}
 
 \noindent where we define the main parameters while specific value of those 
-parameters will be given later.
+parameters will be found in the data-set attached.
+
+
+
+
+
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%% 数据预处理 %%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Data Pre-processing}
-\subsection{Outlier Handling}
-\subsection{Missing Value Handling}
-\subsection{Tag Encoding of String Type Data}
+
+\subsection{Outlier and Missing Value Handling}
+As the \textbf{1906 Intercalated Games} lacked the medal data of various countries and the competition results were not recognized by the International Olympic Committee, the data of 1906 is not taken into account.
+
+In adition, \textbf{Skating} and \textbf{Ice Hockey} have been included in the Winter Olympics since 1920, so these two events are not within the scope of consideration. Otherwise, the "$\cdot$" is replaced by the number $0$. 
+
+It was noticed that \textbf{Jeu de Paume} and \textbf{Roque} sports in the {\bf summerOly\_programs.csv} do not have Codes. Upon researching information from {\color{blue}\url{https://en.wikipedia.org/wiki/Jeu_de_paume}} and {\color{blue}\url{https://en.wikipedia.org/wiki/Roque}}, it was found that only a few people are still engaged in these two sports, which have even not been held for 26 consecutive years in the Summer Olympics. Therefore, these two sports have been excluded.
+
+%\section{Descriptive statistical analysis}
+
+
+统一国家标识
+
+
+
+
+
+
+
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%% Task 1 %%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Task 1: xxx}
+\section{Model 1: Prediction of Number of Medals for Medal-Winning Countries}
+
+\subsection{Index Analysis}
+为了
+
+
+\subsubsection{Dominant Event}
+
+A \textbf{Dominant Event} is defined as a discipline in which a National Olympic Committee (NOC) consistently achieves a high medal yield, contributing significantly to its overall medal tally. The dominance is quantified by the \textbf{medal ratio}, which is the proportion of medals earned in a specific event relative to the NOC's total medal count during a given Olympic Games.
+
+%\begin{equation}
+%N_{Gold}(t,i,j,k)
+%N_{Silver}(t,i,j,k)
+%N_{Bronze}(t,i,j,k)
+%N_{Total}(t,i)
+%\end{equation}
+
+\begin{equation*}
+P(t,i)=\frac{ N_{award}(t,i) }{ N_{participate}(t,i) }
+\end{equation*}
+
+
+\subsubsection{Host effect}
+
+\textbf{Host Effect} refers to the phenomenon where the host country or region performs more prominently in large-scale international events (such as the Olympic Games, the World Cup, etc.) due to its home field advantage. This phenomenon is usually reflected in a significant increase in the host country's medal count, competition results, or overall performance. Define Logical Variable $H(t,i)$ as equation (\ref{eq:H}),
+\begin{equation}
+H(t,i)=
+\begin{cases}
+1, \quad \text{Country } i \text{ is host in year } t, \\
+0, \quad \text{others}.
+\end{cases}
+\label{eq:H}
+\end{equation}
+where $t\in A_{T}$, $i\in A_{C}$.
+
+
+
+\subsubsection{Other indexes}
+
+
+
+
+\subsection{LSTM Model}
+
+
+
+
+
+
+
+\section{Model 2: Prediction of Maiden Medal for Medal-Less Countries}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Task 2: xxx}
 
