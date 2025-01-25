@@ -20,7 +20,7 @@ def save(total_medal, gold_medal):
     gold_medal = pd.Series(gold_medal, dtype='int64')
     data['TotalMedal'] = total_medal
     data['GoldMedal'] = gold_medal
-    data.to_csv('statics-1.csv', index=False)
+    data.to_csv('./full_features.csv', index=False)
     print("--- %s seconds ---" % (time.time() - start_time))
 
 for country in countries: 
