@@ -12,6 +12,7 @@
 \setlength{\cftbeforesecskip}{6pt}
 \renewcommand{\contentsname}{\hspace*{\fill}\Large\bfseries Contents \hspace*{\fill}}
 
+\usepackage{svg} % svg图片
 
 \usepackage{algorithm} % 伪代码
 \usepackage{algpseudocode}
@@ -350,6 +351,14 @@ where the formula calculates the dominant position of country $i$ in year  $t$  
 In sports events, there are often unexpected incidents such as injuries, which are full of uncertainties for Olympics. The Monte Carlo Dropout (MC Dropout) can quantify uncertainty of the model \cite{gal2016dropout}.
 
 The uncertainty is estimated by generating the distribution of predicted values through multiple random activation of the Dropout layer during the inference stage. By conducting multiple forward passes, the variance of the model's output is used to measure the confidence of the prediction.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{fig/LSTM-MCD}
+	\caption{Flow of LSTM based on Monte Carlo Dropout}
+	\label{fig:lstm-mcd}
+\end{figure}
+
 
 Assume $f(x;\theta)$ is the prediction model we build, $x$ is its input and $\theta$ is parameters. In the training stage, Dropout operates with a probability $p$
 randomly dropping neurons is equivalent to sampling from the posterior distribution $P(\theta|D)$ ($D$ are training data) of the parameters. In the inference stage, perform forward propagations $32$ times before each time, generating a mask $\{f(x;\theta,m_t)\}_{t=1}^{32}$ each time. Then, the calculation of the predicted mean and variance is as follows:
