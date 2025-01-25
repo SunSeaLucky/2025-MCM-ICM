@@ -1,69 +1,42 @@
 \documentclass{mcmthesis}
-\mcmsetup{
-	CTeX = false,       % Set to true if using CTeX package
-	tcn = {2504496},     % Team Control Number
-	problem = \textcolor{red}{A},  % Problem designation (red)
-	sheet = true,        % Display summary sheet
-	titleinsheet = true, % Include title in summary sheet
-	keywordsinsheet = true,  % Include keywords in summary sheet
-	titlepage = false,   % Do not show title page
-	abstract = false     % Do not include abstract
-}
+\mcmsetup{CTeX = false,    % 使用 CTeX 套装时，设置为 true
+	tcn = {2504496}, problem = \textcolor{red}{A},
+	sheet = true, titleinsheet = true, keywordsinsheet = true,
+	titlepage = false, abstract = false}
 
-% Use packages for font and layout
-\usepackage{newtxtext}   % Better text font
-\usepackage[style=apa, backend=biber]{biblatex}  % Bibliography style APA
+\usepackage{newtxtext}     % \usepackage{palatino}
+\usepackage[style=apa,backend=biber]{biblatex}
 \addbibresource{reference.bib}
 
-% Section formatting
 \usepackage{tocloft}
 \setlength{\cftbeforesecskip}{6pt}
 \renewcommand{\contentsname}{\hspace*{\fill}\Large\bfseries Contents \hspace*{\fill}}
 
-% Math formatting
-\usepackage{amsmath}
-\usepackage{amssymb}
-
-% Table and figure support
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{booktabs}
-\usepackage{longtable}
-\usepackage{array}
 
-% Algorithm and listings
-\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 
-% Header and footer formatting
+\usepackage[table]{xcolor} % 只加载一次
+\usepackage{array, booktabs, tabularx}
 \usepackage{fancyhdr}
-\setlength{\headheight}{13.6pt}  % Fix header warning
-\pagestyle{fancy}
-\fancyhf{}
-\lhead{\small\sffamily \team}
-\rhead{\small\sffamily Page \thepage\ of \pageref{LastPage}}
+\setlength{\headheight}{13.6pt} % 解决fancyhdr警告
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X} % 自适应列
 
-% Customize colors
+
+% 定义轻微的蓝色和灰色
 \definecolor{lightgray}{rgb}{0.9, 0.9, 0.9}
 \definecolor{lightblue}{rgb}{0.757, 0.989, 0.902}
 
-% Table formatting
-\setlength{\arrayrulewidth}{0.5mm}
-\setlength{\tabcolsep}{12pt}  % Adjust table column spacing
+\setlength{\arrayrulewidth}{0.5mm} % 横线加粗
+\setlength{\tabcolsep}{12pt} % 设置表格列间距
 
-% Path for figures
-\graphicspath{{./}{./img/}{./fig/}{./figure/}}
 
-% Customizing page size and margins
-\geometry{a4paper, margin=1in}
 
-% For clickable links (for PDF)
-\hypersetup{hidelinks}
-
-% Change figure and table names
-\renewcommand{\figurename}{Figure}
-\renewcommand{\tablename}{Table}
-
-% Title setup
 \title{Enjoy a Cozy and Green Bath}
+% \author{\small \href{http://www.latexstudio.net/}
+	%   {\includegraphics[width=7cm]{mcmthesis-logo}}}
 \date{\today}
 
 \begin{document}
@@ -378,49 +351,38 @@ where the closer the \textbf{HHI} is to 1, the more concentrated the distributio
 	
 \begin{algorithm}
 	\caption{LSTM Medal Prediction with Uncertainty Quantification}
-	\label{alg:lstm_mc}
-	\KwIn{Historical sequence $X = [H(t,i), S(t), R(t,i), HHI(t,i), \widetilde{MT}(t,i), N_{\text{athletes}}(t,i)]$}
-	\KwOut{Predicted medal counts $\hat{y}$ with 95\% confidence interval}
-	
-	\textbf{Initialize:}
-	\begin{vlined}
-		$\theta = \{W_f, W_i, W_o, W_c, b_f, b_i, b_o, b_c\}$ \\
-		Hidden state $h_0 \gets \mathbf{0}$, Cell state $c_0 \gets \mathbf{0}$ \\
-		Dropout rate $p=0.4$, Monte Carlo samples $M=100$
-	\end{vlined}
-	
-	\textbf{Forward Pass:} 
-	\For{$t = 1$ \textbf{to} $T$}{
-		$f_t = \sigma(W_f[h_{t-1},x_t] + b_f)$ \tcp{Forget gate}
-		$i_t = \sigma(W_i[h_{t-1},x_t] + b_i)$ \tcp{Input gate}
-		$\tilde{c}_t = \tanh(W_c[h_{t-1},x_t] + b_c)$ \tcp{Candidate state}
-		$c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t$ \tcp{Cell update}
-		$o_t = \sigma(W_o[h_{t-1},x_t] + b_o)$ \tcp{Output gate}
-		$h_t = o_t \odot \tanh(c_t)$ \tcp{Hidden state}
-	}
-	
-	\textbf{Monte Carlo Dropout:}
-	\For{$m = 1$ \textbf{to} $M$}{
-		Enable dropout masks $\xi^{(m)} \sim \text{Bernoulli}(p)$ \\
-		$\hat{y}^{(m)} \gets \text{LSTM}(X; \theta, \xi^{(m)})$ 
-	}
-	
-	\textbf{Uncertainty Estimation:}
-	\begin{vlined}
-		$\mu_y = \frac{1}{M}\sum_{m=1}^M \hat{y}^{(m)}$ \tcp{Prediction mean} \\
-		$\sigma_y = \sqrt{\frac{1}{M}\sum_{m=1}^M (\hat{y}^{(m)}-\mu_y)^2}$ \tcp{Standard deviation} \\
-		$\text{CI}_{95\%} = [\mu_y - 1.96\sigma_y, \mu_y + 1.96\sigma_y]$
-	\end{vlined}
-	
-	\textbf{Optimization:}
-	\begin{vlined}
-		Compute loss $\mathcal{L} = \frac{1}{N}\sum_{i=1}^N (\hat{y}_i - y_i^{\text{true}})^2$ \\
-		Backpropagate gradients $\nabla_\theta\mathcal{L}$ via BPTT \\
-		Update $\theta \gets \theta - \eta\nabla_\theta\mathcal{L}$ \tcp{$\eta$: learning rate}
-	\end{vlined}
-	
-	\KwRet{$\mu_y$, $\text{CI}_{95\%}$}
+	\begin{algorithmic}[1]
+		\State \textbf{Input:} Historical sequence \( X = [H(t,i), S(t), R(t,i), HHI(t,i), \widetilde{MT}(t,i), N_{\text{athletes}}(t,i)] \)
+		\State \textbf{Initialize:} Parameters \( \theta = \{W_f, W_i, W_o, W_c, b_f, b_i, b_o, b_c\} \)
+		\State Initialize hidden state \( h_0 \gets \mathbf{0} \), cell state \( c_0 \gets \mathbf{0} \)
+		\State Set dropout rate \( p = 0.4 \), Monte Carlo samples \( M = 100 \)
+		
+		\For{each \( t = 1 \) to \( T \)}
+		\State Compute forget gate \( f_t = \sigma(W_f[h_{t-1}, x_t] + b_f) \)
+		\State Compute input gate \( i_t = \sigma(W_i[h_{t-1}, x_t] + b_i) \)
+		\State Compute candidate state \( \tilde{c}_t = \tanh(W_c[h_{t-1}, x_t] + b_c) \)
+		\State Update cell state \( c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t \)
+		\State Compute output gate \( o_t = \sigma(W_o[h_{t-1}, x_t] + b_o) \)
+		\State Update hidden state \( h_t = o_t \odot \tanh(c_t) \)
+		\EndFor
+		
+		\For{each \( m = 1 \) to \( M \)}
+		\State Enable dropout masks \( \xi^{(m)} \sim \text{Bernoulli}(p) \)
+		\State Compute prediction \( \hat{y}^{(m)} \gets \text{LSTM}(X; \theta, \xi^{(m)}) \)
+		\EndFor
+		
+		\State Compute prediction mean \( \mu_y = \frac{1}{M}\sum_{m=1}^M \hat{y}^{(m)} \)
+		\State Compute standard deviation \( \sigma_y = \sqrt{\frac{1}{M}\sum_{m=1}^M (\hat{y}^{(m)} - \mu_y)^2} \)
+		\State Compute 95\% confidence interval \( \text{CI}_{95\%} = [\mu_y - 1.96\sigma_y, \mu_y + 1.96\sigma_y] \)
+		
+		\State Compute loss \( \mathcal{L} = \frac{1}{N}\sum_{i=1}^N (\hat{y}_i - y_i^{\text{true}})^2 \)
+		\State Backpropagate gradients \( \nabla_\theta \mathcal{L} \) via BPTT
+		\State Update parameters \( \theta \gets \theta - \eta \nabla_\theta \mathcal{L} \) \(\quad \text{(where \( \eta \) is the learning rate)}\)
+		
+		\State \textbf{Return:} \( \mu_y, \text{CI}_{95\%} \)
+	\end{algorithmic}
 \end{algorithm}
+
 
 % 修正后的表格
 \begin{table}[ht]

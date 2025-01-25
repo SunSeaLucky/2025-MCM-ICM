@@ -5,6 +5,8 @@ from preprocess.Preprocessor import Program
 from preprocess.Preprocessor import RawDataset
 import matplotlib.pyplot as plt
 import pandas as pd
+from scipy import stats
+import numpy as np
 
 class Statics:
     def __init__(self):
@@ -249,3 +251,48 @@ class Statics:
         返回排序后的所有国家缩写
         '''
         return sorted(list(set(self.athlete.csv_file['NOC'])))
+    
+    def query_country(self, country:str = 'USA'):
+        return self.get_all_countries().index(country)
+    
+    def query_idx(self, idx: int = 0):
+        return self.get_all_countries()[idx]
+    
+    def host_effect_check(self):
+        valid_years = self.get_valid_years()
+
+        mth = []
+        mt = []
+        d = []
+
+        for i in range(len(valid_years)-2):
+            y1 = valid_years[i]
+            y2 = valid_years[i+1]
+            y3 = valid_years[i+2]
+            
+            host = self.get_host(y2)
+            
+            a1 = self.get_total_medal(year=y1, country=host).shape[0]
+            a2 = self.get_total_medal(year=y2, country=host).shape[0]
+            a3 = self.get_total_medal(year=y3, country=host).shape[0]
+
+            mth.append( (a1+a3) / 2.0)
+            mt.append(a2)
+            d.append(abs(mth[len(mth)-1] - mt[len(mt)-1]))
+            
+        bar_d = np.mean(d)
+
+        len_d = len(d)
+
+        t = bar_d / (np.std(d) / np.sqrt(len_d))
+
+        alpha = 0.05  # 显著性水平
+
+        critical_value = stats.t.ppf(1 - alpha/2, len_d-1)
+
+        p_value = 2 * (1 - stats.t.cdf(abs(t), len_d-1))
+
+        print("t: %f" % t)
+        print("p-value: %f" % p_value)
+        print("critical value: %f" % critical_value)
+        print("假设检验结果：%s" % str(t >= critical_value))
