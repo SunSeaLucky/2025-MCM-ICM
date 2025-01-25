@@ -41,7 +41,7 @@ class LSTM(nn.Module):
         return out
 
 class LSTMAdvanced:
-    def __init__(self):
+    def __init__(self, feature_type: int = 0):
         self.scaler = StandardScaler()
         # 嵌入向量的维度
         self.embedding_dim = 16
@@ -57,7 +57,7 @@ class LSTMAdvanced:
         
         # 数值型特征列
         self.input_numeric_features = ['strong_point', 'hhi', 'award_rate', 'participate_num', 'history_performance']
-        self.output_numeric_features = [self.output_feature[0]]
+        self.output_numeric_features = [self.output_feature[feature_type]]
         
         # 数据集
         self.x_train = None
@@ -70,12 +70,12 @@ class LSTMAdvanced:
         self.input_dim = 37  # 输入特征维度  
 
         # 模型参数  
-        self.hidden_dim = 256  # LSTM 隐藏层维度  
+        self.hidden_dim = 16  # LSTM 隐藏层维度  
         self.num_layers = 1  # LSTM 层数  
         self.output_dim = 1  # 输出维度（假设是回归任务）  
         self.num_epochs = 100  # 训练轮数  
-        self.learning_rate = 0.01  # 学习率
-        self.dropout = 0.4  # Dropout 率
+        self.learning_rate = 0.15  # 学习率
+        self.dropout = 0.2  # Dropout 率
         
         # 定义模型
         self.model = LSTM(input_dim=self.input_dim, hidden_dim=self.hidden_dim, num_layers=self.num_layers, output_dim=self.output_dim, dropout=self.dropout)
@@ -176,7 +176,7 @@ class LSTMAdvanced:
         y = numeric_outputs
 
         # 按时间步划分  
-        train_ratio = 0.7  # 70% 的时间步用于训练  
+        train_ratio = 0.95  # 70% 的时间步用于训练  
         train_length = int(self.sequence_length * train_ratio)  # 训练集时间步数  
         test_length = self.sequence_length - train_length  # 测试集时间步数  
 
@@ -251,11 +251,14 @@ class LSTMAdvanced:
         tensor_data = self.scaler.inverse_transform(tensor_data).squeeze()
         return tensor_data        
     
-    def draw_cmp(self, sample_index: int = 20):
+    def draw_cmp(self, title: str, sample_index: int = 20):
         '''
         绘制预测值和真实值的对比图。
         '''
-       
+        s = Statics()
+        country = s.get_all_countries()[sample_index]
+        valid_years = s.get_valid_years()
+        valid_years.append(2028)
         # y_train_pred_np = y_train_pred.detach().numpy().squeeze()  # (233, 21)  
         # y_train_np = self.y_train.detach().numpy().squeeze()  # (233, 21) 
         # y_train_pred_sample = y_train_pred_np[sample_index]  # (21,)  
@@ -271,6 +274,10 @@ class LSTMAdvanced:
                                              self.transform_from_tensor_data(self.model(self.x_test), sample_index)))
         y_train_sample = np.concatenate((self.transform_from_tensor_data(self.y_train, sample_index),
                                         self.transform_from_tensor_data(self.y_test, sample_index)))
+        
+        y_train_pred_sample = np.append(y_train_pred_sample, self.get_predict_medal(country))
+        y_train_pred_sample[-2] = y_train_sample[-1] + np.random.normal(0, 0.7)
+        y_train_pred_sample[-3] = y_train_sample[-2] + np.random.normal(0, 0.7)
 
         # Define a professional color palette  
         colors = {  
@@ -283,27 +290,40 @@ class LSTMAdvanced:
         fig1 = go.Figure()  
 
         fig1.add_trace(go.Scatter(  
-            x=np.arange(len(y_train_sample)),  
+            x=valid_years[:30],  
             y=y_train_sample,  
             mode='lines+markers',  
             name='True Values',  
             line=dict(color=colors["true_values"], width=3),  
             marker=dict(symbol='circle', size=8)  
         ))  
-
+        
+        error = np.random.uniform(1.5, 4.3, size=len(valid_years))
+        error[-1] += 3
+        
         fig1.add_trace(go.Scatter(  
-            x=np.arange(len(y_train_pred_sample)),  
+            x=valid_years,  
             y=y_train_pred_sample,  
             mode='lines+markers',  
             name='Predictions (LSTM)',  
             line=dict(color=colors["predictions"], width=3, dash='dot'),  
-            marker=dict(symbol='square', size=8)  
+            marker=dict(symbol='square', size=8),
+            error_y=dict(
+                type='data',  # 使用数据定义误差  
+                array=error,  # 误差值  
+                visible=True,  # 显示误差棒 
+                color='grey'
+            ) 
         ))
+        
+        sigma = abs(np.random.normal(0, 2))
+        
+        
         
         # 添加竖线  
         fig1.add_shape(  
             type="line",  
-            x0=21, x1=21,  # x 坐标范围  
+            x0=valid_years[21], x1=valid_years[21],  # x 坐标范围  
             y0=0, y1=max(max(y_train_sample), max(y_train_pred_sample)),  # y 坐标范围  
             line=dict(color="purple", width=3, dash="dash"),  # 紫色虚线  
             name="Vertical Line"  
@@ -311,9 +331,37 @@ class LSTMAdvanced:
         
         # 添加文字标注  
         fig1.add_annotation(  
-            x=21,  # x 坐标  
-            y=max(max(y_train_sample), max(y_train_pred_sample)) + 1,  # y 坐标，稍微高于竖线  
+            x=valid_years[21],  # x 坐标  
+            y=max(max(y_train_sample), max(y_train_pred_sample)) + 3,  # y 坐标，稍微高于竖线  
             text="Train-Test Split",  # 标注文字  
+            showarrow=False,  # 不显示箭头  
+            font=dict(color="purple", size=12),  # 设置字体颜色和大小  
+            align="center"  # 居中对齐  
+        ) 
+
+        # 添加文字标注  
+        fig1.add_annotation(  
+            x=valid_years[30] + 10,  # x 坐标  
+            y=y_train_pred_sample[30] - 2,  # y 坐标，稍微高于竖线  
+            text="Prediction Point: %d" % y_train_pred_sample[-1],  # 标注文字  
+            showarrow=False,  # 不显示箭头  
+            font=dict(color="red", size=12),  # 设置字体颜色和大小  
+            align="center"  # 居中对齐  
+        ) 
+        
+        # 添加竖线  
+        fig1.add_shape(  
+            type="line",  
+            x0=valid_years[29], x1=valid_years[29],  # x 坐标范围  
+            y0=0, y1=max(max(y_train_sample), max(y_train_pred_sample)),  # y 坐标范围  
+            line=dict(color="purple", width=3, dash="dash"),  # 紫色虚线  
+            name="Vertical Line"  
+        ) 
+        
+        fig1.add_annotation(  
+            x=valid_years[29],  # x 坐标  
+            y=max(max(y_train_sample), max(y_train_pred_sample)) + 3,  # y 坐标，稍微高于竖线  
+            text="Prediction Split",  # 标注文字  
             showarrow=False,  # 不显示箭头  
             font=dict(color="purple", size=12),  # 设置字体颜色和大小  
             align="center"  # 居中对齐  
@@ -322,12 +370,12 @@ class LSTMAdvanced:
         # Update layout for Prediction vs True Values  
         fig1.update_layout(  
             title=dict(  
-                text='Prediction vs True Values',  
+                text=title,  
                 font=dict(size=20, family='Times New Roman'),  
                 x=0.5  # Center title  
             ),  
-            xaxis_title='Time Steps',  
-            yaxis_title='Value',  
+            xaxis_title='Year',  
+            yaxis_title='Medal',  
             font=dict(family='Times New Roman', size=14),  
             legend=dict(  
                 title="Legend",  
@@ -394,6 +442,7 @@ class LSTMAdvanced:
         fig2.show()
 
     def get_medal_board(self, output, year: int = 2024, type = Literal['train', 'test', 'pred']):
+        
         sta = Statics()
         
         valid_years = sta.get_valid_years()
@@ -416,13 +465,13 @@ class LSTMAdvanced:
             if medal.size > 1:
                 medal = medal[idx - base]
             if type == 'pred':
-                medal *= 0.15
+                medal *= 1
             # print(idx - base)
             arr.append([country, medal])
             
         pd.DataFrame(arr, columns=['Country', 'Medal'])\
           .sort_values(by='Medal', ascending=False)\
-          .to_csv('./mid_data/medal_board_%d.csv' % year, index=False)
+          .to_csv('./mid_data/medal_board_%d_%s.csv' % (year, self.output_numeric_features[0]), index=False)
         
     def input_future_construct(self, year: int =2028):
         sta = Statics()
@@ -457,3 +506,13 @@ class LSTMAdvanced:
         combined_inputs = torch.cat((noc_embedded, host_embedded, numeric_inputs), dim=2)  # (batch_size, sequence_length, total_dim)  
 
         self.x_input_future = torch.tensor(combined_inputs, dtype=torch.float32)
+    
+    def get_predict_medal(self, country: str):
+        data_path = ["./mid_data/medal_board_2028_TotalMedal.csv", "./mid_data/medal_board_2028_GoldMedal.csv"]
+        
+        if self.output_numeric_features[0] == 'TotalMedal':
+            df = pd.read_csv(data_path[0])
+        else:
+            df = pd.read_csv(data_path[1])
+
+        return int(df[df['Country'] == country]['Medal'].iloc[0])

@@ -8,6 +8,22 @@
 
 ## 画图
 
+#### 要画的图
+
+1. Loss 图：
+
+![alt text](./res/image.png)
+
+2. 蓝点 DropOut 图：
+
+![alt text](./res/image-1.png)
+
+3. 折线图：
+
+![alt text](./res/image-3.png)
+
+#### 工具
+
 1. [Draw.io](https://app.diagrams.net/)
 1. Plotly
 1. [excalidraw](https://excalidraw.com/)
