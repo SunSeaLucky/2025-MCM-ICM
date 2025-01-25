@@ -5,7 +5,7 @@
 	titlepage = false, abstract = false}
 
 \usepackage{newtxtext}     % \usepackage{palatino}
-\usepackage[style=apa,backend=biber]{biblatex}
+\usepackage[style=ieee,backend=biber]{biblatex}
 \addbibresource{reference.bib}
 
 \usepackage{tocloft}
@@ -16,7 +16,6 @@
 \usepackage{algpseudocode}
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{booktabs}
-
 
 \usepackage[table]{xcolor} % 只加载一次
 \usepackage{array, booktabs, tabularx}
@@ -160,32 +159,30 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%% 符号说明 %%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\section{List of Notations}
-	\begin{center}
-		\begin{tabular}{ll}
-			\toprule
-			{\bf Symbols} & {\bf Description}  \\
-			\midrule 
-			$A_{C},A_{T},A_{S},A_{H}(t)$ & Set of country, years, all sports and host country in year $t$.\\
-			$MG_{t,i,j,k}$ & Number of gold medals country $i$ won in sport $j$ at event $k$ in year t. \\
-			$MS_{t,i,j,k}$ & Number of silver medals country $i$ won in sport $j$ at event $k$ in year t. \\
-			$MB_{t,i,j,k}$ & Number of bronze medals country $i$ won in sport $j$ at event $k$ in year t. \\
-			$MT_{t,i,j}$ & Number of medals country $i$ won in sport $j$ in year $t$. \\
-			$MT_{t,i}$ & Number of total medals country $i$ won in year $t$. \\
-			$N_{athletes}(t,i)$ & Total number of athletes from country $i$ in year $t$. \\
-			$N_{award}(t,i)$ & Number of athletes who won medals from country $i$ in year $t$. \\
-			$H(t,i)$ & Host effect. \\
-			$G_{\text{growth}}(t,i)$ & Growth rate of the number of athletes from country $i$ in year $t$.\\
-			$P_{Medal}(t,i)$ & Probability of country $i$ winning a medal in year $t$.\\
-			$P_{Gold}(t,i)$ & The probability that country $i$ wins a gold medal in year $t$.\\
-			\bottomrule
-		\end{tabular}
-	\end{center}
-	
-	\noindent where we define the main parameters while specific value of those 
-	parameters will be found in the data-set attached.
-	
-	
+\section{List of Notations}
+\begin{center}
+	\begin{tabular}{ll}
+		\toprule
+		{\bf Symbols} & {\bf Description}  \\
+		\midrule 
+		$A_{C},A_{S}$ & Set of country, all sports in Olympic.\\
+		$A_{T}$ & $\{1,\dots,30\}$, representing the ordinal number of year Olympic held. \\
+		$A_{H}(t)$ & Set of host country in year $t$. \\
+		$MG_{t,i,j,k}$ & Number of gold medals country $i$ won in sport $j$ at event $k$ in year t. \\
+		$MS_{t,i,j,k}$ & Number of silver medals country $i$ won in sport $j$ at event $k$ in year t. \\
+		$MB_{t,i,j,k}$ & Number of bronze medals country $i$ won in sport $j$ at event $k$ in year t. \\
+		$MT_{t,i}$ & Number of total medals country $i$ won in year $t$. \\
+		$N_{athletes}(t,i)$ & Total number of athletes from country $i$ in year $t$. \\
+		$N_{award}(t,i)$ & Number of athletes who won medals from country $i$ in year $t$. \\
+		$H(t,i)$ & Host effect. \\
+		$G_{\text{growth}}(t,i)$ & Growth rate of the number of athletes from country $i$ in year $t$.\\
+		$P_{Medal}(t,i)$ & Probability of country $i$ winning a medal in year $t$.\\
+		$P_{Gold}(t,i)$ & Probability of country $i$ winning a gold medal in year $t$.\\
+		\bottomrule
+	\end{tabular}
+\end{center}
+
+\noindent Note: The Summer Olympics have been held for a total of 32 sessions.
 	
 	
 	
@@ -210,7 +207,6 @@
 	%\section{Descriptive statistical analysis}
 	
 	
-	统一国家标识
 	
 	
 	
@@ -240,7 +236,7 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 		MT^H_{t}=\frac{ MT_{t-1} + MT_{t+1} }{2}
 		\label{eq:H_t-test_MT_bar}
 	\end{equation}
-	where $t\in A_T^H = A_T \textbackslash \{1896,2024\}$, $i\in A_{C}$. 
+	where $t=2,3,\cdots,29$, $i\in A_{C}$. 
 	
 	The data set $\{MT_{t},MT^s_{t}\}$ then forms a paired sample with a size of 30. 
 	
@@ -251,10 +247,10 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 	
 	Select the t-test statistic as
 	\begin{equation}
-		T=\frac{ \bar{d} }{ s_d\slash \sqrt{30} } \sim (29)
+		T=\frac{ \bar{d} }{ s_d\slash \sqrt{28} } \sim (27)
 	\end{equation}
-	where $\bar{d}=\frac{1}{30} \sum_{t\in A_T^H} d_t$ is the mean of paired samples, 
-	and $ s_d = \frac{1}{29} \sum_{t\in A_T^H}\big( d_t - \bar{d} \big)^2 $ is the sample variance of the differences of paired data, 
+	where $\bar{d}=\frac{1}{28} \sum_{t=2}^{29} d_t$ is the mean of paired samples, 
+	and $ s_d = \frac{1}{27} \sum_{t=2}^{29}\big( d_t - \bar{d} \big)^2 $ is the sample variance of the differences of paired data, 
 	
 	For a given significance level $\alpha$, the rejection domain for the hypothesis test is
 	\begin{equation}
@@ -290,7 +286,7 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 	V(t) = \big( v_1(t), v_2(t), \dots, v_M(t) \big)^T,
 	\]
 	where: \( v_i(t) = 1 \) if event \( i \) is held in year \( t \),
-	\( v_i(t) = 0 \) if event \( i \) is not held in year \( t \). Here, \( M \) represents the total number of distinct Olympic events considered up to year \( t \) ($t\in\overline{1,32}$) and the elements of \( V(t) \) are binary values indicating the participation of each event in year \( t \).
+	\( v_i(t) = 0 \) if event \( i \) is not held in year \( t \). Here, \( M \) represents the total number of distinct Olympic events considered up to year \( t \) ($t=1,2,\cdots,30$) and the elements of \( V(t) \) are binary values indicating the participation of each event in year \( t \).
 	
 	
 	
@@ -307,28 +303,25 @@ Next, define \( I(t) = \big( I_1(t), I_2(t), \dots, I_M(t) \big)^T \) as the dom
 To get the modified dominance vector \( I'(t) \), we set the components corresponding to the three largest values of \( I(t) \) to 1, and all other components to 0:
 
 \[
-I'(t) = 
+\hat{I}(t) = 
 \begin{cases} 
 	1 & \text{if } j \in \text{Top3}(I(t)) \\
 	0 & \text{otherwise}
 \end{cases}
 \]
 
-\[I'(t) = \mathbf{1}_{\{ j \in \text{Top3}(I(t)) \}},\]
+\[\hat{I}(t) = \mathbf{1}_{\{ j \in \text{Top3}(I(t)) \}},\]
 where \( \text{Top3}(I(t)) \) refers to the indices corresponding to the three largest values in the vector \( I(t) \), and \( \mathbf{1} \) is the indicator function.
 
 	
-	\subsubsection{Strongpoints}
+	\subsubsection{Strong Events}
 	
-	Let \( I'(t) \) and \( V(t) \) be the dominance vector and the event vector for year \( t \), respectively. The number of strongpoints \( S(t) \) can be defined as:
-	
+	Let \( \hat{I}(t) \) and \( V(t) \) be the dominance vector and the event vector for year \( t \), respectively. The number of strongpoints \( S(t) \) can be defined as:
 	\[
-	S(t) = \sum_{i=1}^{M} \mathbf{1}_{\{ I_i(t) = 1 \text{ and } v_i(t) = 1 \}},
+	S(t) = \sum_{i=1}^{M} \mathbf{1}\{ \hat{I}_i(t) = 1 \text{ and } v_i(t) = 1 \},
 	\]
-	
-	where \( \mathbf{1}_{\{ \cdot \}} \) is the indicator function, which is 1 if the condition inside the curly brackets is true and 0 otherwise. 
-	
-	In this context, \( I_i(t) = 1 \) means that event \( i \) has a dominant position in year \( t \), and \( v_i(t) = 1 \) indicates that event \( i \) is held in year \( t \).
+	where \( \mathbf{1}\{ \cdot \} \) is the indicator function, which is 1 if the condition inside the curly brackets is true and 0 otherwise. 
+	In this context, \( \hat{I}_i(t) = 1 \) means that event \( i \) has a dominant position in year \( t \), and \( v_i(t) = 1 \) indicates that event \( i \) is held in year \( t \).
 	
 	
 	\subsubsection{Percentage of winners}
@@ -338,7 +331,7 @@ where \( \text{Top3}(I(t)) \) refers to the indices corresponding to the three l
 \[
 \text{HHI}(t,i) = \sum_{j=1}^{M} \left( \frac{MT_{t,i,j}(t)}{MT_{t,i}(t)} \right)^2
 \]
-where the closer the \textbf{HHI} is to 1, the more concentrated the distribution of medals is in a small number of sports, and the closer it is to 0, the more widely distributed the medals are.
+where the closer the \textbf{HHI}(Herfindahl-Hirschmann Index)\cite{HHI2016} is to 1, the more concentrated the distribution of medals is in a small number of sports, and the closer it is to 0, the more widely distributed the medals are.
 
 	\subsubsection{historical performance}
 	
@@ -348,7 +341,7 @@ where the closer the \textbf{HHI} is to 1, the more concentrated the distributio
 	
 	
 	\subsection{Prediction of Medal Count for Medal-Winning Countries Using LSTM}
-	
+	x x\cite{Gal2015DropoutAA}
 \begin{algorithm}
 	\caption{LSTM Medal Prediction with Uncertainty Quantification}
 	\begin{algorithmic}[1]
@@ -385,7 +378,7 @@ where the closer the \textbf{HHI} is to 1, the more concentrated the distributio
 
 
 % 修正后的表格
-\begin{table}[ht]
+\begin{table}[H]
 	\centering
 	\caption{LSTM Model Parameters Specification}
 	\label{tab:lstm_params}
@@ -416,7 +409,41 @@ where the closer the \textbf{HHI} is to 1, the more concentrated the distributio
 	\end{tabularx}
 \end{table}
 
-	
+
+
+
+
+
+\subsection{Uncertainty estimation Monte Carlo Dropout}
+
+%在体育赛事中，往往会有例如受伤等突发事件，充满了不确定性，Monte Carlo Dropout 可以为模型提供不确定性估计。
+
+In sports events, there are often unexpected incidents such as injuries, which are full of uncertainties for Olympics. The Monte Carlo Dropout (MC Dropout) can quantify uncertainty of the model \cite{gal2016dropout}.
+
+The uncertainty is estimated by generating the distribution of predicted values through multiple random activation of the Dropout layer during the inference stage. By conducting multiple forward passes, the variance of the model's output is used to measure the confidence of the prediction.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1\linewidth]{fig/LSTM-MCD.png}
+	\caption{Flow of LSTM based on Monte Carlo Dropout}
+	\label{fig:lstm-mcd}
+\end{figure}
+
+
+Assume $f(x;\theta)$ is the prediction model we build, $x$ is its input and $\theta$ is parameters. In the training stage, Dropout operates with a probability $p$
+randomly dropping neurons is equivalent to sampling from the posterior distribution $P(\theta|D)$ ($D$ are training data) of the parameters. In the inference stage, perform forward propagations $32$ times before each time, generating a mask $\{f(x;\theta,m_t)\}_{t=1}^{30}$ each time. Then, the calculation of the predicted mean and variance is as follows:
+\begin{align*}
+	\hat{y}&=\frac{1}{32} \sum_{t=1}^{32} f(x;\theta,m_t) \\
+	Var(y) &=\frac{1}{32} \sum_{t=1}^{32} \big( f((x;\theta,m_t)) - \hat{y} \big)^2
+\end{align*}
+where $Var(y)$ reflects the predictive uncertainty of the model for the input $x$.
+
+The results is shown as Figure \ref{}.
+
+
+
+
+
 	
 	\section{Task 2}
 	
@@ -458,7 +485,7 @@ where the closer the \textbf{HHI} is to 1, the more concentrated the distributio
 		\end{algorithmic}
 	\end{algorithm}
 	
-	where \( N_{\text{new}}(t,i) \) represents the number of new events that country \( i \) participated in during year \( t \), and \( P_{\text{new}}(t,i) \) indicates the quantity of new events in which country \(i\) participated during year， We define \( \tilde{N}_{\text{new}} = \min(N_{\text{new}}[t][i], P_{\text{new}}[t][i]) \).
+	where \( N_{\text{new}}(t,i) \) represents the number of new events that country \( i \) participated in during year \( t \), and \( P_{\text{new}}(t,i) \) indicates the quantity of new events in which country \(i\) participated during year. We define \( \tilde{N}_{\text{new}} = \min(N_{\text{new}}[t][i], P_{\text{new}}[t][i]) \).
 	
 	
 	
@@ -484,7 +511,7 @@ where \( T \) is the number of trees in the forest, \( f_t(\cdot) \) is the deci
 If country \( i \) has never won a medal (i.e., no historical medals), we use the RF classifier to calculate the probability of winning a medal. If the probability exceeds a certain threshold, we predict that the country may win a medal in the future, especially a first-time medal:
 
 \[
-P_{\text{first medal}}(t,i) = P(\text{Medal}(t,i)) > \text{Threshold}
+P_{Medal}(t,i) > \text{Threshold}
 \]
 
 where the threshold is determined based on the results of model evaluation.
@@ -503,9 +530,9 @@ where the threshold is determined based on the results of model evaluation.
 		\State Update prediction sum: \( P_{\text{sum}} = P_{\text{sum}} + p_t \)
 		\EndFor
 		
-		\State Calculate average prediction: \( P(\text{Medal}(t,i)) = \frac{P_{\text{sum}}}{T} \)
+		\State Calculate average prediction: \( P_{Medal}(t,i)  = \frac{P_{\text{sum}}}{T} \)
 		
-		\If { \( P(\text{Medal}(t,i)) > \text{Threshold} \) }
+		\If { \( P_{Medal}(t,i) > \text{Threshold} \) }
 		\State \textbf{Return} 1 \text{ (Predicted to win first medal)}
 		\Else
 		\State \textbf{Return} 0 \text{ (Predicted not to win first medal)}
@@ -581,7 +608,6 @@ where the threshold is determined based on the results of model evaluation.
 	%%%%%%%%%%%%%%%%% 文献条目 %%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\newpage
-	\section*{Reference} % 无编号标题
 	\addcontentsline{toc}{section}{References} % 手动添加到目录
 	\printbibliography
 	
