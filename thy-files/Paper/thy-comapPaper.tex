@@ -444,7 +444,7 @@ Next, the LSTM algorithm processes these inputs to capture the complex dynamics 
 \end{algorithm}
 
 % 修正后的表格
-Key parameter configurations (Table \ref{tab:lstm_params}) were determined through temporal cross-validation:
+Key parameter configurations shown in Table \ref{tab:lstm_params} were determined through temporal cross-validation:
 \begin{table}[H]
 	\centering
 	\caption{LSTM Model Parameters Specification}
@@ -480,46 +480,53 @@ Key parameter configurations (Table \ref{tab:lstm_params}) were determined throu
 % China and USA prediction visualization
 \begin{figure}[H]
 	\centering
-	\begin{subfigure}[b]{0.48\textwidth}
-		\includegraphics[width=\textwidth]{fig/CHN_gold.png}
-		\caption{China Gold Medal Prediction Interval}
-		\label{fig:chn_gold1}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.48\textwidth}
-		\includegraphics[width=\textwidth]{fig/CHN_total.png}
-		\caption{China Total Medal Prediction Interval}
-		\label{fig:chn_total1}
-	\end{subfigure}
-	
-	\begin{subfigure}[b]{0.48\textwidth}
-		\includegraphics[width=\textwidth]{fig/USA_gold.png}
+		\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{fig/USA Gold Metal Prediction vs. True Values.png}
 		\caption{USA Gold Medal Prediction Interval}
 		\label{fig:usa_gold1}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.48\textwidth}
-		\includegraphics[width=\textwidth]{fig/USA_total.png}
+		\includegraphics[width=\textwidth]{fig/USA Total Metal Prediction vs. True Values.png}
 		\caption{USA Total Medal Prediction Interval}
 		\label{fig:usa_total1}
 	\end{subfigure}
-	\caption{Medal Predictions for China and USA in 2028}
 	\label{fig:chn_usa_pred1}
-	\label{all}
+
+	
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{fig/CHN Gold Metal Prediction vs. True Values.png}
+		\caption{China Gold Medal Prediction Interval}
+		\label{fig:chn_gold1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{fig/CHN Total Metal Prediction vs. True Values.png}
+		\caption{China Total Medal Prediction Interval}
+		\label{fig:chn_total1}
+	\end{subfigure}
+		
+		\caption{Medal Predictions for China and USA in 2028}
+\label{all}
 \end{figure}
 %%模型评估
-\textbf{Prediction Results for China’s Medal Count}
+Due to space constraints, we will only show the forecasts for the U.S. and China here.
 
-Figure \ref{all} (a) shows China's gold medal count rising steadily since 1980, with LSTM projections reaching 47 by 2028. The model demonstrates strong generalization (5\% deviation in 2010–2020) and robust temporal pattern recognition. Total medals (Fig. \ref{all} (b)) are forecast to surpass 96 by 2028 (5.4\% CAGR), supported by high historical fit ($R^2=0.93$ for 1960–2000) and consistent post-2000 trajectory alignment.
 
-\textbf{Prediction Results for the United States’ Medal Count}
+\textbf{Predicted Results of the United States’ Medal Count}
 
-The U.S. gold medal forecast (Fig. \ref{all} (c)) projects 44 medals by 2028 (10\% CAGR), reflecting stable growth in professional sports ecosystems. Total medals (Fig. \ref{all} (d)) are predicted to hit a record 128 by 2028, with precise training-phase calibration (MAE=3.2) and test-phase sensitivity to global competition dynamics (MAE=7.8 post-2000). Prediction splits post-2020 show high temporal coherence (Pearson $r=0.89$), confirming adaptive event modeling capabilities.
+The U.S. gold medal forecast shown in Fig. \ref{all} (c) projects 44 medals by 2028 (10\% CAGR), reflecting stable growth in professional sports ecosystems. Total medals shown in Fig. \ref{all} (d) are predicted to hit a record 128 by 2028, with precise training-phase calibration (MAE=3.2) and test-phase sensitivity to global competition dynamics (MAE=7.8 post-2000). Prediction splits post-2020 show high temporal coherence (Pearson $r=0.89$), confirming adaptive event modeling capabilities.
+
+
+\textbf{Predicted Results of China’s Medal Count}
+
+Figure \ref{all} (a) shows China's gold medal count rising steadily since 1980, with LSTM projections reaching 47 by 2028. The model demonstrates strong generalization (5\% deviation in 2010–2020) and robust temporal pattern recognition. Total medals shown in Figure. \ref{all} (b) are forecast to surpass 96 by 2028 (5.4\% CAGR), supported by high historical fit ($R^2=0.93$ for 1960–2000) and consistent post-2000 trajectory alignment.
+
 
 \subsection{Uncertainty Quantification Modeling with Monte Carlo Dropout}
 %\label{subsec:uncertainty}
 
-In sports events, there are often unexpected incidents such as injuries, which are full of uncertainties for Olympics. The Monte Carlo Dropout (MC Dropout) can quantify uncertainty of the model \cite{gal2016dropout}.
+In sports, there are often unexpected incidents such as injuries, which are full of uncertainties for Olympics. The Monte Carlo Dropout (MC Dropout) can quantify uncertainty of the model \cite{gal2016dropout}.
 
 The uncertainty is estimated by generating the distribution of predicted values through multiple random activation of the Dropout layer during the inference stage. By conducting multiple forward passes, the variance of the model's output is used to measure the confidence of the prediction.
 
@@ -530,8 +537,8 @@ To address temporal dependencies and uncertainty in Olympic medal predictions, w
 	\caption{Flow of LSTM based on Monte Carlo Dropout}
 	\label{fig:LSTM-MCD}
 \end{figure}
-  Assume $f(x;\theta)$ is the prediction model we build, $x$ is its input and $\theta$ is parameters. In the training stage, Dropout operates with a probability $p$
-randomly dropping neurons is equivalent to sampling from the posterior distribution $P(\theta|D)$ ($D$ are training data) of the parameters. In the inference stage, perform forward propagations $30$ times before each time, generating a mask $\{f(x;\theta,m_t)\}_{t=1}^{30}$ each time. Then, the calculation of the predicted mean and variance is as follows:
+  Assume $f(X;\theta)$ is the prediction model we build, $X$ is its input and $\theta$ is parameters. In the training stage, Dropout operates with a probability $p$
+randomly dropping neurons is equivalent to sampling from the posterior distribution $P(\theta|D)$ ($D$ are training data) of the parameters. In the inference stage, perform forward propagations $30$ times before each time, generating a mask $\{f(X;\theta,m_t)\}_{t=1}^{30}$ each time. Then, the calculation of the predicted mean and variance is as follows:
 \begin{algorithm}
 	\caption{Monte Carlo Dropout Uncertainty Quantification}
 	\begin{algorithmic}[1]
@@ -620,7 +627,7 @@ randomly dropping neurons is equivalent to sampling from the posterior distribut
 %		MC iterations = 100 \; | \; Dropout rate = 0.4 \; | \; Confidence level = 90\%
 %	\end{tcolorbox}
 %\end{stepenv}
-We have empirically validated the selection of key implementation parameters for Monte Carlo Dropout, as shown in the table \ref{tab:mc_params}
+We have empirically validated the selection of key implementation parameters for Monte Carlo Dropout, as shown in the table \ref{tab:mc_params}.
 \begin{table}[H]
 	\centering
 	\caption{Monte Carlo Dropout Implementation Parameters}
@@ -652,45 +659,47 @@ We have empirically validated the selection of key implementation parameters for
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.48\textwidth}
-		\includegraphics[width=\textwidth]{fig/CHN_gold_bar.png}
-		\caption{China Gold Medal Prediction Interval}
-		\label{fig:chn_gold}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.48\textwidth}
-		\includegraphics[width=\textwidth]{fig/CHN_total_bar.png}
-		\caption{China Total Medal Prediction Interval}
-		\label{fig:chn_total}
-	\end{subfigure}
-	
-	\begin{subfigure}[b]{0.48\textwidth}
-		\includegraphics[width=\textwidth]{fig/USA_gold_bar.png}
+		\includegraphics[width=\textwidth]{fig/USA Gold Metal Prediction vs. True Values (Bar).png}
 		\caption{USA Gold Medal Prediction Interval}
 		\label{fig:usa_gold}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.48\textwidth}
-		\includegraphics[width=\textwidth]{fig/USA_total_bar.png}
+		\includegraphics[width=\textwidth]{fig/USA Total Metal Prediction vs. True Values (Bar).png}
 		\caption{USA Total Medal Prediction Interval}
 		\label{fig:usa_total}
 	\end{subfigure}
 	\caption{Medal Range Projections for China and USA in 2028}
 	\label{fig:chn_usa_pred}
+		\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{fig/CHN Gold Metal Prediction vs. True Values (Bar).png}
+		\caption{China Gold Medal Prediction Interval}
+		\label{fig:chn_gold}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.48\textwidth}
+		\includegraphics[width=\textwidth]{fig/CHN Total Metal Prediction vs. True Values (Bar).png}
+		\caption{China Total Medal Prediction Interval}
+		\label{fig:chn_total}
+	\end{subfigure}
+	
 \end{figure}
 \subsubsection{Results Showcase}
 The table below shows the total number of medals and gold medals for the predicted top 15 countries with the corresponding prediction intervals.
+
 \begin{table}[H]
 	\centering
 	\caption{2028 LA Olympics Top 15 Medal and Gold Medal Ranking}
 	\label{tab:combined_medals}
+	\renewcommand{\arraystretch}{1.2}
 	\begin{tabularx}{\textwidth}{l|ccc|ccc}
 		\toprule
 		\rowcolor{red!10}
 		\textbf{Country} & \textbf{Total Medal} & \textbf{Lower} & \textbf{Upper} & \textbf{Gold Medal} & \textbf{Lower} & \textbf{Upper} \\
 		\midrule
 		\rowcolor{gray!10}
-		USA & 128 & 135.0 & 124.0 & 44 & 45.3 & 50.4 \\
-		CHN & 96 & 108.1 & 103.1 & 47 & 45.3 & 42.4 \\
+		USA & 128 & 124.0 & 135.0 & 44 & 45.3 & 50.4 \\
+		CHN & 95& 103.1 & 108.1 & 42 & 40.4 & 44.2 \\
 		\rowcolor{gray!10}
 		GBR & 71 & 67.5 & 72.5 & 37 & 35.1 & 40.2 \\
 		GER & 54 & 50.8 & 55.8 & 24 & 22.2 & 27.3 \\
@@ -713,10 +722,41 @@ The table below shows the total number of medals and gold medals for the predict
 	\end{tabularx}
 \end{table}
 
+Below are the countries that improved their performance at the 2028 Olympic Games in Los Angeles compared to 2024：
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{gold_medal_more_cmp.png}
+		\caption{Gold Medal Comparison: 2028 vs 2024}
+		\label{fig:gold_medal}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{total_medal_more_cmp.png}
+		\caption{Total Medal Comparison: 2028 vs 2024}
+		\label{fig:total_medal}
+	\end{subfigure}
+	\caption{Top five countries with improved performance}
+	\label{fig:medal_comparison}
+\end{figure}
 
-
-
-
+Below is a chart of the countries that will see a decrease in performance at the 2028 Olympic Games in Los Angeles compared to 2024:
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{gold_medal_less_cmp.png}
+		\caption{Gold Medal Comparison: 2028 vs 2024}
+		\label{fig:gold_medal1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{total_medal_less_cmp.png}
+		\caption{Total Medal Comparison: 2028 vs 2024}
+		\label{fig:total_medal1}
+	\end{subfigure}
+	\caption{Top five countries with lower achievement}
+	\label{fig:medal_comparison1}
+\end{figure}
 \subsubsection{Modelling Assessment}
 
 % Model Performance Table
@@ -791,99 +831,89 @@ The table below shows the total number of medals and gold medals for the predict
 %\end{figure}
 
 
-	
-	\section{Task 2}
-	
-	
-	\subsection{Problem Overview}
-	The objective of this model is to predict whether countries that have never won a medal in the past (i.e., "first-time winning countries") will be able to win a medal in future Olympic Games. For these countries, traditional medal prediction models (which usually rely on historical medal data) may not effectively predict their future performance. Therefore, we need to consider other potential factors, such as the host country effect, athlete participation growth, and the addition of new events.
-	
-	
-	\subsection{Index Analysis}
-	
-	
-	\subsubsection{Target variable}
-	\[
-	y(t,i) = 
-	\begin{cases} 
-		1 & \text{if country } i \text{ wins a medal in year } t \\ 
-		0 & \text{if country } i \text{ does not win a medal in year } t 
-	\end{cases}
-	\]
-	\subsubsection{Athlete growth rate}
-	The growth rate of athletes from country $i$ in year $t$, calculated by the following formula:
-	\[
-	G_{\text{growth}}(t,i) = \frac{N_{\text{participate}}(t,i) - N_{\text{participate}}(t-1,i)}{N_{\text{participate}}(t-1,i)}
-	\]
-	where $N_{\text{participate}}(t,i)$ is the number of athletes from country $i$ in year $t$.
-	
-	
-	\subsubsection{Participation in new events compared to previous years} 
-	\begin{algorithm}[]
-		\caption{Participation in new events compared to previous years}
-		\begin{algorithmic}[1]
-			\State \textbf{Input:} Year \( t \), Country \( i \), Matrices \( N_{\text{new}} \), \( P_{\text{new}} \)
-			\For {each \( k \in \{t-2, t-1, t\} \)}
-			\If {$N_{\text{new}}[k][i] > 0$ \textbf{and} $P_{\text{new}}[t][i] > 0$}
-			\State \textbf{Return} $\min(N_{\text{new}}[t][i], P_{\text{new}}[t][i])$
-			\EndIf
-			\EndFor
-			\State \textbf{Return} 0
-		\end{algorithmic}
-	\end{algorithm}
-	
-	where \( N_{\text{new}}(t,i) \) represents the number of new events that country \( i \) participated in during year \( t \), and \( P_{\text{new}}(t,i) \) indicates the quantity of new events in which country \(i\) participated during year. We define \( \tilde{N}_{\text{new}} = \min(N_{\text{new}}[t][i], P_{\text{new}}[t][i]) \).
-	
-	
-	
-	
-	
+\section{Task 2}
 
-\subsection{Prediction model:}  
-We use a Random Forest (RF) classifier to predict whether first-time winning countries will win medals. The model’s input is the feature vector of the country \( X(t,i) \):
+\subsection{Problem Overview}
+The objective of this model is to predict whether countries that have never won a medal in the past (i.e., "first-time winning countries") will be able to win a medal in future Olympic Games. Traditional medal prediction models, which usually rely on historical medal data, may not effectively predict the future performance of these countries. Therefore, additional factors, such as the host country effect, athlete participation growth, and the addition of new events, need to be considered.
 
+\subsection{Index Analysis}
+
+\subsubsection{Target Variable}
+The target variable remains defined as:
 \[
-X(t,i) = [G_{\text{growth}}(t,i), H(t,i), \tilde{N}_{\text{new}}(t,i)]
+y(t,i) = 
+\begin{cases} 
+	1 & \text{if country } i \text{ wins a medal in year } t \\ 
+	0 & \text{otherwise}
+\end{cases}
 \]
 
-The RF classifier consists of multiple decision trees, where each tree makes a prediction, and the final prediction is determined by majority voting from all the trees:
 
+\subsubsection{Participants Growth Rate (PGR)}
+Defining \(\Delta N(k,i) \equiv N_{\text{athletes}}(k-1,i) - N_{\text{athletes}}(k,i)\), the growth rate becomes:
 \[
-P(\text{Medal}(t,i)) = \frac{1}{T} \sum_{t=1}^{T} f_t(X(t,i), \theta_t)
+\text{PGR}(t,i) = \frac{1}{2} \left[ \max(0,\Delta N(t-1,i)) + \max(0,\Delta N(t-2,i)) \right]
+\]
+where \(k\) denotes year index. Negative growth values are automatically clipped by the \(\max(0,\cdot)\) operator.
+
+\subsubsection{New Project Index (NPI)}
+Counts newly introduced Olympic projects in recent editions:
+\[
+\text{NPI}(t,i) = \sum_{k=t-3}^{t-1} \mathbf{1}\left( P(k,i) \cap \neg P(t-4, i) \right)
+\]
+where \( P(k, i) \) represents the set of projects in edition \( k \) for country \( i \), the indicator function \( \mathbf{1}(\cdot) \) takes the value 1 when the condition inside is true, and 0 otherwise, the operator \(\neg\) represents the negation.
+
+\subsubsection{Unpopular Project Participation Growth Rate (LPIR)}
+Defining \(\Delta N(k,i) \equiv N_{\text{unpopular}}(k,i) - N_{\text{unpopular}}(k-1,i)\), the growth rate becomes:
+\[
+\text{LPIR}(t,i) = \frac{1}{2} \left[ \max(0, \Delta N(t-1,i)) + \max(0, \Delta N(t-2,i)) \right]
 \]
 
-where \( T \) is the number of trees in the forest, \( f_t(\cdot) \) is the decision function of the \( t \)-th tree, and \( \theta_t \) is the parameter learned during training for the \( t \)-th tree.
 
-\textbf{Prediction of first-time medal probability:}  
-If country \( i \) has never won a medal (i.e., no historical medals), we use the RF classifier to calculate the probability of winning a medal. If the probability exceeds a certain threshold, we predict that the country may win a medal in the future, especially a first-time medal:
+\subsection{Prediction Model}
+
+We utilize an XGBoost classifier to predict the probability of first-time medal wins for countries. The model’s input is the feature vector for country \( i \) at time \( t \), denoted as \( X(t,i) \):
 
 \[
-P_{Medal}(t,i) > \text{Threshold}
+X(t,i) = [PGR(t,i), NPI(t,i), LPIR(t,i)]
 \]
 
-where the threshold is determined based on the results of model evaluation.
-\begin{algorithm}
-	\caption{Prediction with Random Forest for First-Time Medal}
+The XGBoost classifier is an ensemble method based on decision trees, where each tree contributes to the final prediction. The final prediction is the weighted sum of the outputs from all trees in the model:
+
+\[
+P(\text{Medal}(t,i)) = \sum_{k=1}^{K} \alpha_k \cdot f_k(X(t,i))
+\]
+
+where \( K \) is the number of trees, \( \alpha_k \) is the weight of the \( k \)-th tree, and \( f_k(\cdot) \) is the decision function of the \( k \)-th tree.
+
+
+For countries that have not previously won any medals, the XGBoost classifier calculates the probability of winning a medal in the next Olympic Games. If the predicted probability exceeds a predefined threshold, the model predicts that the country has the potential to win a first medal:
+
+\[
+P_{\text{Medal}}(t,i) > \text{Threshold}
+\]
+
+The specific algorithm flow is shown below.
+\begin{algorithm}[H]
+	\caption{XGBoost for Breakthrough Prediction}
+	\label{alg:xgboost_short}
 	\begin{algorithmic}[1]
-		\State \textbf{Input:} Year \( t \), Country \( i \), Matrices \( \tilde{N}_{\text{new}} \), \( P_{\text{new}} \), Feature vector \( X(t,i) \), RF with \( T \) trees.
-		\State \textbf{Output:} First-time medal prediction probability \( P_{\text{first medal}}(t,i) \)
+		\Require 
+		$X$: Feature matrix (PGR, NPI, LPIR) \\
+		$y$: Binary target vector \\
+		$\mathit{test\_ratio} \in (0,1)$
 		
-		\State Calculate feature vector \( X(t,i) = [G_{\text{growth}}(t,i), H(t,i), N_{\text{new}}(t,i)] \)
+		\Procedure{Model Pipeline}{}
+		\State $(X_{\mathit{tr}}, X_{\mathit{te}}, y_{\mathit{tr}}, y_{\mathit{te}}) \gets \texttt{split}(X, y, \mathit{test\_ratio})$
+		\State $\mathit{model} \gets \texttt{XGBClassifier}(n\_est=100, \eta=0.1, d_{max}=3)$
+		\State $\mathit{model}.\texttt{fit}(X_{\mathit{tr}}, y_{\mathit{tr}})$
 		
-		\State Initialize prediction sum: \( P_{\text{sum}} = 0 \)
+		\State $\hat{y} \gets \mathit{model}.\texttt{predict}(X_{\mathit{te}})$
+		\State $p_{\mathit{prob}} \gets \mathit{model}.\texttt{predict\_proba}(X_{\mathit{te}})$
 		
-		\For {each tree \( t \in \{1, \dots, T\} \)}
-		\State Get prediction from tree \( t \): \( p_t = f_t(X(t,i), \theta_t) \)
-		\State Update prediction sum: \( P_{\text{sum}} = P_{\text{sum}} + p_t \)
-		\EndFor
-		
-		\State Calculate average prediction: \( P_{Medal}(t,i)  = \frac{P_{\text{sum}}}{T} \)
-		
-		\If { \( P_{Medal}(t,i) > \text{Threshold} \) }
-		\State \textbf{Return} 1 \text{ (Predicted to win first medal)}
-		\Else
-		\State \textbf{Return} 0 \text{ (Predicted not to win first medal)}
-		\EndIf
+		\State Evaluate: $\mathit{Acc} \gets \frac{\mathit{TP+TN}}{n}$, $\mathit{AUC} \gets \int \mathit{ROC}$
+		\State Plot: ROC curve, Confusion Matrix, Feature Importance
+		\EndProcedure
 	\end{algorithmic}
 \end{algorithm}
 
@@ -904,10 +934,9 @@ where the threshold is determined based on the results of model evaluation.
 	
 	
 	
-	
 
 	
-	\section{Task 3: xxx}
+	\section{Task 3:}
 	
 	
 	\section{Task 4: xxx}
