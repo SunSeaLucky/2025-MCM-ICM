@@ -589,7 +589,7 @@ Y_{i,t}=\alpha+\delta_t+\gamma \cdot Treat_i \cdot Post_t + \varepsilon_{i,t},
 \end{equation}
 where \( Y_{i,t} \) represents team \( i \)'s performance at time \( t \) (e.g., medal count). The model includes a constant term \(\alpha\), time fixed effects \(\delta_t\) for common influences (e.g., 1980s gymnastics improvements), and an interaction term \( Treat_i \cdot Post_t \) to capture \textbf{Béla Károlyi}'s impact as coach on the U.S. team. The coefficient \(\gamma\) measures the "great coach effect," and \(\varepsilon_{i,t}\) is the error term.
 
-By using $SPSS$, we obtained the estimated value of the regression coefficient $\hat{\gamma}=2.1572$. To test the significance of $\gamma$, assume that
+By using $Least$ $Squares$ $Method$ in $Python$, we obtained the estimated value of the regression coefficient $\hat{\gamma}=4.1572$. To test the significance of $\gamma$, assume that
 \begin{equation*}
 H_0: \gamma=0 \quad vs \quad H_1: \gamma>0
 \end{equation*}
@@ -603,7 +603,7 @@ where $\text{SE}(\hat{\gamma}) = \sqrt{ \frac{1}{N} \sum_{i=1}^{N} \hat{\varepsi
 	W_\alpha = \big\{ |T| \ge t_{1-\frac{\alpha}{2}}(30-4) \big\}
 \end{equation}
 
-The test results of regression coefficients were obtained and are summarized in Table \ref{table:great-coach-effect_t-test}. The sample falls within the rejection region $W_{0.975}$, so it can be concluded that the regression coefficient $\gamma$ is significant, e.i. the impact of great coach Béla Károlyi for the USA gymnastics team is significant.
+The test results of regression coefficients were obtained and are summarized in Table \ref{table:great-coach-effect_t-test}. The sample falls within the rejection region $W_{0.975}$, so it can be concluded that the regression coefficient $\gamma$ is significant, e.i. the impact of great coach Béla Károlyi for the USA gymnastics team is significant. On average, a great coach can increase the number of medals by 4 for the US gymnastics.
 \begin{table}[H]
 	\centering
 	\caption{Transposed Presentation of t-Test Results}
@@ -622,8 +622,7 @@ The test results of regression coefficients were obtained and are summarized in 
 
 
 
-\subsection{}
-
+\subsection{Selection of Investment Sports}
 
 
 
