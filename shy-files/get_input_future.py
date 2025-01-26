@@ -20,8 +20,8 @@ for country in countries:
     arr.append(len(set(self.get_participates(year=year, country=country)['Name'])))
     arr.append(self.get_history_performance(year=year, country=country))
     # 强制赋值为 2024 年
-    arr.append(len(set(self.get_participates(year=2024, country=country)['Name'])))
-    arr.append(self.get_history_performance(year=2024, country=country))
+    arr.append(self.get_total_medal(year=2024, country=country).shape[0])
+    arr.append(self.get_gold_medal(year=2024, country=country).shape[0])
     arr_dataset.append(arr)
 
 res = pd.DataFrame(arr_dataset, 
