@@ -257,6 +257,108 @@ class Statics:
     
     def query_idx(self, idx: int = 0):
         return self.get_all_countries()[idx]
+
+    def get_country_never_awarded(self, year: int = 2024):
+        '''
+        计算 `year` 及之前，从未拿奖的国家，并升序输出。
+        
+        输出的国家包括未参赛的国家。
+        '''
+        all_countries = set(self.get_all_countries())
+        
+        df = self.athlete.csv_file
+        df = df[ (df['Medal']!='No medal') & (df['Year'] <= year) ]
+        
+        awarded_countries = set(df['NOC'])
+        return sorted(list(all_countries - awarded_countries))
+    
+    def get_country_awarded_by_year(self, year: int = 2024):
+        '''
+        计算 `year` 年拿奖的国家，升序输出。
+        '''
+        df = self.athlete.csv_file
+        df = df[ (df['Medal']!='No medal') & (df['Year'] == year) ]
+        return sorted(list(set(df['NOC'])))
+    
+    def get_valid_zero_one_countries(self, year):
+        valid_years = self.get_valid_years()
+        
+        assert year >= valid_years[3], f"Invalid year {year}."
+
+        award_countries = self.get_country_awarded_by_year(year=year)
+        never_awarded_countries_by_year = self.get_country_never_awarded(year=valid_years[valid_years.index(year)-1])
+        zero_one_countries = set(award_countries) & set(never_awarded_countries_by_year)
+
+        df = self.athlete.csv_file
+
+        year_ip1_countries = df[df['Year'] == valid_years[valid_years.index(year)-1] ]['NOC'].unique()
+        year_ip2_countries = df[df['Year'] == valid_years[valid_years.index(year)-2] ]['NOC'].unique()
+        year_ip3_countries = df[df['Year'] == valid_years[valid_years.index(year)-3] ]['NOC'].unique()
+
+        to_remove = set()
+        for i in zero_one_countries:
+            if i in year_ip1_countries and i in year_ip2_countries and i in year_ip3_countries:
+                continue
+            else:
+                to_remove.add(i)            
+        return zero_one_countries - to_remove
+    
+    def get_valid_zero_zero_countries(self, year):
+        valid_years = self.get_valid_years()
+        
+        assert year >= valid_years[3], f"Invalid year {year}."
+
+        # award_countries = s.get_country_awarded_by_year(year=year)
+        never_awarded_countries_by_year = set()
+        # zero_one_countries = set(award_countries) & set(never_awarded_countries_by_year)
+
+        df = s.athlete.csv_file
+
+        year_ip1_countries = df[df['Year'] == valid_years[valid_years.index(year)-1] ]['NOC'].unique()
+        year_ip2_countries = df[df['Year'] == valid_years[valid_years.index(year)-2] ]['NOC'].unique()
+        year_ip3_countries = df[df['Year'] == valid_years[valid_years.index(year)-3] ]['NOC'].unique()
+
+        to_remove = set()
+        for i in never_awarded_countries_by_year:
+            if i in year_ip1_countries and i in year_ip2_countries and i in year_ip3_countries:
+                continue
+            else:
+                to_remove.add(i)            
+        return never_awarded_countries_by_year - to_remove
+    
+    def get_zero_one_idx(self, year, country):
+        df = self.athlete.csv_file
+        valid_years = self.get_valid_years()
+
+        sport = df.groupby(['Sport'])\
+                    .size()\
+                    .reset_index(name='Participants')\
+                    .sort_values(by='Participants')['Sport']
+        rare_sport = sport[ int(len(sport) * 0.05):int(len(sport) * 0.5) ]
+        
+        # Participants Growth Rate
+        i = valid_years.index(year)
+        s1 = set(df[ (df['Year']==valid_years[i-1] ) & (df['NOC']==country) ]['Name'])
+        s2 = set(df[ (df['Year']==valid_years[i-2] ) & (df['NOC']==country) ]['Name'])
+        s3 = set(df[ (df['Year']==valid_years[i-3] ) & (df['NOC']==country) ]['Name'])
+        
+        a1 = len(s1)
+        a2 = len(s2)
+        a3 = len(s3)
+        pgr = (max(0, a2 - a3) + max(0, a2 - a1)) / 2   
+        
+        # New Project Index
+        event_three_years = df[ (df['Year']==valid_years[i-1]) | (df['Year']==valid_years[i-2]) | (df['Year']==valid_years[i-3]) ]['Sport']
+        event_one_to_i_plus_four_years = df[ df['Year'] < valid_years[i-3] ]['Sport']
+        npi = len(set(event_three_years) - set(event_one_to_i_plus_four_years))
+        
+        # LPIR
+        k1 = len(set(s1) & set(rare_sport))
+        k2 = len(set(s2) & set(rare_sport))
+        k3 = len(set(s3) & set(rare_sport))
+        lpir = (max(0, k2-k1) + max(0, k3-k2))/2    
+        
+        return pgr, npi, lpir
     
     def host_effect_check(self):
         valid_years = self.get_valid_years()

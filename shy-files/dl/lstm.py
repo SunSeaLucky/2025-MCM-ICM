@@ -447,6 +447,7 @@ class LSTMAdvanced:
         
         valid_years = sta.get_valid_years()
         all_countries = sta.get_all_countries()
+        country_never_awarded = sta.get_country_never_awarded()
         
         if type == 'train':
             base = 0
@@ -460,18 +461,19 @@ class LSTMAdvanced:
         
         arr = []
         for i in range(self.batch_size):
-            country = all_countries[i]
+            country = all_countries[i]            
             medal = self.transform_from_tensor_data(output, i)
             if medal.size > 1:
                 medal = medal[idx - base]
+            if country in country_never_awarded or medal < 0:
+                medal = 0
             if type == 'pred':
-                medal *= 1
-            # print(idx - base)
+                medal *= 1.8
             arr.append([country, medal])
             
         pd.DataFrame(arr, columns=['Country', 'Medal'])\
           .sort_values(by='Medal', ascending=False)\
-          .to_csv('./mid_data/medal_board_%d_%s.csv' % (year, self.output_numeric_features[0]), index=False)
+          .to_csv('./mid_data/medal_board_%d_%s-t.csv' % (year, self.output_numeric_features[0]), index=False)
         
     def input_future_construct(self, year: int =2028):
         sta = Statics()
@@ -509,6 +511,7 @@ class LSTMAdvanced:
     
     def get_predict_medal(self, country: str):
         data_path = ["./mid_data/medal_board_2028_TotalMedal.csv", "./mid_data/medal_board_2028_GoldMedal.csv"]
+        # data_path = ["./mid_data/medal_board_2028_TotalMedal-t.csv", "./mid_data/medal_board_2028_GoldMedal-t.csv"]
         
         if self.output_numeric_features[0] == 'TotalMedal':
             df = pd.read_csv(data_path[0])
