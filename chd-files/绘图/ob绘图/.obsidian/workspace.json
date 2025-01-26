@@ -4,17 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "436109e8cb254743",
+        "id": "42069e9fbdf90269",
         "type": "tabs",
         "children": [
           {
-            "id": "c765662a376121ea",
+            "id": "8bc2d96a9c3a3e60",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "新标签页"
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/Drawing 2025-01-26 12.14.41.excalidraw.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "Drawing 2025-01-26 12.14.41.excalidraw"
             }
           }
         ]
@@ -159,12 +161,14 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "96b322820e32a533",
+  "active": "8bc2d96a9c3a3e60",
   "lastOpenFiles": [
+    "Excalidraw/Drawing 2025-01-26 12.14.41.excalidraw.md",
+    "Excalidraw",
+    "LSTM/LSTM.excalidraw.md",
     "LSTM/LSTM2.png",
     "LSTM/LSTM.png",
     "LSTM/LSTM.png",
-    "LSTM/LSTM.excalidraw.md",
     "LSTM-MCD/LSTM-MCD.excalidraw.md",
     "LSTM-MCD/LSTM-MCD.png",
     "LSTM-MCD/LSTM-MCD.excalidraw.png",
