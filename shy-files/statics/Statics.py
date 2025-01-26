@@ -255,7 +255,7 @@ class Statics:
     def query_country(self, country:str = 'USA'):
         return self.get_all_countries().index(country)
     
-    def query_idx(self, idx: int = 0):
+    def query_idx(self, idx: int = 0) -> str:
         return self.get_all_countries()[idx]
 
     def get_country_never_awarded(self, year: int = 2024):
