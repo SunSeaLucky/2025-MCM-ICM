@@ -4,19 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "716bb83125c38040",
+        "id": "436109e8cb254743",
         "type": "tabs",
         "children": [
           {
-            "id": "88f3392129f631d4",
+            "id": "c765662a376121ea",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
-              "state": {
-                "file": "LSTM/LSTM.excalidraw.md"
-              },
-              "icon": "excalidraw-icon",
-              "title": "LSTM.excalidraw"
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "新标签页"
             }
           }
         ]
@@ -161,21 +159,24 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "88f3392129f631d4",
+  "active": "96b322820e32a533",
   "lastOpenFiles": [
+    "LSTM/LSTM2.png",
     "LSTM/LSTM.png",
+    "LSTM/LSTM.png",
+    "LSTM/LSTM.excalidraw.md",
+    "LSTM-MCD/LSTM-MCD.excalidraw.md",
+    "LSTM-MCD/LSTM-MCD.png",
+    "LSTM-MCD/LSTM-MCD.excalidraw.png",
     "assets/会徽.webp",
     "assets",
     "新建文件夹",
-    "LSTM/LSTM.excalidraw.md",
     "LSTM-MCD/641.webp",
-    "LSTM-MCD/LSTM-MCD.png",
     "LSTM-MCD",
     "Excalidraw/Drawing 2025-01-26 00.09.07.excalidraw.md",
     "LSTM",
     "Excalidraw/Drawing 2025-01-26 00.08.45.excalidraw.md",
     "欢迎.md",
-    "LSTM-MCD/LSTM-MCD.excalidraw.md",
     "Drawing 2025-01-25 21.09.50.excalidraw.pdf",
     "LSTM-MCD/LSTM-MCD.svg",
     "LSTM-MCD.eps",
