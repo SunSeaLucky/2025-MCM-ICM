@@ -252,6 +252,11 @@ class Statics:
         '''
         return sorted(list(set(self.athlete.csv_file['NOC'])))
     
+    def get_all_countries_and_full_name(self):
+        df = self.athlete.csv_file
+        df.drop_duplicates(subset=['Team', 'NOC'], inplace=True)
+        return df[['Team', 'NOC']].sort_values(['NOC']).reset_index(drop=True)
+    
     def query_country(self, country:str = 'USA'):
         return self.get_all_countries().index(country)
     
@@ -398,3 +403,36 @@ class Statics:
         print("p-value: %f" % p_value)
         print("critical value: %f" % critical_value)
         print("假设检验结果：%s" % str(t >= critical_value))
+
+    def get_24_28_total_gold_medal(self):
+        '''
+        获取 2024 和 2028 年的金牌、总牌数量的 DataFrame。格式如下：
+
+        NOC, TotalMedal_2024, TotalMedal_2028, GoldMedal_2024, GoldMedal_2028
+        '''
+
+        df = self.athlete.csv_file
+
+        df = df[ (df['Medal']!="No medal") & (df['Year'] == 2024) ]\
+            .drop_duplicates(subset=['NOC','Sport', 'Event', 'Medal'])\
+            .groupby(['NOC']).size().reset_index(name='TotalMedal_2024')\
+            .sort_values(by=['TotalMedal_2024'], ascending=False)
+
+        df2 = self.athlete.csv_file
+
+        df2 = df2[ (df2['Medal']=="Gold") & (df2['Year'] == 2024) ]\
+            .drop_duplicates(subset=['NOC','Sport', 'Event', 'Medal'])\
+            .groupby(['NOC']).size().reset_index(name='GoldMedal_2024')\
+            .sort_values(by=['GoldMedal_2024'], ascending=False)
+
+        m = pd.merge(df, df2, on='NOC', how='left')
+
+        df3 = pd.read_csv('./mid_data/medal_board_2028_TotalMedal.csv').iloc[:,:2]
+        df3.rename(columns={'Medal':'TotalMedal_2028', 'Country':'NOC'}, inplace=True)
+
+        df4 = pd.read_csv('./mid_data/medal_board_2028_GoldMedal.csv').iloc[:,:2]
+        df4.rename(columns={'Medal':'GoldMedal_2028', 'Country':'NOC'}, inplace=True)
+
+        n = pd.merge(df3, df4, on='NOC', how='left')
+
+        return pd.merge(m, n, on='NOC', how='left')
