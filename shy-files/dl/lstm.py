@@ -267,10 +267,7 @@ class LSTMAdvanced:
         s = Statics()
         country = s.get_all_countries()[sample_index]
         valid_years = s.get_valid_years()
-        valid_years.append(2028)
-        
-               
-        
+        valid_years.append(2028)      
         
         y_train_pred_sample = np.concatenate((self.transform_from_tensor_data(self.model(self.x_train), sample_index),
                                              self.transform_from_tensor_data(self.model(self.x_test), sample_index)))
@@ -399,9 +396,10 @@ class LSTMAdvanced:
             xaxis=dict(showgrid=True, gridcolor='lightgrey'),  
             yaxis=dict(showgrid=True, gridcolor='lightgrey')  
         )  
-
+        fig1.write_image("./scratch/%s.png" % title, format='png', scale=5)
+        print("Image saved to ./scratch/%s.png" % title)
         fig1.show()
-        fig1.write_image("./scratch/%s.svg" % title, format='svg')
+        
         
     def draw_loss(self):
         '''
