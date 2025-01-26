@@ -11,8 +11,9 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.pyplot as plt  
 import seaborn as sns  
 
-import plotly.graph_objects as go  
-import numpy as np  
+import plotly.graph_objects as go
+import numpy as np
+import os
 
 # 定义 LSTM 模型  
 class LSTM(nn.Module):  
@@ -442,7 +443,7 @@ class LSTMAdvanced:
         fig2.show()
 
     def get_medal_board(self, output, year: int = 2024, type = Literal['train', 'test', 'pred']):
-        
+        assert os.path.exists('./mid_data/')
         sta = Statics()
         
         valid_years = sta.get_valid_years()
