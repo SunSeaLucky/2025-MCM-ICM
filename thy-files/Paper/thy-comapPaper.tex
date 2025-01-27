@@ -3,7 +3,7 @@
 \mcmsetup{
 	CTeX = false,
 	tcn = {2504496},
-	problem = \textcolor{red}{A},
+	problem = \textcolor{red}{C},
 	sheet = true,
 	titleinsheet = true,
 	keywordsinsheet = true,
@@ -14,6 +14,7 @@
 \usepackage{tcolorbox}
 \usepackage{xcolor}
 \usepackage{enumitem}
+\usepackage{wrapfig} 
 \usepackage{adjustbox} % 在导言区添加
 \definecolor{customblue}{RGB}{165,216,255} % 定义 #a5d8ff 的 RGB 值
 \definecolor{deepblue}{RGB}{0,74,173}      % 配套深蓝色
@@ -37,7 +38,18 @@
 	}{\end{tcolorbox}}
 % ================ 预声明hyperref选项 ================
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{colorlinks=true, linkcolor=blue, urlcolor=cyan, citecolor=magenta}{hyperref}
+\definecolor{ccr}{RGB}{0,128,172}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,     % 启用链接颜色
+	linkcolor=ccr,       % 设置标号引用和内部链接的颜色
+	citecolor=ccr,       % 设置文献引用的颜色
+	pdfborder={0 0 0},   % 移除链接的边框
+	linktoc=none,        % 不改变目录链接的颜色
+	frenchlinks=true     % 禁用页眉链接的颜色
+}
+
 
 % ================ 基础包配置 ================
 \usepackage{newtxtext}
@@ -81,39 +93,34 @@
 \setlength{\tabcolsep}{12pt}
 \renewcommand{\arraystretch}{1.2}
 
-\title{Enjoy a Cozy and Green Bath}
+\title{How Many Olympic Medal Count in 2028?}
 \date{\today}
 \begin{document}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% 摘要 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
 	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%%%%%%%%%%%%%%%%% 摘要 %%%%%%%%%%%%%%%%%
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\begin{abstract}
-		
-	本研究通过构建一个多因子奥运奖牌预测模型，旨在预测各国在2028年奥运会中的奖牌数量，并探讨影响奖牌数的主要因素。预测模型中的因子包括Host Effect, Strong Events, Percentage of Winners, Medal Distribution Concentration, Historical Performance, Number of Athletes 等因素。通过LSTM模型进行点预测，其中美国在2028年奥运会预计会拿到128枚奖牌，本文还通过基于贝叶斯理论的蒙特卡洛drop out方法提供了预测区间，以评估奖牌数的潜在波动。模型结果表明，美国、中国、阿尔及利亚在2028年洛杉矶奥运会上会有较大进步，而澳大利亚、法国、挪威则会在2028年表现有所降低。LSTM-Monte Carlo Dropout模型评估指标显示，在测试集上MSE为1.1284，RMSE为1.0625，$R^2$高达0.9216，这说明我们所构建的模型具有较好的预测性能。
+	Currently, the global attention to the Olympic Games medal table has gone beyond the scope of pure sports competitions to become an important indicator of a country's comprehensive strength, the effectiveness of its sports policies and its international image. In this paper, we analyze the data and implement a medal table prediction for reference.
 	
-	对于首次获奖国家的预测，我们通过XGBoost模型，估算了哪些国家可能在2028年首次获得奥运奖牌。分析结果显示，FSM具有最高的可能在2028年奥运会上实现01突破，其成功概率为85\%，其余01突破成功概率前十五位的国家在文中进行了列举。模型评估方面ROC-AUC 高达 0.90 分，显示出出色的类别区分能力。
+	For Task 1, we developed a prediction model of medal count in 2028 Olympic. We chose the 6 factors including Host Effect, Strong Events, Percentage of Winners, Medal Distribution Concentration, Historical Performance, Number of Athletes as the model indicators. Construct an \textbf{LSTM}-based prediction, which yields that in the 2028 Olympics, the United States secured \textbf{44} gold / \textbf{128} total medals, while China earned \textbf{40} gold / \textbf{91} total medals. Furthermore, we obtained prediction intervals by \textbf{Bayesian-based Monte Carlo Dropout} to extend LSTM. The results show that the USA, CHN, and Algeria will improve their medal counts \textbf{1$\sim$5} medals, while AUS, FRA, and NOR will decrease their medal counts \textbf{1$\sim$3} medals in 2028. The \textbf{LSTM-Monte Carlo Dropout Model} evaluation metrics show that \textbf{MSE=1.1284}, \textbf{RMSE=1.0625}, and \textbf{$R^2$=0.9216} on the test set, indicating its good prediction performance.
 	
-	对于奥运项目的关系分析与重要性评估，我们通过计算各国在各项赛事中的历史奖牌率，并对其进行排名，评估了不同项目在各国奖牌获取中的重要性并揭示了每个国家在不同项目中的优势。其中美国优势项目分别为体操，游泳，射击等。
-	
-	对于Task2, 我们利用Difference-in-Difference建立了伟大教练对奖牌提升作用的评估模型。
-%	教练流动性的影响
-%	研究验证了教练流动性对国家体育项目的影响。通过对历史数据的分析，发现教练在跨项目流动后，能够显著提升特定项目的表现，例如郎平和贝拉·卡罗利的成功案例。模型结果表明，教练效应在体操和排球项目中尤为突出。
-%	
-%	教练效能的量化与建议
-%	对教练效能进行了量化分析，结果表明教练的成功经验对奖牌数的提升有显著贡献。为日本、法国和澳大利亚等国家提供了具体的投资建议，特别是在选拔高水平教练、支持项目培养和增加教练资源方面。
+	Furthermore, we constructed a Prediction Model of Median model based on \textbf{XGBoost} for Medal-Less Countries to estimate which countries can realize 01 breakthrough  in 2028. We chose 3 indicators as inputs, namely \textbf{Participants Growth Rate, New Project Index, and Unpopular Project Participation Growth Rate}. The results show that FSM has\textbf{ 85\%} probability of achieving 01 breakthrough in the 2028 Olympics, others seeing Table \textbf{2xx}. The model evaluation score \textbf{ROC-AUC=0.90}, indicating a strong classification ability. 
 	
 	
-	本研究还提取了模型中的潜在规律，并提出了一些战略性建议以供奥运委员会参考。针对奥运项目的垄断与非垄断项目，建议委员会通过促进非垄断项目的参与来提升公平性和全球竞争力。同时，通过分析性别比例趋势，建议优化项目选拔，促进女性运动员的参与，确保性别平衡。此外，基于运动员表现排名，建议优先资源分配，以支持具有潜力的“明星运动员”。
+	For the relationship analysis and importance assessment of Olympic sports, we calculated the historical medal rates of each country in each event and ranked them to assess the importance of different sports in each country's medal acquisition and reveal the strengths of each country in different sports. The \textbf{USA}'s dominant sports are \textbf{gymnastics}, \textbf{swimming}, and \textbf{shooting}.
 	
-	通过本研究的预测和分析，我们为优化奥运奖牌策略提供了数据驱动的科学依据。不仅揭示了潜力国家在未来奥运中的表现趋势，还为奥运委员会在教练流动、资源分配、性别平衡以及项目优化等方面提供了具有实际价值的战略建议。这些洞察有助于提升全球竞争力，推动更加公平和多元化的奥运发展。
-		
-		\begin{keywords}
-			Keyword one, Keyword two, Keyword three
-		\end{keywords}
-		
-	\end{abstract}
+	For Task 2, we modeled the effect of great coaching on medal improvement to estimate the effect of great coaching on medal improvement. We analyzed the historical medal data of USA Gymnastics and constructed A \textbf{Diff-in-Diff} Model for Evaluating the Impact of "Great Coach", with a regression coefficient $\hat{\gamma}=4.1572$. We carried out a \textbf{regression coefficient test}, with $p=0.008$, proving the existence of the "Effect of Great Coach". Based on the total number of medals, Japan, France and Australia were selected, and the most important sports to invest in by the medal enhancement rate, and their medal enhancement rate were \textbf{13.5\%}, \textbf{12.9\%} and \textbf{9.6\%}, calculated by the effect evaluation model.
 	
+	For Task3, combined the model, we analyze the \textbf{monopoly and non-monopoly sports}, such as 3x3 Basketball and Art Competitions as the latter, as well as Artistic Swimming as the former, for the Olympic Committee's reference to maintain the fairness.In addition, we also analyzed the trend of \textbf{gender ratio} and \textbf{individual strength of athletes} to provide scientific suggestions for the Olympic Committee in resource allocation and program optimization.
+	
+	Finally, we performed a sensitivity analysis of the LSTM-MC Dropout model, showing the model has strong accuracy and robustness.
+	
+	\begin{keywords}
+		Olympic \quad LSTM \quad MC Dropout \quad XGBoost \quad Difference in Difference
+	\end{keywords}
+	
+\end{abstract}
 	
 	\maketitle
 	\tableofcontents        % 若不想要目录, 注释掉该句
@@ -129,48 +136,65 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 	
-	\section{Introduction}
+\section{Introduction}
 	
-	\subsection{Background}
-	The medal table of the 2024 Paris Olympics shows that the United States and China each won 40 gold medals and tied for the top spot, but the United States led with a total of 126 medals. The host country France ranked fifth in gold medals (16) and fourth in total medals (64). Dominica, Saint Lucia and other countries won their first Olympic medals, while 60 countries still have not broken through for any medals.
-	\begin{figure}[htbp]
-		\centering
-		\includegraphics[width=0.7\linewidth]{fig/background1}
-		\caption{The medals of the 2024 Paris Olympics}
-	\end{figure}
-	
+
+
+\subsection{Background}
+\begin{wrapfigure}{r}{0.5\linewidth}  % 'r' for right, '0.7\linewidth' for the width of the figure
+	\centering
+	\includegraphics[width=0.76\linewidth]{fig/backgroud3.png}
+	\caption{2028 Olympic Games in Los Angeles}
+\end{wrapfigure}
+The medal table of the 2024 Paris Olympics shows that the United States and China each won 40 gold medals and tied for the top spot, but the United States led with a total of 126 medals. The host country France ranked fifth in gold medals (16) and fourth in total medals (64). Dominica, Saint Lucia, and other countries won their first Olympic medals, while 60 countries still have not broken through for any medals. The competition has been fierce, and the significance of the event has drawn the attention of athletes from all around the world. As nations compete for prestige and recognition, each medal earned adds to the legacy of the Olympic Games.
+
+
+\vspace{1.5\baselineskip}
 	\subsection{Restatement and Analysis of the Problem}
 	Based on the provided historical data-set of the Olympic Games from 1896 to 2024, we are employed to analyze and answer the following questions:
-	\begin{enumerate}
-		\item 
-		Develop a \textbf{prediction model} to forecast the number of medals each country will win in 2028, and identify countries that may progress or regress. 
-		\item 
-		Provide \textbf{prediction intervals} and estimates of \textbf{uncertainty} and metrics to measure the model's performance.
-		\item 
-		Estimate the number of countries that will win their \textbf{first medal} and the probability of this happening.
-		\item 
-		Analyze the \textbf{relationship} between specific Olympic events (in terms of quantity and type) and the number of medals, explore which events are more important, and the impact of the host country's event selection strategy on the outcome.
-		\item 
-		Verify whether the \textbf{mobility of coaches} significantly enhances a country's performance in specific sports (such as Lang Ping and Bela Karolyi).
-		\item 
-		Quantify the contribution of\textbf{ coaching effectiveness} to the number of medals, and recommend key sports for investment and expected returns for the three countries.
-		\item 
-		Extract the less-attended-to patterns from the model and provide strategic \textbf{suggestions} for the Olympic Committee.
+	
+\begin{enumerate}[leftmargin=0.15in, labelsep=0.1in, itemsep=2.5pt, parsep=1pt]
+	\item \textbf{Task 1: Prediction Model and Performance Metrics}
+	\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=2.5pt, parsep=1pt]
+		
+		\item Develop a \textbf{prediction model} to forecast the number of medals each country will win in 2028, and identify countries that may progress or regress.
+		
+		\item Provide \textbf{prediction intervals} and estimates of \textbf{uncertainty} and metrics to measure the model's performance.
+		
+		\item Estimate the number of countries that will win their \textbf{first medal} and the probability of this happening.
+		
+		\item Analyze the \textbf{relationship} between specific Olympic events (in terms of quantity and type) and the number of medals, explore which events are more important, and the impact of the host country's event selection strategy on the outcome.
+	\end{itemize}
+	
+	\item \textbf{Task 2: Event Analysis and Coaching Effectiveness}
+	\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=2.5pt, parsep=1pt]
+		
+		
+		\item Verify whether the \textbf{mobility of coaches} significantly enhances a country's performance in specific sports (such as Lang Ping and Bela Karolyi).
+		
+		\item Quantify the contribution of \textbf{coaching effectiveness} to the number of medals. 
+		
+		\item Recommend key sports for investment and expected returns for the three countries. 
+	\end{itemize}
+	
+	\item \textbf{Task 3: Strategic Recommendations for the Olympic Committee}
+	\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=2.5pt, parsep=1pt]
+		\item Extract the less-attended-to patterns from the model. 
+		\item provide strategic \textbf{suggestions} for the Olympic Committee. 
+	\end{itemize}
 	\end{enumerate}
-	
-	
-	
-	%对于Task1，我们选取7个指标，建立了基于LSTM的奖牌数量预测模型，并使用贝叶斯估计给出了区间预测，而对于从未获奖的国家，我们根据新增的event、运动员数量、历史参与趋势，建立了基于SVM的“首奖突破”预测模型。
-	%对于Task2，我们分析了“伟大教练”效应的影响。
-	
-	
-	
-	
-	
-	
-	
-	
-	
+%	
+%	%对于Task1，我们选取7个指标，建立了基于LSTM的奖牌数量预测模型，并使用贝叶斯估计给出了区间预测，而对于从未获奖的国家，我们根据新增的event、运动员数量、历史参与趋势，建立了基于SVM的“首奖突破”预测模型。
+%	%对于Task2，我们分析了“伟大教练”效应的影响。
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%	
 	\subsection{Overview of Our Work}
 		\begin{figure}[H]
 		\centering
@@ -190,20 +214,20 @@
 		%	\end{itemize}
 	%	
 	%\end{itemize}
-	
-	
-	
-	
-	
-	
-	
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%%%%%%%%%%%%%%%%% 模型假设 %%%%%%%%%%%%%%%%%
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	%%%%%%%%%%%%%%%%% 模型假设 %%%%%%%%%%%%%%%%%
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Assumptions and Justification}
 
-\begin{enumerate}[leftmargin=0.15in, labelsep=0.1in, itemsep=10pt, parsep=5pt]
+\begin{enumerate}[leftmargin=0.15in, labelsep=0.1in, itemsep=10pt, parsep=7pt]
 	%	\item \textbf{Historical medal data exhibits temporal dependencies that reflect future medal trends. }
 	%	
 	%	This suggests that historical performance can offer insights into future outcomes, and thus, should be treated as a time series when making predictions.
@@ -223,10 +247,10 @@
 	
 	It is assumed that the career cycle of an athlete is 3-4 Olympic Games, so most of the indicators in the following prediction model use the first three as input vectors to predict the fourth
 \end{enumerate}
-
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%%%%%%%%%%%%%%%%% 符号说明 %%%%%%%%%%%%%%%%%
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	%%%%%%%%%%%%%%%%% 符号说明 %%%%%%%%%%%%%%%%%
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{List of Notations}
 \begin{center}
 	\begin{tabular}{ll}
@@ -251,19 +275,19 @@
 	\end{tabular}
 \end{center}
 
-\noindent Note: The Summer Olympics have been held for a total of 32 sessions.
+\noindent Note: The Summer Olympics have been held for a total of 30 sessions.
 	
-	
-	
-	
-	
-	
-	
-	
-	
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%% 数据预处理 %%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% 数据预处理 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Data Pre-processing}
 
 \subsection{Outlier and Missing Value Handling}
@@ -274,24 +298,26 @@ In adition, \textbf{Skating} and \textbf{Ice Hockey} have been included in the W
 It was noticed that \textbf{Jeu de Paume} and \textbf{Roque} sports in the {\bf summerOly\_programs.csv} do not have Codes. Upon researching information from {\color{blue}\url{https://en.wikipedia.org/wiki/Jeu_de_paume}} and {\color{blue}\url{https://en.wikipedia.org/wiki/Roque}}, it was found that only a few people are still engaged in these two sports, which have even not been held for 26 consecutive years in the Summer Olympics. Therefore, these two sports have been excluded.
 
 \subsection{consistency}
-The IOC records country names by session, but political changes or rebranding can cause variations (e.g., the USSR and Germany's two teams in the 2000 Olympics). To ensure consistency, we standardized country names based on official IOC lists and cross-checked with past Olympic records.Additionally, project names like "Marathon Swimming" and "Marathon Swimming, Swimming" or "3x3 Basketball" and "3x3 Basketball, Basketball" were treated as the same event for consistency in the data.
+The IOC records country names by session, but political changes or rebranding can cause variations (e.g., the USSR and Germany's two teams in the 2000 Olympics). To ensure consistency, we standardized country names based on official IOC lists and cross-checked with past Olympic records. 
 
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+Additionally, project names like "Marathon Swimming" and "Marathon Swimming, Swimming" or "3x3 Basketball" and "3x3 Basketball, Basketball" were treated as the same event for consistency in the data.
+%
+%
+%
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%	
+%	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%% Task 1 %%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -306,7 +332,7 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 	%为了验证东道主效应的显著性，我们采用了成对样本t检验。首先，我们选取每年的东道主的奖牌数$MT_{ti}$作为第一个样本，其次，为了消除奖牌数量的整体增长趋势的影响，选取东道主国家在前后两届奥运会中获得的奖牌数的平均值
 		\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\linewidth]{fig/MT.png}
+		\includegraphics[width=1\linewidth]{fig/MT.png}
 		\caption{Schematic diagram of $MT_t^H$}
 		\label{MT}
 	\end{figure}
@@ -972,6 +998,7 @@ The specific algorithm flow is shown below.
 Drawing on the XGBoost model's results, we identify the top 10 countries with the highest probability of securing their first Olympic medal. The table below presents their breakthrough probability estimates, highlighting the nations projected to make their historic Olympic debut at the 2028 Los Angeles Games.
 \begin{table}[H]
 	\centering
+	\caption{Predicted Probability of Winning First Olympic Medal}
 	\setlength{\tabcolsep}{25pt} % Adjust column separation to increase width
 	\begin{tabular}{ccccc}
 		\toprule
@@ -1000,13 +1027,13 @@ Drawing on the XGBoost model's results, we identify the top 10 countries with th
 		PLE & 1.0 & 19 & 0.0 & 0.37 \\ 
 		\bottomrule
 	\end{tabular}
-	\caption{Predicted Probability of Winning First Olympic Medal}
 	\label{tab:predicted_probability}
 \end{table}
 
 \subsubsection{Modelling Assessment}
 \begin{table}[H]
 	\centering
+	\caption{Optimized XGBoost Model Evaluation Metrics}
 	\begin{tabular}{c c c c c}
 		\toprule
 		\rowcolor{red!10} \textbf{Metric} & \textbf{Class 0} & \textbf{Class 1} & \textbf{Macro Avg} & \textbf{Weighted Avg} \\ 
@@ -1018,7 +1045,6 @@ Drawing on the XGBoost model's results, we identify the top 10 countries with th
 		\rowcolor{gray!10} ROC-AUC & 0.90 & 0.90 & 0.90 & 0.90 \\
 		\bottomrule
 	\end{tabular}
-	\caption{Optimized XGBoost Model Evaluation Metrics}
 	\label{tab:model_metrics}
 \end{table}
 
@@ -1123,7 +1149,7 @@ To test this hypothesis, we constructed the experimental group and the "pseudo-c
 
 \subsection{Test of Great Coach Effect based on DiD}
 
-To seek evidence of the existence of the great coach effect, we employ the Difference-in-Differences (DiD) model to examine its impact.
+To seek evidence of the existence of the great coach effect, we employ the Difference-in-Differences (DiD) \cite{becketti2009big} model to examine its impact.
 
 The DiD model is a statistical method used to assess the causal effect of an intervention on an outcome variable. It estimates the intervention effect by comparing the performance differences between the experimental group and the control group before and after the intervention. The model equation is 
 \begin{equation*}
@@ -1257,7 +1283,7 @@ The larger the $MRR$ is, the more people are involved in the single-person sport
 	\end{itemize}
 	
 \end{enumerate}
-\section{Task 3}
+\section{Task 3: Original Insight from Models} 
 \subsection{Monopoly versus non-monopoly projects}
 
 By comparing the number of medals won by each country in a sport to the total number of medals in that sport, we calculate a ratio and rank them. If a country holds more than 20\% of the medals, it is considered to have a monopoly, and if multiple countries exceed 20\%, they all share the monopoly. Analyzing these monopolies helps the Olympic Committee identify dominant countries in certain sports, enabling strategies to enhance fairness by promoting non-monopoly sports, encouraging wider participation, and improving global competition balance. See Table \ref{table:Monopolized_vs_Non_monopolized_Sports} for selected sports.
@@ -1425,35 +1451,50 @@ The line plot further confirms this stability: while $+10\%$ or $-10\%$ adjustme
 	
 	
 	
-	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%%%%%%%%%%%%%%%%% AI使用 %%%%%%%%%%%%%%%%%
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\newpage
-	\newcounter{lastpage}
-	\setcounter{lastpage}{\value{page}}
-	\thispagestyle{empty} 
-	
-	\section*{Report on Use of AI}
-	
-	\begin{enumerate}
-		\item OpenAI ChatGPT (Nov 5, 2023 version, ChatGPT-4,) 
-		\begin{description}
-			\item[Query1:] <insert the exact wording you input into the AI tool> 
-			\item[Output:] <insert the complete output from the AI tool>
-		\end{description}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% AI使用 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\newcounter{lastpage}
+\setcounter{lastpage}{\value{page}}
+\thispagestyle{empty} 
+
+\section*{Report on Use of AI}
+
+\begin{enumerate}
+	\item OpenAI ChatGPT (Jan 26, 2025 version, ChatGPT-3.5,) 
+	\begin{description}
+		\item[Query1:] What Béla Károlyi has contributed to USA Gymnastics?
+		\item[Output:] Béla Károlyi made significant contributions to USA Gymnastics, particularly through his coaching and development of elite gymnasts. Born in Romania, he immigrated to the United States in 1981, where he quickly became a central figure in American gymnastics. His most notable contributions include:
 		
-		\item OpenAI ChatGPT (Nov 5, 2023 version, ChatGPT-4,) 
-		\begin{description}
-			\item[Query1:] <insert the exact wording you input into the AI tool> 
-			\item[Output:] <insert the complete output from the AI tool>
-		\end{description}
+		1. Coaching Elite Gymnasts:
+		Károlyi coached some of the most iconic gymnasts in U.S. history, including Mary Lou Retton (1984 Olympic all-around gold medalist), Kerri Strug (famous for her vault in the 1996 Olympics, despite an injured ankle), and Dominique Moceanu (1996 Olympic team gold medalist). His athletes were known for their impressive technical skill, strength, and resilience, helping raise the level of gymnastics in the U.S. to international prominence.
 		
-	\end{enumerate}
+		2. 1996 Olympics Success:
+		Under Károlyi's coaching, the U.S. women’s gymnastics team won gold in the 1996 Summer Olympics in Atlanta, often referred to as the "Magnificent Seven." This marked the first time the U.S. women's gymnastics team had won Olympic gold in the team competition, a groundbreaking achievement.
+		
+		3. National Team Coordinator (1999-2001):
+		Károlyi served as the National Team Coordinator for USA Gymnastics from 1999 to 2001. During his tenure, he helped shape the U.S. gymnastics program, setting high standards and focusing on the development of gymnasts at all levels.
+		
+		4. Systemic Changes to Training and Technique:
+		He introduced a rigorous and disciplined training program that focused on mental toughness and physical strength, along with technical skills. His method was sometimes controversial, particularly regarding the pressure he placed on athletes, but it was undeniably effective in developing champions.
+		
+		5. Mentoring the Next Generation of Coaches:
+		Károlyi also played a crucial role in mentoring other coaches, many of whom went on to have successful careers in gymnastics. His coaching philosophy influenced the training methods of many gymnasts and coaches who followed.
+		
+		6. Legacy in the U.S. Gymnastics System:
+		Despite controversies surrounding his methods and his involvement in the broader gymnastics culture (particularly in light of the sexual abuse scandal involving Larry Nassar), Károlyi's contributions to USA Gymnastics in terms of raising the profile of American gymnastics cannot be overlooked. He is widely regarded as one of the most successful and influential figures in U.S. gymnastics history.
+		
+		Though his legacy is complex, with debates over the nature of his coaching style and the broader culture he helped foster, Károlyi undeniably played a central role in shaping U.S. gymnastics into the powerhouse it is today.
+	\end{description}
 	
-	% 重置页码
-	\clearpage
-	\setcounter{page}{\value{lastpage}}
+	
+	
+\end{enumerate}
+
+% 重置页码
+\clearpage
+\setcounter{page}{\value{lastpage}}
 	
 	
 	
