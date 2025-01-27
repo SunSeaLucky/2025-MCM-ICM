@@ -286,10 +286,10 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 	%为了验证东道主效应的显著性，我们采用了成对样本t检验。首先，我们选取每年的东道主的奖牌数$MT_{ti}$作为第一个样本，其次，为了消除奖牌数量的整体增长趋势的影响，选取东道主国家在前后两届奥运会中获得的奖牌数的平均值
 	
 	To assess the significance of the host effect, we employed a paired samples  \textbf{t-Test}. First, we selected the medal count of the host country for each year, denoted as $MT_{t}$, as the first sample. To eliminate the influence of overall growth trends in medal counts, we used the average medal count from the two preceding Olympic Games as the second sample, as shown in equation (\ref{eq:H_t-test_MT_bar}),
-	\begin{equation*}
+	\begin{equation}
 		MT^H_{t}=\frac{ MT_{t-1} + MT_{t+1} }{2}
 		\label{eq:H_t-test_MT_bar}
-	\end{equation*}
+	\end{equation}
 	where $t=2,3,\cdots,29$, $i\in A_{C}$. 
 	
 	The data set $\{MT_{t},MT^s_{t}\}$ then forms a paired sample with a size of 30. 
@@ -1233,12 +1233,20 @@ The larger the $MRR$ is, the more people are involved in the single-person sport
 \section{Sensitivity Analysis}
 To assess the robustness of our LSTM model, we varied two key input variables—HHI and historical performance—by $\pm5\%$ (and $\pm10\%$ for HHI) to observe their impact on predicted medal counts. 
 
-放紫色的柱状图
-
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{fig/barplot.png}
+	\caption{Sensitivity analysis of six paramters in the LSTM-MC Dropout model}
+	\label{barplot}
+	\end{figure}
 As illustrated by the purple bar charts, modest ($\pm5\%$) changes in either HHI or historical performance produced only slight variations in the total predicted medals, indicating that the model’s estimates remain relatively stable despite these perturbations. 
 
-放五条线的条形图
-
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{fig/lineplot.png}
+	\caption{Sensitivity analysis of history performance(example)}
+	\label{lineplot}
+\end{figure}
 The line plot further confirms this stability: while $+10\%$ or $-10\%$ adjustments to HHI do shift the prediction curves, the overall trend and magnitude of predicted medal counts remain consistent. These results suggest our LSTM model is reasonably robust to small fluctuations in these input variables.
 	
 \section{Strength and Weakness}
