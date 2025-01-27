@@ -4,17 +4,19 @@
     "type": "split",
     "children": [
       {
-        "id": "55e819298cc0832d",
+        "id": "bda4abf7c92bf277",
         "type": "tabs",
         "children": [
           {
-            "id": "58b2e43455d2a1c9",
+            "id": "23ecf86fabcadc87",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "新标签页"
+              "type": "excalidraw",
+              "state": {
+                "file": "OurWork/OurWork.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "OurWork"
             }
           }
         ]
@@ -159,36 +161,37 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "58b2e43455d2a1c9",
+  "active": "23ecf86fabcadc87",
   "lastOpenFiles": [
+    "欢迎.md",
+    "MT/MT.excalidraw.md",
+    "assets/411147F07CA1870C53A13B6D7B27A02D.jpg",
+    "Excalidraw/Drawing 2025-01-26 12.14.41.excalidraw.md",
     "OurWork/OurWork.md",
     "OurWork/OurWork.excalidraw.png",
+    "MT/MT.png",
+    "assets/ Los Angeles.png",
+    "assets/会徽_0.webp",
+    "assets/会徽 1.webp",
+    "MT/MT.png",
+    "MT",
     "OurWork",
     "Rose-Chart/Rose-Chart.excalidraw.md",
     "Rose-Chart/Rose-Chart.png",
     "Rose-Chart/Rose-Chart.svg",
     "Rose-Chart/新建 文本文档.txt",
-    "Excalidraw/Drawing 2025-01-26 12.14.41.excalidraw.md",
     "Rose-Chart/Rose-Chart.png",
-    "clean_rose_chart.png",
     "Rose-Chart",
     "Excalidraw",
     "LSTM/LSTM.excalidraw.md",
-    "LSTM/LSTM2.png",
-    "LSTM/LSTM.png",
-    "LSTM/LSTM.png",
     "LSTM-MCD/LSTM-MCD.excalidraw.md",
-    "LSTM-MCD/LSTM-MCD.png",
-    "LSTM-MCD/LSTM-MCD.excalidraw.png",
     "assets",
     "新建文件夹",
     "LSTM-MCD",
     "Excalidraw/Drawing 2025-01-26 00.09.07.excalidraw.md",
     "LSTM",
     "Excalidraw/Drawing 2025-01-26 00.08.45.excalidraw.md",
-    "欢迎.md",
     "Drawing 2025-01-25 21.09.50.excalidraw.pdf",
-    "LSTM-MCD.eps",
     "Excalidraw/Drawing 2025-01-25 21.09.50.excalidraw.md"
   ]
 }
