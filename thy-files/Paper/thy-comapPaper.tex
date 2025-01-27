@@ -12,6 +12,7 @@
 
 \usepackage{tcolorbox}
 \usepackage{xcolor}
+\usepackage{enumitem}
 \usepackage{adjustbox} % 在导言区添加
 \definecolor{customblue}{RGB}{165,216,255} % 定义 #a5d8ff 的 RGB 值
 \definecolor{deepblue}{RGB}{0,74,173}      % 配套深蓝色
@@ -155,7 +156,12 @@
 	
 	
 	\subsection{Overview of Our Work}
-	
+		\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig/1.png}
+		\caption{Overview of Our Work}
+		\label{fig:Overview of Our Work}
+	\end{figure}
 	%\begin{itemize}
 	%	\item {\bf 111}. ...
 	%	\item {\bf 222}. ...
@@ -266,7 +272,7 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%% Task 1 %%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\section{Task 1}
+	\section{Task 1: How Many Medal Count in 2028? }
 	\subsection{Medal-Winning Countries' Medal Count Prediction using LSTM-MCD}
 	
 	\subsubsection{Significance Analysis of Host Effect}
@@ -276,10 +282,10 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 	%为了验证东道主效应的显著性，我们采用了成对样本t检验。首先，我们选取每年的东道主的奖牌数$MT_{ti}$作为第一个样本，其次，为了消除奖牌数量的整体增长趋势的影响，选取东道主国家在前后两届奥运会中获得的奖牌数的平均值
 	
 	To assess the significance of the host effect, we employed a paired samples  \textbf{t-Test}. First, we selected the medal count of the host country for each year, denoted as $MT_{t}$, as the first sample. To eliminate the influence of overall growth trends in medal counts, we used the average medal count from the two preceding Olympic Games as the second sample, as shown in equation (\ref{eq:H_t-test_MT_bar}),
-	\begin{equation}
+	\begin{equation*}
 		MT^H_{t}=\frac{ MT_{t-1} + MT_{t+1} }{2}
 		\label{eq:H_t-test_MT_bar}
-	\end{equation}
+	\end{equation*}
 	where $t=2,3,\cdots,29$, $i\in A_{C}$. 
 	
 	The data set $\{MT_{t},MT^s_{t}\}$ then forms a paired sample with a size of 30. 
@@ -290,16 +296,16 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 	\end{equation*}
 	
 	Select the t-test statistic as
-	\begin{equation}
+	\begin{equation*}
 		T=\frac{ \bar{d} }{ s_d\slash \sqrt{28} } \sim (27)
-	\end{equation}
+	\end{equation*}
 	where $\bar{d}=\frac{1}{28} \sum_{t=2}^{29} d_t$ is the mean of paired samples, 
 	and $ s_d = \frac{1}{27} \sum_{t=2}^{29}\big( d_t - \bar{d} \big)^2 $ is the sample variance of the differences of paired data, 
 	
 	For a given significance level $\alpha$, the rejection domain for the hypothesis test is
-	\begin{equation}
+	\begin{equation*}
 		W_\alpha = \big\{ |T| \ge t_{1-\frac{\alpha}{2}}(29) \big\}
-	\end{equation}
+	\end{equation*}
 	
 	By following the described procedure, the results of the t-test were obtained and are summarized in Table \ref{1}.
 
@@ -320,84 +326,80 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 	\label{1}
 \end{table}
 	
-	\subsubsection{Analysis of Key Indices}
+\subsubsection{Analysis of Key Indices}
+\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
+	\item \textbf{Host Effect}
 	
-	\textbf{Host effect}
-	
-	Define Logical Variable $H_{t,i}$ as equation (\ref{eq:H}),
-	\begin{equation}
-		H(t,i)=
-		\begin{cases}
-			1, \quad \text{Country } i \text{ is host in year } t, \\
-			0, \quad \text{others}.
+	Define the logical variable \( H_{t,i} \) as shown in equation (\ref{eq:H}):
+	\begin{equation*}
+		H(t,i) = 
+		\begin{cases} 
+			1, & \text{if Country } i \text{ is the host in year } t, \\
+			0, & \text{otherwise.}
 		\end{cases}
 		\label{eq:H}
-	\end{equation}
-	where $t\in A_{T}$, $i\in A_{C}$.
+	\end{equation*}
+	where \( t \in A_{T} \) and \( i \in A_{C} \).
 	
-	
-	
-	\textbf{Event held}
+	\item \textbf{Event Held}
 	
 	The event vector \( V(t) \) is defined as:
-	
 	\[
-	V(t) = \big( v_1(t), v_2(t), \dots, v_M(t) \big)^T,
+	V(t) = \left( v_1(t), v_2(t), \dots, v_M(t) \right)^T,
 	\]
-	where: \( v_i(t) = 1 \) if event \( i \) is held in year \( t \),
-	\( v_i(t) = 0 \) if event \( i \) is not held in year \( t \). Here, \( M \) represents the total number of distinct Olympic events considered up to year \( t \) ($t=1,2,\cdots,30$) and the elements of \( V(t) \) are binary values indicating the participation of each event in year \( t \).
+	where \( v_i(t) = 1 \) if event \( i \) is held in year \( t \), and \( v_i(t) = 0 \) if event \( i \) is not held in year \( t \). \( M \) represents the total number of distinct Olympic events considered up to year \( t \) (\( t = 1, 2, \dots, 30 \)).
 	
+	\item \textbf{Definition of Dominant Event}
 	
+	Let \( I_j(t) \) represent the dominance of event \( j \) in year \( t \), where dominance is calculated based on the medal count over the past three years and the total number of medals in year \( t \):
+	\[
+	I_j(t) = \frac{\sum_{q=t-3}^{t-1} MT_{q,i,k,j}}{\sum_{q=t-3}^{t-1} V_j(q) \cdot MT_{q,i,j,k}}.
+	\]
 	
-\textbf{Definition of Dominant Event}
-
-Let \( I_j(t) \) represent the dominance of event \( j \) in year \( t \), where the dominance is calculated based on the medal count over the past three years and the total number of medals in year \( t \).
-
-\[
-I_j(t) = \frac{\sum_{q=t-3}^{t-1} MT_{q,i,k,j}}{\sum_{q=t-3}^{t-1} V_j(q) \cdot MT_{q,i,j,k}} 
-\]
-
-Next, define \( I(t) = \big( I_1(t), I_2(t), \dots, I_M(t) \big)^T \) as the dominance vector. 
-
-To get the modified dominance vector \( I'(t) \), we set the components corresponding to the three largest values of \( I(t) \) to 1, and all other components to 0:
-
-\[
-\hat{I}(t) = 
-\begin{cases} 
-	1 & \text{if } j \in \text{Top3}(I(t)) \\
-	0 & \text{otherwise}
-\end{cases}
-\]
-
-\[\hat{I}(t) = \mathbf{1}_{\{ j \in \text{Top3}(I(t)) \}},\]
-where \( \text{Top3}(I(t)) \) refers to the indices corresponding to the three largest values in the vector \( I(t) \), and \( \mathbf{1} \) is the indicator function.
-
+	Next, define \( I(t) = \left( I_1(t), I_2(t), \dots, I_M(t) \right)^T \) as the dominance vector.
 	
-	\textbf{Strong Events}
+	To obtain the modified dominance vector \( I'(t) \), we set the components corresponding to the three largest values of \( I(t) \) to 1, and all other components to 0:
+	\[
+	\hat{I}(t) = 
+	\begin{cases} 
+		1 & \text{if } j \in \text{Top3}(I(t)), \\
+		0 & \text{otherwise.}
+	\end{cases}
+	\]
+	where \( \text{Top3}(I(t)) \) refers to the indices corresponding to the three largest values in the vector \( I(t) \), and \( \mathbf{1} \) is the indicator function.
+	
+	\item \textbf{Strong Events}
 	
 	Let \( \hat{I}(t) \) and \( V(t) \) be the dominance vector and the event vector for year \( t \), respectively. The number of strongpoints \( S(t) \) can be defined as:
 	\[
-	S(t) = \sum_{i=1}^{M} \mathbf{1}\{ \hat{I}_i(t) = 1 \text{ and } v_i(t) = 1 \},
+	S(t) = \sum_{i=1}^{M} \mathbf{1}\left\{ \hat{I}_i(t) = 1 \text{ and } v_i(t) = 1 \right\},
 	\]
-	where \( \mathbf{1}\{ \cdot \} \) is the indicator function, which is 1 if the condition inside the curly brackets is true and 0 otherwise. 
-	In this context, \( \hat{I}_i(t) = 1 \) means that event \( i \) has a dominant position in year \( t \), and \( v_i(t) = 1 \) indicates that event \( i \) is held in year \( t \).
+	where \( \mathbf{1}\{ \cdot \} \) is the indicator function, which is 1 if the condition inside the curly brackets is true and 0 otherwise.
 	
+	\item \textbf{Percentage of Winners}
 	
-	\textbf{Percentage of winners}
-	\[R(t,i) = \frac{N_{\text{award}}(t,i)}{N_{\text{athletes}}(t,i)}\]
-	
-\textbf{Medal Distribution Concentration}
-\[
-\text{HHI}(t,i) = \sum_{j=1}^{M} \left( \frac{MT_{t,i,j}(t)}{MT_{t,i}(t)} \right)^2
-\]
-where the closer the \textbf{HHI}(Herfindahl-Hirschmann Index)\cite{HHI2016} is to 1, the more concentrated the distribution of medals is in a small number of sports, and the closer it is to 0, the more widely distributed the medals are.
-
-	\textbf{historical performance}
-	
+	The percentage of winners in year \( t \) for country \( i \) can be defined as:
 	\[
-	\widetilde{MT}(t,i) = \frac{1}{3} \sum_{q=t-3}^{t-1} MT_{q,i}
+	R(t,i) = \frac{N_{\text{award}}(t,i)}{N_{\text{athletes}}(t,i)},
 	\]
+	where \( N_{\text{award}}(t,i) \) is the number of awards won by country \( i \) in year \( t \), and \( N_{\text{athletes}}(t,i) \) is the number of athletes representing country \( i \).
 	
+	\item \textbf{Medal Distribution Concentration}
+	
+	The Herfindahl-Hirschman Index (HHI) for the medal distribution concentration can be defined as:
+	\[
+	\text{HHI}(t,i) = \sum_{j=1}^{M} \left( \frac{MT_{t,i,j}(t)}{MT_{t,i}(t)} \right)^2,
+	\]
+	where \( \text{HHI} \) approaches 1 when medals are concentrated in a small number of events, and approaches 0 when medals are distributed widely across many events.
+	
+	\item \textbf{Historical Performance}
+	
+	The historical performance of country \( i \) in year \( t \) can be calculated as the average medal count over the past three years:
+	\[
+	\widetilde{MT}(t,i) = \frac{1}{3} \sum_{q=t-3}^{t-1} MT_{q,i}.
+	\]
+\end{itemize}
+
 	
 	\subsubsection{Prediction of Medal Count for Medal-Winning Countries Using LSTM}
 	In this study, we propose to utilise a Long Short-Term Memory (LSTM) network \cite{Gal2015DropoutAA} for Olympic medal prediction, exploiting both temporal dynamics and uncertainty quantification. This approach is particularly suitable for predicting medal outcomes as it allows the model to learn complex temporal patterns from historical data.To better illustrate how the LSTM model can be useful in medal prediction, the detailed workflow of the model is shown in Fig\ref{fig:LSTM}.
@@ -483,7 +485,7 @@ Key parameter configurations shown in Table \ref{tab:lstm_params} were determine
 % China and USA prediction visualization
 \begin{figure}[H]
 	\centering
-		\begin{subfigure}[b]{0.48\textwidth}
+	\begin{subfigure}[b]{0.48\textwidth}
 		\includegraphics[width=\textwidth]{fig/USA Gold Metal Prediction vs. True Values.png}
 		\caption{USA Gold Medal Prediction Interval}
 		\label{fig:usa_gold1}
@@ -494,8 +496,6 @@ Key parameter configurations shown in Table \ref{tab:lstm_params} were determine
 		\caption{USA Total Medal Prediction Interval}
 		\label{fig:usa_total1}
 	\end{subfigure}
-	\label{fig:chn_usa_pred1}
-
 	
 	\begin{subfigure}[b]{0.48\textwidth}
 		\includegraphics[width=\textwidth]{fig/CHN Gold Metal Prediction vs. True Values.png}
@@ -508,22 +508,23 @@ Key parameter configurations shown in Table \ref{tab:lstm_params} were determine
 		\caption{China Total Medal Prediction Interval}
 		\label{fig:chn_total1}
 	\end{subfigure}
-		
-		\caption{Medal Predictions for China and USA in 2028}
-\label{all}
+	
+	\caption{Medal Predictions for China and USA in 2028}
+	\label{all}
 \end{figure}
+
 %%模型评估
 Due to space constraints, we will only show the forecasts for the U.S. and China here.
 
 
 \textbf{Predicted Results of the United States’ Medal Count}
 
-The U.S. gold medal forecast shown in Fig. \ref{all} (c) projects 44 medals by 2028 (10\% CAGR), reflecting stable growth in professional sports ecosystems. Total medals shown in Fig. \ref{all} (d) are predicted to hit a record 128 by 2028, with precise training-phase calibration (MAE=3.2) and test-phase sensitivity to global competition dynamics (MAE=7.8 post-2000). Prediction splits post-2020 show high temporal coherence (Pearson $r=0.89$), confirming adaptive event modeling capabilities.
+The U.S. gold medal forecast shown in Fig. \ref{fig:usa_gold1} projects 44 medals by 2028 (10\% CAGR), reflecting stable growth in professional sports ecosystems. Total medals shown in Fig. \ref{fig:usa_total1} are predicted to hit a record 128 by 2028, with precise training-phase calibration (MAE=3.2) and test-phase sensitivity to global competition dynamics (MAE=7.8 post-2000). Prediction splits post-2020 show high temporal coherence (Pearson $r=0.89$), confirming adaptive event modeling capabilities.
 
 
 \textbf{Predicted Results of China’s Medal Count}
 
-Figure \ref{all} (a) shows China's gold medal count rising steadily since 1980, with LSTM projections reaching 47 by 2028. The model demonstrates strong generalization (5\% deviation in 2010–2020) and robust temporal pattern recognition. Total medals shown in Figure. \ref{all} (b) are forecast to surpass 96 by 2028 (5.4\% CAGR), supported by high historical fit ($R^2=0.93$ for 1960–2000) and consistent post-2000 trajectory alignment.
+Figure \ref{fig:chn_gold1} shows China's gold medal count rising steadily since 1980, with LSTM projections reaching 47 by 2028. The model demonstrates strong generalization (5\% deviation in 2010–2020) and robust temporal pattern recognition. Total medals shown in Figure \ref{fig:chn_total1} are forecast to surpass 96 by 2028 (5.4\% CAGR), supported by high historical fit ($R^2=0.93$ for 1960–2000) and consistent post-2000 trajectory alignment.
 
 
 \subsubsection{Uncertainty Quantification Modeling with Monte Carlo Dropout}
@@ -686,7 +687,7 @@ We have empirically validated the selection of key implementation parameters for
 	
 \end{figure}
 %\subsubsection{Results Showcase}
-The table below shows the total number of medals and gold medals for the predicted top 15 countries with the corresponding prediction intervals.
+The table \ref{12} below shows the total number of medals and gold medals for the predicted top 15 countries with the corresponding prediction intervals.
 
 \begin{table}[H]
 	\centering
@@ -699,65 +700,85 @@ The table below shows the total number of medals and gold medals for the predict
 		\textbf{Country} & \textbf{Total Medal} & \textbf{Lower} & \textbf{Upper} & \textbf{Gold Medal} & \textbf{Lower} & \textbf{Upper} \\
 		\midrule
 		\rowcolor{gray!10}
-		USA & 128 & 124.0 & 135.0 & 44 & 45.3 & 50.4 \\
-		CHN & 95& 103.1 & 108.1 & 42 & 40.4 & 44.2 \\
+		USA & 128 & 126.0 & 130.0 & 44 & 43.0 & 45.0 \\
+		CHN & 95 & 94.0 & 96.0 & 42 & 41.0 & 43.0 \\
 		\rowcolor{gray!10}
-		GBR & 71 & 67.5 & 72.5 & 37 & 35.1 & 40.2 \\
-		GER & 54 & 50.8 & 55.8 & 24 & 22.2 & 27.3 \\
+		GBR & 71 & 69.0 & 73.0 & 37 & 36.0 & 38.0 \\
+		GER & 54 & 53.0 & 55.0 & 24 & 23.0 & 25.0 \\
 		\rowcolor{gray!10}
-		FRA & 51 & 47.5 & 52.5 & 18 & 16.7 & 21.9 \\
-		AUS & 46 & 42.1 & 47.1 & 18 & 15.9 & 21.0 \\
+		FRA & 51 & 50.0 & 52.0 & 18 & 17.0 & 19.0 \\
+		AUS & 46 & 45.0 & 47.0 & 18 & 17.0 & 19.0 \\
 		\rowcolor{gray!10}
-		JPN & 43 & 39.4 & 44.4 & 16 & 14.5 & 19.6 \\
-		RUS & 33 & 29.3 & 34.2 & 15 & 13.6 & 18.8 \\
+		JPN & 43 & 42.0 & 44.0 & 16 & 15.0 & 17.0 \\
+		RUS & 33 & 32.0 & 34.0 & 15 & 14.0 & 16.0 \\
 		\rowcolor{gray!10}
-		NED & 33 & 29.2 & 34.2 & 15 & 13.1 & 18.3 \\
-		KOR & 28 & 24.7 & 29.7 & 14 & 12.5 & 17.7 \\
+		NED & 33 & 32.0 & 34.0 & 15 & 14.0 & 16.0 \\
+		KOR & 28 & 27.0 & 29.0 & 14 & 13.0 & 15.0 \\
 		\rowcolor{gray!10}
-		ITA & 28 & 24.5 & 29.4 & 14 & 12.2 & 17.3 \\
-		ESP & 26 & 21.9 & 26.9 & 13 & 11.7 & 16.8 \\
+		ITA & 28 & 27.0 & 29.0 & 14 & 13.0 & 15.0 \\
+		ESP & 26 & 25.0 & 27.0 & 13 & 12.0 & 14.0 \\
 		\rowcolor{gray!10}
-		ROC & 21 & 17.3 & 22.2 & 12 & 10.0 & 15.1 \\
-		NZL & 21 & 17.0 & 22.0 & 11 & 9.2 & 14.3 \\
+		ROC & 21 & 20.0 & 22.0 & 12 & 11.0 & 13.0 \\
+		NZL & 21 & 20.0 & 22.0 & 11 & 10.0 & 12.0 \\
 		\bottomrule
 	\end{tabularx}
+	\label{12}
 \end{table}
 
-Below are the countries that improved their performance at the 2028 Olympic Games in Los Angeles compared to 2024：
+In Olympic medal prediction, we calculate the probabilities of improvement and decline based on the predicted confidence interval for the 2028 Games. Specifically, the probability of improvement refers to the likelihood that the upper bound of the predicted 2028 medal count exceeds the 2024 medal count, while the probability of decline refers to the likelihood that the lower bound of the predicted 2028 medal count is less than the 2024 medal count.
+
+Let \( MT_{30} \) represent the medal count for a given country in 2024, and let the predicted confidence interval for the 2028 medal count be \([L_{\text{lower}}, L_{\text{upper}}]\). The probabilities of improvement and decline can be expressed by the following formulas:
+
+\textbf{Probability of Improvement}
+\[
+P_{\text{progress}} = \frac{\max(0, L_{\text{upper}} - MT_{30})}{L_{\text{upper}} - L_{\text{lower}}}
+\]
+where \( L_{\text{upper}} - M_{T30} \) represents the potential improvement if the 2024 medal count is below the upper bound of the 2028 prediction. If the 2024 medal count exceeds the upper bound, the probability of improvement becomes zero.
+
+\textbf{Probability of Decline} 
+\[
+P_{\text{decline}} = \frac{\max(0, MT_{30} - L_{\text{lower}})}{L_{\text{upper}} - L_{\text{lower}}}
+\]
+
+The following Figure \ref{fig:medal_comparison} illustrates the top five countries that have shown an improvement in their performance at the 2028 Olympic Games in Los Angeles compared to the 2024 Games:
+
+
 \begin{figure}[h!]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
 		\includegraphics[width=\textwidth]{gold_medal_more_cmp.png}
-		\caption{Gold Medal Comparison: 2028 vs 2024}
+		\caption{Comparison of Gold Medals: 2028 vs 2024}
 		\label{fig:gold_medal}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.45\textwidth}
 		\includegraphics[width=\textwidth]{total_medal_more_cmp.png}
-		\caption{Total Medal Comparison: 2028 vs 2024}
+		\caption{Comparison of Total Medals: 2028 vs 2024}
 		\label{fig:total_medal}
 	\end{subfigure}
-	\caption{Top five countries with improved performance}
+	\caption{Top five countries with improved performance at the 2028 Olympic Games}
 	\label{fig:medal_comparison}
 \end{figure}
 
-Below is a chart of the countries that will see a decrease in performance at the 2028 Olympic Games in Los Angeles compared to 2024:
+The following Figures \ref{fig:medal_comparison1} depict the top five countries that are projected to experience a decline in their performance at the 2028 Olympic Games in Los Angeles compared to the 2024 Games:
+
 \begin{figure}[h!]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
 		\includegraphics[width=\textwidth]{gold_medal_less_cmp.png}
-		\caption{Gold Medal Comparison: 2028 vs 2024}
+		\caption{Comparison of Gold Medals: 2028 vs 2024}
 		\label{fig:gold_medal1}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.45\textwidth}
 		\includegraphics[width=\textwidth]{total_medal_less_cmp.png}
-		\caption{Total Medal Comparison: 2028 vs 2024}
+		\caption{Comparison of Total Medals: 2028 vs 2024}
 		\label{fig:total_medal1}
 	\end{subfigure}
-	\caption{Top five countries with lower achievement}
+	\caption{Top five countries with a decline in achievement at the 2028 Olympic Games}
 	\label{fig:medal_comparison1}
 \end{figure}
+
 \subsubsection{Modelling Assessment}
 
 % Model Performance Table
@@ -833,44 +854,49 @@ Below is a chart of the countries that will see a decrease in performance at the
 
 
 
-\subsection{Problem Overview}
+\subsection{ Prediction of Maiden Medal for Medal-Less Countries}
 The objective of this model is to predict whether countries that have never won a medal in the past (i.e., "first-time winning countries") will be able to win a medal in future Olympic Games. Traditional medal prediction models, which usually rely on historical medal data, may not effectively predict the future performance of these countries. Therefore, additional factors, such as the host country effect, athlete participation growth, and the addition of new events, need to be considered.
 
-\subsection{Index Analysis}
+\subsubsection{Index Analysis}
 
-\subsubsection{Target Variable}
-The target variable remains defined as:
-\[
-y(t,i) = 
-\begin{cases} 
-	1 & \text{if country } i \text{ wins a medal in year } t \\ 
-	0 & \text{otherwise}
-\end{cases}
-\]
+\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
+	\item \textbf{Target Variable}
+	
+	The target variable is defined as:
+	\[
+	y(t,i) = 
+	\begin{cases} 
+		1, & \text{if country } i \text{ wins a medal in year } t, \\ 
+		0, & \text{otherwise.}
+	\end{cases}
+	\]
+	
+	\item \textbf{Participants Growth Rate (PGR)}
+	
+	Define \(\Delta N(k,i) \equiv N_{\text{athletes}}(k-1,i) - N_{\text{athletes}}(k,i)\), the growth rate is:
+	\[
+	\text{PGR}(t,i) = \frac{1}{2} \left[ \max(0, \Delta N(t-1,i)) + \max(0, \Delta N(t-2,i)) \right]
+	\]
+	where \(k\) denotes the year index. Negative growth values are automatically clipped by the \(\max(0,\cdot)\) operator.
+	
+	\item \textbf{New Project Index (NPI)}
+	
+	Counts newly introduced Olympic projects in recent editions:
+	\[
+	\text{NPI}(t,i) = \sum_{k=t-3}^{t-1} \mathbf{1}\left( P(k,i) \cap \neg P(t-4, i) \right)
+	\]
+	where \( P(k, i) \) represents the set of projects in edition \( k \) for country \( i \), the indicator function \( \mathbf{1}(\cdot) \) takes the value 1 when the condition inside is true, and 0 otherwise, and the operator \(\neg\) represents negation.
+	
+	\item \textbf{Unpopular Project Participation Growth Rate (LPIR)}
+	
+	Define \(\Delta N(k,i) \equiv N_{\text{unpopular}}(k,i) - N_{\text{unpopular}}(k-1,i)\), the growth rate is:
+	\[
+	\text{LPIR}(t,i) = \frac{1}{2} \left[ \max(0, \Delta N(t-1,i)) + \max(0, \Delta N(t-2,i)) \right]
+	\]
+\end{itemize}
 
 
-\subsubsection{Participants Growth Rate (PGR)}
-Defining \(\Delta N(k,i) \equiv N_{\text{athletes}}(k-1,i) - N_{\text{athletes}}(k,i)\), the growth rate becomes:
-\[
-\text{PGR}(t,i) = \frac{1}{2} \left[ \max(0,\Delta N(t-1,i)) + \max(0,\Delta N(t-2,i)) \right]
-\]
-where \(k\) denotes year index. Negative growth values are automatically clipped by the \(\max(0,\cdot)\) operator.
-
-\subsubsection{New Project Index (NPI)}
-Counts newly introduced Olympic projects in recent editions:
-\[
-\text{NPI}(t,i) = \sum_{k=t-3}^{t-1} \mathbf{1}\left( P(k,i) \cap \neg P(t-4, i) \right)
-\]
-where \( P(k, i) \) represents the set of projects in edition \( k \) for country \( i \), the indicator function \( \mathbf{1}(\cdot) \) takes the value 1 when the condition inside is true, and 0 otherwise, the operator \(\neg\) represents the negation.
-
-\subsubsection{Unpopular Project Participation Growth Rate (LPIR)}
-Defining \(\Delta N(k,i) \equiv N_{\text{unpopular}}(k,i) - N_{\text{unpopular}}(k-1,i)\), the growth rate becomes:
-\[
-\text{LPIR}(t,i) = \frac{1}{2} \left[ \max(0, \Delta N(t-1,i)) + \max(0, \Delta N(t-2,i)) \right]
-\]
-
-
-\subsection{Prediction Model}
+\subsubsection{XGBoost 01 Breakthrough in Olympic Medal Prediction}
 
 We utilize an XGBoost classifier to predict the probability of first-time medal wins for countries. The model’s input is the feature vector for country \( i \) at time \( t \), denoted as \( X(t,i) \):
 
@@ -921,6 +947,7 @@ The specific algorithm flow is shown below.
 Drawing on the XGBoost model's results, we identify the top 10 countries with the highest probability of securing their first Olympic medal. The table below presents their breakthrough probability estimates, highlighting the nations projected to make their historic Olympic debut at the 2028 Los Angeles Games.
 \begin{table}[H]
 	\centering
+	\setlength{\tabcolsep}{25pt} % Adjust column separation to increase width
 	\begin{tabular}{ccccc}
 		\toprule
 		\rowcolor{red!10} 
@@ -951,6 +978,7 @@ Drawing on the XGBoost model's results, we identify the top 10 countries with th
 	\caption{Predicted Probability of Winning First Olympic Medal}
 	\label{tab:predicted_probability}
 \end{table}
+
 \subsubsection{Modelling Assessment}
 \begin{table}[H]
 	\centering
@@ -969,7 +997,6 @@ Drawing on the XGBoost model's results, we identify the top 10 countries with th
 	\label{tab:model_metrics}
 \end{table}
 
-\textbf{Model Performance Summary:}  
 The optimized XGBoost model demonstrates strong performance, achieving an overall \textbf{accuracy of 85\%} and a high \textbf{ROC-AUC score of 0.90}, indicating excellent class discrimination. Precision is particularly strong for Class 0 (\textbf{88\%}), while Class 1 precision is slightly lower at \textbf{82\%}, suggesting some room for improvement in minimizing false positives. Recall values are balanced, with \textbf{87\% for Class 1} and \textbf{83\% for Class 0}, showing the model effectively identifies most true positives but may miss a few Class 0 instances. The F1-scores of \textbf{0.85 (Class 0)} and \textbf{0.84 (Class 1)} further confirm a well-balanced trade-off between precision and recall, making the model reliable for both classes.
 	
 	
@@ -978,21 +1005,56 @@ The optimized XGBoost model demonstrates strong performance, achieving an overal
 	
 
 	
-\section{Task 3:}
+\subsection{Analysis of Event Influence on Medal Distribution}
 
-
-		\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.8\linewidth]{fig/Rose-Chart.png}
-		\caption{Flow of LSTM based on Monte Carlo Dropout}
-		\label{fig:Rose-Chart}
-	\end{figure}
+\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
+	\item \textbf{New Event Held}
 	
-\section{Task 4: Effect of Great Coach}
+	\[
+	\tilde{V}(t) = \left( v_1(t), v_2(t), \dots, v_M(t) \right)^T
+	\]
+	
+	\item \textbf{New Dominance of Event}
+	
+	\[
+	\tilde{D}_j(t) = \frac{\sum_{q=1}^{t-1} \tilde{V}_j(q) \cdot MT_{q,i,k,j}}{\sum_{q=1}^{t-1} \tilde{V}_j(q) \cdot \sum_{k=1}^{N} \sum_{i=1}^{M} MT_{q,i,k,j}}
+	\]
+	
+	\item \textbf{Historical Medal Rate for Each Sport}
+	
+	Let \( D_{i,j} \) represent the historical medal rate for country \( i \) in event \( j \). This can be calculated as the ratio of the total number of medals won by country \( i \) in event \( j \) over the total number of participations in that event across all years:
+	
+	\[
+	D_{i,j} = \frac{\sum_{q=1}^{t-1} MT_{q,i,j}}{\sum_{q=1}^{t-1} P_{q,i,j}},
+	\]
+	where \( MT_{q,i,j} \) is the number of medals won by country \( i \) in event \( j \) during year \( q \), and \( P_{q,i,j} \) is the total number of participations by country \( i \) in event \( j \) during year \( q \).
+	
+	\item \textbf{Ranking of Sports within Each Country}
+	
+	Once the historical medal rates \( D_{i,j} \) have been calculated for all events \( j \) for a given country \( i \), we can rank these events for each country based on their historical medal rates. The rank \( R_{i,j} \) for country \( i \) in event \( j \) can be defined as:
+	
+	\[
+	R_{i,j} = \text{Rank}(D_{i,1}, D_{i,2}, \dots, D_{i,M}),
+	\]
+	where \( \text{Rank}(\cdot) \) represents the ranking function that orders the historical medal rates for country \( i \) in all events. The event with the highest medal rate will be ranked first, and so on.
+	
+	\item \textbf{Results Visualization}
+	
+	The figure below shows the ranking of sports based on historical medal rates for country \( i \). The x-axis represents the different events, while the y-axis shows the corresponding historical medal rates. The ranking can be visualized by the height of the bars in the chart.
+	
+	\begin{figure}[htbp]
+		\centering
+		\includegraphics[width=0.7\textwidth]{fig/Rose-Chart.png}
+		\caption{Ranking of Sports for Country \( i \) Based on Historical Medal Rates}
+		\label{fig:ranking}
+	\end{figure}
+\end{itemize}
+
+\subsection{Effect of Great Coach}
 
 
 
-\subsection{Test of Parallel Trend }
+\subsubsection{Test of Parallel Trend }
 %我们可以从图4中看出，从1900年-1984年，美国体操队的奖牌数与xx国相似，为了证实这一猜想，我们对他们的奖牌数进行平行检验，
 
 We can see that the number of medals won by the US gymnastics team from 1896 to 1984 and 1984-2016 years in Figure \ref{fig:USA-GYM}. To verify this conjecture, we conducted a parallel test on their medal counts.
@@ -1003,7 +1065,7 @@ We can see that the number of medals won by the US gymnastics team from 1896 to 
 	\label{fig:USA-GYM}
 \end{figure}
 
-\subsection{Test of Great Coach Effect based on DiD}
+\subsubsection{Test of Great Coach Effect based on DiD}
 
 To seek evidence of the existence of the great coach effect, we employ the Difference-in-Differences (DiD) model to examine its impact.
 
@@ -1046,7 +1108,7 @@ The test results of regression coefficients were obtained and are summarized in 
 
 
 
-\subsection{Selection of Investment Sports}
+\subsubsection{Selection of Investment Sports}
 	
 	\section{Task 5}
 	
