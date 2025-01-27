@@ -17,6 +17,7 @@ class Statics:
         self.program = Program()
         self.raw_dataset = RawDataset()
         self.matlab_dir = './matlab-plotter/'
+        self.data_path = './mid_data/'
         
     def get_valid_years(self, start_year: int = 1896, end_year: int = 2024):
         '''
@@ -536,3 +537,28 @@ class Statics:
         df['Rate'] = (df['Rate'] - np.min(df['Rate'])) / (np.max(df['Rate']) - np.min(df['Rate']))
         df = df.sort_values(by=['Rate', 'NoMedal'], ascending=[False, False])
         return df
+
+    def get_monopoly_state(self):
+        '''
+        求解奥运会的所有项目的垄断国家。
+        
+        如果国家 c 在项目 j 上获得的奖牌数量，占所有届奥运会在项目 j 上下发奖牌数量的 20% 及以上，则称国家 c 对项目 j 上**垄断**。
+        '''
+        self = Statics()
+        df = self.athlete.csv_file
+        df = df[ df['Medal']!='No medal' ]
+        df = df.drop_duplicates(subset=['NOC', 'Year','Sport', 'Event', 'Medal'])
+
+        sports = np.array(df['Sport'].unique())
+
+        res = pd.DataFrame(df['Sport'].unique(), columns=['Sport'])
+        top_countries = []
+
+        for sport in sports:
+            k = df[ df['Sport'] == sport ].groupby(['NOC']).size().sort_values(ascending=False).reset_index(name='Count')
+            split_rate = k['Count'].sum() * 0.2
+            l = np.array2string(np.array(k[ k['Count']>= split_rate]['NOC']), separator=', ')
+            top_countries.append(l)
+
+        res['top_countries'] = pd.Series(top_countries)
+        return res.sort_values(by='Sport')
