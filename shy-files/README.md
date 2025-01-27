@@ -5,6 +5,7 @@
 ## 数据预处理记录
 
 1. 四个文件中，只有 `summerlyOly_programs.csv` 中有缺失值，使用 0 填充。 
+1. `athelete` 对应的 csv 文件中，Marathon Swimming 和 Marathon Swimming, Swimming，视为同一类项目。3x3 Basketball 和 3x3 Basketball, Basketball	 诸如此类。
 
 ## 画图
 

@@ -38,6 +38,8 @@ class Athlete(Preprocessor):
 
     def __preprocess__(self):
         self.csv_file = self.csv_file[ self.csv_file['Year'] != 1906 ]
+        self.csv_file['Sport'] = self.csv_file['Sport'].replace('3x3 Basketball, Basketball','3x3 Basketball')
+        self.csv_file['Sport'] = self.csv_file['Sport'].replace('Marathon Swimming, Swimming','Marathon Swimming')
 
 class Host(Preprocessor):
     def __init__(self, test_mode=True):
