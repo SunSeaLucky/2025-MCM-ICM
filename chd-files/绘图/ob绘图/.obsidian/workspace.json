@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "8607abf4e16500a0",
+        "id": "55e819298cc0832d",
         "type": "tabs",
         "children": [
           {
-            "id": "3167904555a79a9e",
+            "id": "58b2e43455d2a1c9",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -159,8 +159,11 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "96b322820e32a533",
+  "active": "58b2e43455d2a1c9",
   "lastOpenFiles": [
+    "OurWork/OurWork.md",
+    "OurWork/OurWork.excalidraw.png",
+    "OurWork",
     "Rose-Chart/Rose-Chart.excalidraw.md",
     "Rose-Chart/Rose-Chart.png",
     "Rose-Chart/Rose-Chart.svg",
@@ -177,7 +180,6 @@
     "LSTM-MCD/LSTM-MCD.excalidraw.md",
     "LSTM-MCD/LSTM-MCD.png",
     "LSTM-MCD/LSTM-MCD.excalidraw.png",
-    "assets/会徽.webp",
     "assets",
     "新建文件夹",
     "LSTM-MCD",
@@ -187,7 +189,6 @@
     "欢迎.md",
     "Drawing 2025-01-25 21.09.50.excalidraw.pdf",
     "LSTM-MCD.eps",
-    "新建 文本文档.txt",
     "Excalidraw/Drawing 2025-01-25 21.09.50.excalidraw.md"
   ]
 }
