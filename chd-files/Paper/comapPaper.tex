@@ -12,6 +12,8 @@
 \setlength{\cftbeforesecskip}{6pt}
 \renewcommand{\contentsname}{\hspace*{\fill}\Large\bfseries Contents \hspace*{\fill}}
 
+\usepackage{enumitem}
+
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage[table,xcdraw]{xcolor}
@@ -72,11 +74,11 @@
 	
 	\subsection{Background}
 	The medal table of the 2024 Paris Olympics shows that the United States and China each won 40 gold medals and tied for the top spot, but the United States led with a total of 126 medals. The host country France ranked fifth in gold medals (16) and fourth in total medals (64). Dominica, Saint Lucia and other countries won their first Olympic medals, while 60 countries still have not broken through for any medals.
-	\begin{figure}[htbp]
-		\centering
-		\includegraphics[width=0.7\linewidth]{fig/background}
-		\caption{The medals of the 2024 Paris Olympics}
-	\end{figure}
+%	\begin{figure}[htbp]
+%		\centering
+%		\includegraphics[width=0.7\linewidth]{fig/background}
+%		\caption{The medals of the 2024 Paris Olympics}
+%	\end{figure}
 	
 	\subsection{Restatement and Analysis of the Problem}
 	Based on the provided historical data-set of the Olympic Games from 1896 to 2024, we are employed to analyze and answer the following questions:
@@ -206,14 +208,18 @@
 	
 	%\section{Descriptive statistical analysis}
 	
+	苏联、俄罗斯
 	
 	
 	
 	
 	
-	
-	
-	
+\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
+	\item aAAAAAAAA
+	\item BBBBBBBBBB
+\end{itemize}
+
+
 	
 	
 	
@@ -223,7 +229,7 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%% Task 1 %%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\section{Task 1}
+	\section{Task 1: How Many Medal Counts in 2028? }
 	
 	\subsection{Significance Analysis of Host Effect}
 	
@@ -342,12 +348,12 @@
 	
 	\subsection{Prediction of Medal Count for Medal-Winning Countries Using LSTM}
 	x x\cite{Gal2015DropoutAA}
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{fig/LSTM2.png}
-		\caption{Flow of LSTM based on Monte Carlo Dropout}
-		\label{fig:LSTM}
-	\end{figure}
+%	\begin{figure}[H]
+%		\centering
+%		\includegraphics[width=1\linewidth]{fig/LSTM2.png}
+%		\caption{Flow of LSTM based on Monte Carlo Dropout}
+%		\label{fig:LSTM}
+%	\end{figure}
 	\begin{algorithm}
 		\caption{LSTM Medal Prediction with Uncertainty Quantification}
 		\begin{algorithmic}[1]
@@ -427,13 +433,13 @@
 	In sports events, there are often unexpected incidents such as injuries, which are full of uncertainties for Olympics. The Monte Carlo Dropout (MC Dropout) can quantify uncertainty of the model \cite{gal2016dropout}.
 	
 	The uncertainty is estimated by generating the distribution of predicted values through multiple random activation of the Dropout layer during the inference stage. By conducting multiple forward passes, the variance of the model's output is used to measure the confidence of the prediction.
-	
-	\begin{figure}
-		\centering
-		\includegraphics[width=1\linewidth]{fig/LSTM-MCD.png}
-		\caption{Flow of LSTM based on Monte Carlo Dropout}
-		\label{fig:lstm-mcd}
-	\end{figure}
+%	
+%	\begin{figure}
+%		\centering
+%		\includegraphics[width=1\linewidth]{fig/LSTM-MCD.png}
+%		\caption{Flow of LSTM based on Monte Carlo Dropout}
+%		\label{fig:lstm-mcd}
+%	\end{figure}
 	
 	
 	Assume $f(x;\theta)$ is the prediction model we build, $x$ is its input and $\theta$ is parameters. In the training stage, Dropout operates with a probability $p$
@@ -624,9 +630,13 @@ The test results of regression coefficients were obtained and are summarized in 
 
 \subsection{Selection of Investment Sports}
 
+%一般国力雄厚的国家能够花费金钱聘请优秀教练，所以我们最好选择有一定实力但不是非常顶尖的国家。考虑到一代运动员的职业生涯一般为4届运动会，故统计2012、2016、2020、2024这四届奥林匹克运动会的奖牌总数总和，并排序，如图所示
 
+Generally, countries with strong national power can afford to hire excellent coaches, so we'd better choose countries that have certain strength but are not the very top ones. Considering that an athlete's career usually lasts for 4 Olympic Games, the total number of medals won in the 2012, 2016, 2020 and 2024 Olympic Games was calculated and ranked as shown in the Figure \ref{fig:choose3_rank}.
 
+分析、选择国家
 
+插图
 
 
 
