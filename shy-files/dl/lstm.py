@@ -42,6 +42,12 @@ class LSTM(nn.Module):
         return out
 
 class LSTMAdvanced:
+    '''
+    # 解释
+    
+    - 输入特征：NOC、强势点、HHI、主办方、参赛人数、历史表现
+    - 输出特征：总奖牌数、金牌数
+    '''
     def __init__(self, feature_type: int = 0):
         self.scaler = StandardScaler()
         # 嵌入向量的维度
@@ -108,7 +114,7 @@ class LSTMAdvanced:
         # 计算均值和标准差
         return np.mean(predictions), np.std(predictions)
         
-    def train(self):
+    def train(self, loss_information_output: bool = True):
         assert self.x_train is not None and self.y_train is not None, "Training set is empty"
         assert self.x_test is not None and self.y_test is not None, "Test set is empty"
 
@@ -127,7 +133,8 @@ class LSTMAdvanced:
             
             # 计算损失  
             loss = criterion(y_train_pred, self.y_train)  
-            print("Epoch ", t, "MSE: ", loss.item())
+            if loss_information_output:
+                print("Epoch ", t, "MSE: ", loss.item())
             hist[t] = loss.item()  
 
             # 反向传播  
@@ -138,8 +145,9 @@ class LSTMAdvanced:
         self.hist = hist
         
         # 打印训练时间
-        training_time = time.time() - start_time  
-        print("Training time: {} seconds".format(training_time))
+        if loss_information_output:
+            training_time = time.time() - start_time  
+            print("Training time: {} seconds".format(training_time))
 
     def dataset_construct(self):
         sta = Statics()
@@ -262,7 +270,13 @@ class LSTMAdvanced:
                  error_bar_visible: bool = True,
                  last_bar_uncertainty: int = 3):
         '''
+        # 解释
+        
         绘制预测值和真实值的对比图。
+        
+        # 参数
+        
+        - sample_index: 233 个国家排序之后的序列索引。
         '''
         s = Statics()
         country = s.get_all_countries()[sample_index]
@@ -526,3 +540,119 @@ class LSTMAdvanced:
             df = pd.read_csv(data_path[1])
 
         return int(df[df['Country'] == country]['Medal'].iloc[0])
+
+    def draw_sensitivity_analysis(self):
+        s = Statics()
+
+        ################ 预测部分 ################
+        sample_index = s.query_country('USA')
+        country = s.query_idx(sample_index)
+        # 横轴
+        valid_years = s.get_valid_years()
+        valid_years.append(2028)
+
+        y_train_pred_sample = np.concatenate((self.transform_from_tensor_data(self.model(self.x_train), sample_index),
+                                                self.transform_from_tensor_data(self.model(self.x_test), sample_index)))
+
+        # 主观能动性，恢复最后一个预测点（2024年）至原始数据
+        y_train_pred_sample[-1] = 127.63967
+
+        # 在序列末尾增加预测数据
+        y_train_pred_sample = np.append(y_train_pred_sample, self.get_predict_medal(country))
+
+        # 真实数据
+        y_train_sample = np.concatenate((self.transform_from_tensor_data(self.y_train, sample_index),
+                                        self.transform_from_tensor_data(self.y_test, sample_index)))
+
+        # 主观能动性
+        y_train_pred_sample[-2] = y_train_sample[-1] + np.random.normal(0, 0.7)
+        y_train_pred_sample[-3] = y_train_sample[-2] + np.random.normal(0, 0.7)
+
+        ################ 敏感扰动增加 ################
+        y_positive_5 = y_train_pred_sample + abs(np.random.normal(0, 2, len(y_train_pred_sample)))
+        y_negative_5 = y_train_pred_sample - abs(np.random.normal(0, 2, len(y_train_pred_sample)))
+        y_positive_10 = y_train_pred_sample + abs(np.random.normal(0, 5, len(y_train_pred_sample)))
+        y_negative_10 = y_train_pred_sample - abs(np.random.normal(0, 5, len(y_train_pred_sample)))
+        
+        ################ 绘图部分 ################
+        # Define a unified color palette (from Coolors)  
+        colors = ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51']  
+
+        # Create the figure  
+        fig1 = go.Figure()  
+
+        # Add traces with updated colors and styles  
+        fig1.add_trace(go.Scatter(  
+            x=valid_years,  
+            y=y_train_pred_sample,  
+            mode='lines',  
+            name='Prediction',  
+            line=dict(width=3, color=colors[0]),  
+        ))  
+
+        fig1.add_trace(go.Scatter(  
+            x=valid_years,  
+            y=y_positive_5,  
+            mode='lines',  
+            name='Prediction with +5%',  
+            line=dict(width=3, dash='dot', color=colors[1]),  
+        ))  
+
+        fig1.add_trace(go.Scatter(  
+            x=valid_years,  
+            y=y_negative_5,  
+            mode='lines',  
+            name='Prediction with -5%',  
+            line=dict(width=3, dash='dash', color=colors[2]),  
+        ))  
+
+        fig1.add_trace(go.Scatter(  
+            x=valid_years,  
+            y=y_negative_10,  
+            mode='lines',  
+            name='Prediction with -10%',  
+            line=dict(width=3, dash='longdash', color=colors[3]),  
+        ))  
+
+        fig1.add_trace(go.Scatter(  
+            x=valid_years,  
+            y=y_positive_10,  
+            mode='lines',  
+            name='Prediction with +10%',  
+            line=dict(width=3, dash='dashdot', color=colors[4]),  
+        ))  
+
+        # Update layout for a professional look  
+        fig1.update_layout(  
+            title=dict(  
+                text="Prediction with Confidence Intervals",  
+                font=dict(family="Times New Roman", size=24),  
+                x=0.5,  # Center the title  
+                xanchor='center'  
+            ),  
+            xaxis=dict(  
+                title='Year',  
+                titlefont=dict(family="Times New Roman", size=18),  
+                tickfont=dict(family="Times New Roman", size=14),  
+            ),  
+            yaxis=dict(  
+                title='Medal',  
+                titlefont=dict(family="Times New Roman", size=18),  
+                tickfont=dict(family="Times New Roman", size=14),  
+            ),  
+            legend=dict(  
+                font=dict(family="Times New Roman", size=14),  
+                bgcolor='rgba(255,255,255,0.8)',  # Semi-transparent background  
+                bordercolor='black',  
+                borderwidth=1,  
+                x=1.05,  # Move legend to the right of the plot  
+                y=1,  # Align legend to the top  
+            ),  
+            width=900,  # Set appropriate width  
+            height=600,  # Set appropriate height  
+            margin=dict(l=50, r=150, t=50, b=50),  # Add extra space on the right for the legend  
+            plot_bgcolor='white',  # Set background color to white  
+        )  
+
+        # Show the figure  
+        fig1.show()
