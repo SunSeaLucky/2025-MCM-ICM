@@ -511,3 +511,28 @@ class Statics:
                 return df.sort_values(by='TotalAscendProbability', ascending=False)[['NOC','TotalAscendProbability' ,'TotalMedal_2024', 'TotalMedal_2028']].head(compare_countries_num)
             elif compare == 'less':
                 return df.sort_values(by='TotalDescendProbability', ascending=False)[['NOC','TotalDescendProbability' ,'TotalMedal_2024', 'TotalMedal_2028']].head(compare_countries_num)
+
+    def get_potential_sport(self, country, year:int = 2012):
+        df = self.athlete.csv_file
+
+        df = df[ (df['NOC']==country) & (df['Year']>=year) ]
+        df = df.drop_duplicates(subset=['NOC', 'Year', 'Sport', 'Event', 'Medal'])
+
+        def set_num(row):
+            if row['Medal'] == 'No medal':
+                row['NoMedal'] = 1
+                row['HasMedal'] = 0
+            else:
+                row['NoMedal'] = 0
+                row['HasMedal'] = 1
+            return row
+
+        df = df.apply(set_num, axis=1)
+
+        df = df[['NOC', 'Sport', 'NoMedal', 'HasMedal']]
+        df = df.groupby(['NOC','Sport'], as_index=False)[['NoMedal', 'HasMedal']].sum()
+        df['Rate'] = df['HasMedal'] / (df['HasMedal'] + df['NoMedal'])
+
+        df['Rate'] = (df['Rate'] - np.min(df['Rate'])) / (np.max(df['Rate']) - np.min(df['Rate']))
+        df = df.sort_values(by=['Rate', 'NoMedal'], ascending=[False, False])
+        return df
