@@ -1,0 +1,148 @@
+\section{Task 2: Effect of Great Coach}
+
+
+
+\subsection{Analysis of the Great Coach Effect}
+%我们可以从图4中看出，从1900年-1984年，美国体操队的奖牌数与xx国相似，为了证实这一猜想，我们对他们的奖牌数进行平行检验，
+
+%We can see that the number of medals won by the US gymnastics team in 1950-1980 and 1984-2016 years in Figure \ref{fig:USA-GYM}. To verify this conjecture, 
+%我们看到美国体操队的奖牌数量在1950-1976年十分平稳，但在1984-2016年出现急剧提升和波动，这个时间正好是bela教练成为美国体操队教练的时间点，并且在1984-2016年期间，bela和他的妻子mara一直在为美国体操队做出贡献，故而我们提出存在“伟大教练效应”的假设==猜测。
+%
+%为了检验这一个猜测，我们构造实验组和“伪对照组”如下。
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{fig/USA-GYM.png}
+	\caption{Flow of LSTM based on Monte Carlo Dropout}
+	\label{fig:USA-GYM}
+\end{figure}
+
+We observe that the number of medals won by the US gymnastics team was quite stable from 1950 to 1976, but experienced a sharp increase and fluctuation from 1984 to 2016 in Figure \ref{fig:USA-GYM}. This period coincides with the time when \textbf{Béla Károlyi} became the coach of the US gymnastics team. During this period, Béla Károlyi and his wife\textbf{Márta Károlyi} have been making significant contributions to the US gymnastics team. Therefore, we propose the hypothesis that there is a "Great Coach Effect". 
+
+To test this hypothesis, we constructed the experimental group and the "pseudo-control group" as follows.
+
+\begin{table}[H]
+	\centering
+	\caption{Group and Sample setting of DiD}
+	\begin{tabular}{c c}
+		\toprule
+		\rowcolor{red!10}
+		\textbf{Group} & \textbf{Sample} \\
+		\midrule
+		\textbf{Experimental Group} & US gymnastics' Total medal count from 1952 to 1976 ($n=7$). \\
+		\textbf{Pseudo-Control Group} & US gymnastics' Total medal count from 1988 to 2012 ($n=7$). \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+\noindent Noted: The United States did not participate in the 1980 Summer Olympics and was the host country in 1984. Therefore, these two years are not included in the sample.
+%注：美国没有参加1980年夏季奥运会，美国是1984年的东道主，故这两年不计入样本
+
+
+
+
+
+\subsection{Test of Great Coach Effect based on DiD}
+
+To seek evidence of the existence of the great coach effect, we employ the Difference-in-Differences (DiD) model to examine its impact.
+
+The DiD model is a statistical method used to assess the causal effect of an intervention on an outcome variable. It estimates the intervention effect by comparing the performance differences between the experimental group and the control group before and after the intervention. The model equation is 
+\begin{equation}
+	Y_{i,t}=\alpha+\delta_t+\gamma \cdot Treat_i \cdot Post_t + \varepsilon_{i,t},
+\end{equation}
+where \( Y_{i,t} \) represents team \( i \)'s performance at time \( t \) (e.g., medal count). The model includes a constant term \(\alpha\), time fixed effects \(\delta_t\) for common influences (e.g., 1980s gymnastics improvements), and an interaction term \( Treat_i \cdot Post_t \) to capture \textbf{Béla Károlyi}'s impact as coach on the U.S. team. The coefficient \(\gamma\) measures the "great coach effect," and \(\varepsilon_{i,t}\) is the error term.
+
+By using $Least$ $Squares$ $Method$ in $Python$, we obtained the estimated value of the regression coefficient $\hat{\gamma}=4.1572$. To test the significance of $\gamma$, assume that
+\begin{equation*}
+	H_0: \gamma=0 \quad vs \quad H_1: \gamma>0
+\end{equation*}
+
+Select the test statistic:
+\begin{equation}
+	T=\frac{ \hat{\gamma} }{ \text{SE}(\hat{\gamma}) } \sim t(6)
+\end{equation}
+where $\text{SE}(\hat{\gamma}) = \sqrt{ \frac{1}{N} \sum_{i=1}^{N} \hat{\varepsilon}_i^2 }$, $\hat{\varepsilon}=\hat{Y}_{i,t}-Y_{i,t}$. For a given significance level $\alpha$, the rejection domain for the hypothesis test is
+\begin{equation}
+	W_\alpha = \big\{ |T| \ge t_{1-\frac{\alpha}{2}}(6) \big\}
+\end{equation}
+
+The test results of regression coefficients were obtained and are summarized in Table \ref{table:great-coach-effect_t-test}. The sample falls within the rejection region $W_{0.975}$, so it can be concluded that the regression coefficient $\gamma$ is significant, e.i. the impact of great coach Béla Károlyi for the USA gymnastics team is significant. On average, a great coach can increase the number of medals by 4 for the US gymnastics.
+\begin{table}[H]
+	\centering
+	\caption{Transposed Presentation of t-Test Results}
+	\label{table:great-coach-effect_t-test}
+	\begin{tabular}{lcccc}
+		\toprule
+		\rowcolor{red!10}
+		& \textbf{t-statistic} & \textbf{p-value} & \textbf{Critical value (α=0.05)} & \textbf{Test conclusion} \\
+		\midrule
+		\rowcolor{white} % 纯白色
+		\textbf{Value} & 3.045 & 0.008 & 2.052 & Reject null hypothesis \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+
+
+
+
+
+	\subsection{Selection of Investment Countries and Sports}
+	
+	%一般国力雄厚的国家能够花费金钱聘请优秀教练，所以我们最好选择有一定实力但不是非常顶尖的国家。考虑到一代运动员的职业生涯一般为4届运动会，故统计2012、2016、2020、2024这四届奥林匹克运动会的奖牌总数总和，并排序，如图所示
+	
+	Generally, countries with strong national power can afford to hire excellent coaches, so we'd better choose countries that have certain strength but are not the very top ones. Considering that an athlete's career usually lasts for 4 Olympic Games, the total number of medals won in the 2012, 2016, 2020 and 2024 Olympic Games was calculated and ranked, seeing Figure \ref{fig:medal_count_by_noc}.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig/Medal_Count_by_NOC.png}
+		\caption{Sort of Various Conutries by Total Medal Count}
+		\label{fig:medal_count_by_noc}
+	\end{figure}
+	
+	%根据图2，美国、中国、英国排在TOP3，而日本、法国、澳大利亚排在第4-6名，后者都属于有较为雄厚的国力且有提升潜力的国家，故而选择日本、法国、澳大利亚这三个国家进行分析。
+	%我们选择对日本、法国、澳大利亚这三个国家提出投资建议
+	
+	Based on Figure \ref{fig:medal_count_by_noc}, the United States, China, and the United Kingdom occupy the TOP 3 positions in terms of medal counts. Japan, France, and Australia rank 4-6, respectively. Given that these latter three countries possess substantial national resources and demonstrate significant potential for improvement, We choose to offer investment suggestions for Japan, France and Australia.
+	
+	%最需要考虑的项目最好是"汇报/投入"最大的项目，故对每个项目，因为团体项目人数多但是奖牌少，即选择奖牌数回报率更高的国家，奖牌数回报率被定义为式3
+	
+	%故对每个项目，因为团体项目人数多但是奖牌少
+	
+	The item that requires the most consideration is preferably the one with the greatest "return on input", namely, to select the country with a higher medal return rate. The \textbf{Medal Return Rate} is defined as Eq(\ref{eq:MRR}).
+	\begin{equation}
+		MRR_{i,j}=1-\text{Normal}
+		\Bigg( 
+		\frac{ \sum_{t=27}^{30} \sum_{k\in \tilde{A}_{E}(j)} MT_{t,i,j} }{ \sum_{t=27}^{30} \sum_{j\in \tilde{A}_{S}} N_{athletes}(t,i,j) }
+		\Bigg)
+		\label{eq:MRR}
+	\end{equation}
+	where $\tilde{A}_{E}(j)$ denotes individual event of sport $j$, and $\text{Normal}(x)=x/(\max{x} - \min{x})$. 
+	
+	The larger the $MRR$ is, the more people are involved in the single-person sport but the fewer awards are won, indicating a greater potential for medal count improvement. After calculation, $MRR_{i,j}$ are shown in Table \ref{table:MRR}.
+	\begin{table}[htbp]
+		\centering
+		\caption{Medal Rate Ranking for Different Countries}
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{l | l c | l c | l c}
+				\toprule
+				\rowcolor{red!10} 
+				& \multicolumn{2}{c|}{\cellcolor{red!10} France} & \multicolumn{2}{c|}{\cellcolor{red!10} Japan} & \multicolumn{2}{c}{\cellcolor{red!10} Australia} \\ 
+				\midrule
+				\rowcolor{red!10} 
+				Rank  & Sport & MRR & Sport & MRR & Sport & MRR \\ 
+				\midrule
+				\rowcolor{gray!10}
+				1     & Weightlifting & 1.00 & Shooting & 1.00 & Artistic Gymnastics & 1.00 \\ 
+				\rowcolor{white}
+				2     & Diving & 1.00 & Cycling & 1.00 & Judo  & 1.00 \\ 
+				\rowcolor{gray!10}
+				3     & Badminton & 1.00 & Sailing & 0.96 & Table Tennis & 1.00 \\ 
+				\rowcolor{white}
+				4     & Gymnastics & 0.95 & Cycling Track & 0.95 & Shooting & 0.93 \\ 
+				\rowcolor{gray!10}
+				5     & Wrestling & 0.90 & Athletics & 0.95 & Boxing & 0.81 \\ 
+				\bottomrule
+			\end{tabular}
+		}
+		\label{table:MRR}
+	\end{table}
