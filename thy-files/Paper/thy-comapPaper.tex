@@ -90,7 +90,23 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\begin{abstract}
 		
-		abstract...
+	本研究通过构建一个多因子奥运奖牌预测模型，旨在预测各国在2028年奥运会中的奖牌数量，并探讨影响奖牌数的主要因素。预测模型中的因子包括Host Effect, Strong Events, Percentage of Winners, Medal Distribution Concentration, Historical Performance, Number of Athletes 等因素。通过LSTM模型进行点预测，其中美国在2028年奥运会预计会拿到128枚奖牌，本文还通过基于贝叶斯理论的蒙特卡洛drop out方法提供了预测区间，以评估奖牌数的潜在波动。模型结果表明，美国、中国、阿尔及利亚在2028年洛杉矶奥运会上会有较大进步，而澳大利亚、法国、挪威则会在2028年表现有所降低。LSTM-Monte Carlo Dropout模型评估指标显示，在测试集上MSE为1.1284，RMSE为1.0625，$R^2$高达0.9216，这说明我们所构建的模型具有较好的预测性能。
+	
+	对于首次获奖国家的预测，我们通过XGBoost模型，估算了哪些国家可能在2028年首次获得奥运奖牌。分析结果显示，FSM具有最高的可能在2028年奥运会上实现01突破，其成功概率为85\%，其余01突破成功概率前十五位的国家在文中进行了列举。模型评估方面ROC-AUC 高达 0.90 分，显示出出色的类别区分能力。
+	
+	对于奥运项目的关系分析与重要性评估，我们通过计算各国在各项赛事中的历史奖牌率，并对其进行排名，评估了不同项目在各国奖牌获取中的重要性并揭示了每个国家在不同项目中的优势。其中美国优势项目分别为体操，游泳，射击等。
+	
+	对于Task2, 我们利用Difference-in-Difference建立了伟大教练对奖牌提升作用的评估模型。
+%	教练流动性的影响
+%	研究验证了教练流动性对国家体育项目的影响。通过对历史数据的分析，发现教练在跨项目流动后，能够显著提升特定项目的表现，例如郎平和贝拉·卡罗利的成功案例。模型结果表明，教练效应在体操和排球项目中尤为突出。
+%	
+%	教练效能的量化与建议
+%	对教练效能进行了量化分析，结果表明教练的成功经验对奖牌数的提升有显著贡献。为日本、法国和澳大利亚等国家提供了具体的投资建议，特别是在选拔高水平教练、支持项目培养和增加教练资源方面。
+	
+	
+	本研究还提取了模型中的潜在规律，并提出了一些战略性建议以供奥运委员会参考。针对奥运项目的垄断与非垄断项目，建议委员会通过促进非垄断项目的参与来提升公平性和全球竞争力。同时，通过分析性别比例趋势，建议优化项目选拔，促进女性运动员的参与，确保性别平衡。此外，基于运动员表现排名，建议优先资源分配，以支持具有潜力的“明星运动员”。
+	
+	通过本研究的预测和分析，我们为优化奥运奖牌策略提供了数据驱动的科学依据。不仅揭示了潜力国家在未来奥运中的表现趋势，还为奥运委员会在教练流动、资源分配、性别平衡以及项目优化等方面提供了具有实际价值的战略建议。这些洞察有助于提升全球竞争力，推动更加公平和多元化的奥运发展。
 		
 		\begin{keywords}
 			Keyword one, Keyword two, Keyword three
@@ -119,7 +135,7 @@
 	The medal table of the 2024 Paris Olympics shows that the United States and China each won 40 gold medals and tied for the top spot, but the United States led with a total of 126 medals. The host country France ranked fifth in gold medals (16) and fourth in total medals (64). Dominica, Saint Lucia and other countries won their first Olympic medals, while 60 countries still have not broken through for any medals.
 	\begin{figure}[htbp]
 		\centering
-		\includegraphics[width=0.7\linewidth]{fig/background}
+		\includegraphics[width=0.7\linewidth]{fig/background1}
 		\caption{The medals of the 2024 Paris Olympics}
 	\end{figure}
 	
@@ -158,7 +174,7 @@
 	\subsection{Overview of Our Work}
 		\begin{figure}[H]
 		\centering
-		\includegraphics[width=1\linewidth]{fig/1.png}
+		\includegraphics[width=1\linewidth]{fig/ourwork.png}
 		\caption{Overview of Our Work}
 		\label{fig:Overview of Our Work}
 	\end{figure}
@@ -188,9 +204,9 @@
 \section{Assumptions and Justification}
 
 \begin{enumerate}[leftmargin=0.15in, labelsep=0.1in, itemsep=10pt, parsep=5pt]
-	\item \textbf{Historical medal data exhibits temporal dependencies that reflect future medal trends. }
-	
-	This suggests that historical performance can offer insights into future outcomes, and thus, should be treated as a time series when making predictions.
+	%	\item \textbf{Historical medal data exhibits temporal dependencies that reflect future medal trends. }
+	%	
+	%	This suggests that historical performance can offer insights into future outcomes, and thus, should be treated as a time series when making predictions.
 	
 	\item \textbf{Monte Carlo Dropout approximates Bayesian inference by quantifying prediction uncertainty through multiple stochastic samplings.}
 	
@@ -200,9 +216,12 @@
 	
 	This assumption supports the idea that non-medal-winning countries have similar characteristics to those that may perform well in future Olympics, making them a valuable reference for predicting future medal potential.
 	
-	\item \textbf{The impact of coaching remains independent of confounding variables (e.g., athlete training conditions, changes in international competition rules).} 
-	
+	\item \textbf{The impact of coaching remains independent of confounding variables.}
+			
 	This assumption isolates the effect of coaching from other factors that might influence performance, ensuring that coaching effects can be accurately assessed.
+	\item \textbf{The career cycle of an athlete is approximately 12-16 years}
+	
+	It is assumed that the career cycle of an athlete is 3-4 Olympic Games, so most of the indicators in the following prediction model use the first three as input vectors to predict the fourth
 \end{enumerate}
 
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -255,7 +274,8 @@ In adition, \textbf{Skating} and \textbf{Ice Hockey} have been included in the W
 It was noticed that \textbf{Jeu de Paume} and \textbf{Roque} sports in the {\bf summerOly\_programs.csv} do not have Codes. Upon researching information from {\color{blue}\url{https://en.wikipedia.org/wiki/Jeu_de_paume}} and {\color{blue}\url{https://en.wikipedia.org/wiki/Roque}}, it was found that only a few people are still engaged in these two sports, which have even not been held for 26 consecutive years in the Summer Olympics. Therefore, these two sports have been excluded.
 
 \subsection{consistency}
-The International Olympic Committee (IOC) records country names by session on its official Olympic website.Names may change over time due to political changes or rebranding.For example, the Soviet Union competed under the name "USSR" before breaking up into an independent country; Germany fielded two teams in beach volleyball at the 2000 Olympics, labelled "Germany-1" and "Germany-2".Germany-2".For the sake of uniformity, we standardised the country names in all historical data based on the official IOC country lists, and cross-checked them with the records of previous Olympic Games to ensure consistency between the datasets.
+The IOC records country names by session, but political changes or rebranding can cause variations (e.g., the USSR and Germany's two teams in the 2000 Olympics). To ensure consistency, we standardized country names based on official IOC lists and cross-checked with past Olympic records.Additionally, project names like "Marathon Swimming" and "Marathon Swimming, Swimming" or "3x3 Basketball" and "3x3 Basketball, Basketball" were treated as the same event for consistency in the data.
+
 
 
 	
@@ -284,16 +304,19 @@ The International Olympic Committee (IOC) records country names by session on it
 Host Effect refers to the phenomenon where a host country tends to perform better in large-scale international events (such as the Olympic Games or the World Cup) due to the advantages associated with competing on home soil. This often manifests in a significnt increase in the host country's medal count, competition results, and overall performance.
 
 	%为了验证东道主效应的显著性，我们采用了成对样本t检验。首先，我们选取每年的东道主的奖牌数$MT_{ti}$作为第一个样本，其次，为了消除奖牌数量的整体增长趋势的影响，选取东道主国家在前后两届奥运会中获得的奖牌数的平均值
-	
+		\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{fig/MT.png}
+		\caption{Schematic diagram of $MT_t^H$}
+		\label{MT}
+	\end{figure}
 	To assess the significance of the host effect, we employed a paired samples  \textbf{t-Test}. First, we selected the medal count of the host country for each year, denoted as $MT_{t}$, as the first sample. To eliminate the influence of overall growth trends in medal counts, we used the average medal count from the two preceding Olympic Games as the second sample, as shown in equation (\ref{eq:H_t-test_MT_bar}),
 	\begin{equation}
 		MT^H_{t}=\frac{ MT_{t-1} + MT_{t+1} }{2}
 		\label{eq:H_t-test_MT_bar}
 	\end{equation}
 	where $t=2,3,\cdots,29$, $i\in A_{C}$. 
-	
 	The data set $\{MT_{t},MT^s_{t}\}$ then forms a paired sample with a size of 30. 
-	
 	Define $d_t= MT_{t} - MT^s_{t}$, and assume that
 	\begin{equation*}
 		H_0: \mu_d=0, \quad vs \quad H_1:  \mu_d \ne 0.
@@ -304,8 +327,7 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 		T=\frac{ \bar{d} }{ s_d\slash \sqrt{28} } \sim (27)
 	\end{equation*}
 	where $\bar{d}=\frac{1}{28} \sum_{t=2}^{29} d_t$ is the mean of paired samples, 
-	and $ s_d = \frac{1}{27} \sum_{t=2}^{29}\big( d_t - \bar{d} \big)^2 $ is the sample variance of the differences of paired data, 
-	
+	and $ s_d = \frac{1}{27} \sum_{t=2}^{29}\big( d_t - \bar{d} \big)^2 $ is the sample variance of the differences of paired data. 
 	For a given significance level $\alpha$, the rejection domain for the hypothesis test is
 	\begin{equation*}
 		W_\alpha = \big\{ |T| \ge t_{1-\frac{\alpha}{2}}(29) \big\}
@@ -391,7 +413,7 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 	
 	\item \textbf{Medal Distribution Concentration}
 	
-	The Herfindahl-Hirschman Index (HHI) for the medal distribution concentration can be defined as:
+	The Herfindahl-Hirschman Index (HHI) \cite{HHI2016} for the medal distribution concentration can be defined as:
 	\[
 	\text{HHI}(t,i) = \sum_{j=1}^{M} \left( \frac{MT_{t,i,j}(t)}{MT_{t,i}(t)} \right)^2,
 	\]
@@ -431,7 +453,7 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 \end{featurebox}
 This tensor includes critical features such as the host country effect, the presence of strong events, and the distribution of winners, which together form the basis for our predictions. The matrix structure is carefully designed to capture the interdependencies between these factors, ensuring that temporal correlations are properly accounted for during the prediction process.
 
-Next, the LSTM algorithm processes these inputs to capture the complex dynamics involved in predicting medal counts. The key steps in the LSTM implementation are outlined in the following algorithm. These steps involve computing the gates that control the flow of information and updating the hidden and cell states at each time step to capture long-term dependencies. The process is shown below.
+Next, the LSTM algorithm processes the inputs to capture the dynamics of predicting medal counts. Key steps include computing gates to control information flow and updating hidden and cell states at each time step to capture long-term dependencies, as shown below.
 \begin{algorithm}
 	\caption{LSTM Medal Prediction}
 	\begin{algorithmic}[1]
@@ -454,7 +476,7 @@ Next, the LSTM algorithm processes these inputs to capture the complex dynamics 
 \end{algorithm}
 
 % 修正后的表格
-Key parameter configurations shown in Table \ref{tab:lstm_params} were determined through temporal cross-validation:
+
 \begin{table}[H]
 	\centering
 	\caption{LSTM Model Parameters Specification}
@@ -486,7 +508,7 @@ Key parameter configurations shown in Table \ref{tab:lstm_params} were determine
 	\end{tabularx}
 \end{table}
 
-
+%Key parameter configurations shown in Table \ref{tab:lstm_params} were determined through temporal cross-validation.
 % China and USA prediction visualization
 \begin{figure}[H]
 	\centering
@@ -527,9 +549,9 @@ Key parameter configurations shown in Table \ref{tab:lstm_params} were determine
 \subsubsection{Uncertainty Quantification Modeling with Monte Carlo Dropout}
 %\label{subsec:uncertainty}
 
- \hspace{1.5em}Olympic outcomes are inherently uncertain due to unforeseen events like athlete injuries. To quantify this uncertainty, we employ Monte Carlo Dropout (MC Dropout) \cite{gal2016dropout}, which activates dropout layers stochastically during inference to generate prediction distributions. The variance across multiple forward passes reflects model confidence.
+	 \hspace{1.5em}Olympic outcomes are inherently uncertain due to unforeseen events like athlete injuries. To quantify this uncertainty, we employ Monte Carlo Dropout (MC Dropout) \cite{gal2016dropout}, which activates dropout layers stochastically during inference to generate prediction distributions. The variance across multiple forward passes reflects model confidence.
 
-To model temporal dependencies and uncertainty simultaneously, we introduce an embedding-enhanced LSTM-MCD framework (Figure \ref{fig:LSTM-MCD}). This approach integrates historical trends and stochastic dropout sampling, ensuring robust medal predictions under dynamic conditions.
+	To model temporal dependencies and uncertainty simultaneously, we introduce an embedding-enhanced LSTM-MCD framework (Figure \ref{fig:LSTM-MCD}). This approach integrates historical trends and stochastic dropout sampling, ensuring robust medal predictions under dynamic conditions.
 	\begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{fig/LSTM-MCD.png}
@@ -779,13 +801,13 @@ Figure \ref{fig:medal_comparison_combined} illustrates the \textbf{top five coun
 	\centering
 	\caption{LSTM Model Performance Evaluation (Training/Test Set Comparison)}
 	\label{tab:model_performance}
-	\begin{tabular}{lrrp{8cm}}
+	\begin{tabular}{lrrp{9cm}}
 		\toprule
 		\rowcolor{red!10}
 		\textbf{Metric} & \textbf{Train} & \textbf{Test} & \textbf{Analysis} \\
 		\midrule
 		\rowcolor{gray!10}
-		MSE  & 0.9836 & 1.1284 & The small train/test error gap (\(\Delta = 0.1448\)) suggests mild overfitting with maintained generalization.\\
+		MSE  & 0.9836 & 1.1284 & The small train/test error gap (\(\Delta = 0.1448\)) indicates mild overfitting with good generalization.\\
 		RMSE & 0.9918 & 1.0625 & Prediction std dev ≈1 gold medal, meeting competition forecasting precision requirements \\
 		\rowcolor{gray!10}
 		MAE  & 0.7571 & 0.8923 & Mean absolute error <1 gold medal validates prediction reliability \\
@@ -852,7 +874,14 @@ The objective of this model is to predict whether countries that have never won 
 
 To address these limitations, we incorporate XGBoost, a powerful machine learning algorithm. XGBoost is well-suited for handling complex and non-linear relationships within the data, and its ability to manage multiple features and large datasets makes it ideal for predicting medal outcomes in this context. By integrating XGBoost, we can better capture the influence of additional factors and improve the model's accuracy in forecasting the performance of first-time winning countries in future Olympic Games.
 
-\subsubsection{Calculation of cold items}
+\subsubsection{Calculation of Cold Events}
+Because many in the number of medals to achieve 01 breakthrough are mostly through the cold project to achieve, so here for the Olympic Games in the cold project for the calculation and summary, due to the total number of countries in the data set of 223, so we counted the number of medals produced by the history of each type of project, sorted and summarised, selected less than 230 medals as the cold project, the results of the statistics are shown in the figure, and the results are shown in the Figure \ref{coolevents}, the number of medals produced in the history of each type of project.
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig/coolevents.png}
+	\caption{Cool Events}
+	\label{coolevents}
+\end{figure}
 \subsubsection{Index Analysis}
 
 \begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
@@ -1002,6 +1031,7 @@ The optimized XGBoost model demonstrates strong performance, achieving an overal
 
 	
 \subsection{Analysis of Event Influence on Medal Distribution}
+\label{meigui}
 Similar to that defined in \ref{ppp}：
 \begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
 	\item \textbf{Event Held}
@@ -1096,9 +1126,9 @@ To test this hypothesis, we constructed the experimental group and the "pseudo-c
 To seek evidence of the existence of the great coach effect, we employ the Difference-in-Differences (DiD) model to examine its impact.
 
 The DiD model is a statistical method used to assess the causal effect of an intervention on an outcome variable. It estimates the intervention effect by comparing the performance differences between the experimental group and the control group before and after the intervention. The model equation is 
-\begin{equation}
+\begin{equation*}
 	Y_{i,t}=\alpha+\delta_t+\gamma \cdot Treat_i \cdot Post_t + \varepsilon_{i,t},
-\end{equation}
+\end{equation*}
 where \( Y_{i,t} \) represents team \( i \)'s performance at time \( t \) (e.g., medal count). The model includes a constant term \(\alpha\), time fixed effects \(\delta_t\) for common influences (e.g., 1980s gymnastics improvements), and an interaction term \( Treat_i \cdot Post_t \) to capture \textbf{Béla Károlyi}'s impact as coach on the U.S. team. The coefficient \(\gamma\) measures the "great coach effect," and \(\varepsilon_{i,t}\) is the error term.
 
 By using $Least$ $Squares$ $Method$ in $Python$, we obtained the estimated value of the regression coefficient $\hat{\gamma}=4.1572$. To test the significance of $\gamma$, assume that
@@ -1107,13 +1137,13 @@ By using $Least$ $Squares$ $Method$ in $Python$, we obtained the estimated value
 \end{equation*}
 
 Select the test statistic:
-\begin{equation}
+\begin{equation*}
 	T=\frac{ \hat{\gamma} }{ \text{SE}(\hat{\gamma}) } \sim t(6)
-\end{equation}
+\end{equation*}
 where $\text{SE}(\hat{\gamma}) = \sqrt{ \frac{1}{N} \sum_{i=1}^{N} \hat{\varepsilon}_i^2 }$, $\hat{\varepsilon}=\hat{Y}_{i,t}-Y_{i,t}$. For a given significance level $\alpha$, the rejection domain for the hypothesis test is
-\begin{equation}
+\begin{equation*}
 	W_\alpha = \big\{ |T| \ge t_{1-\frac{\alpha}{2}}(6) \big\}
-\end{equation}
+\end{equation*}
 
 The test results of regression coefficients were obtained and are summarized in Table \ref{table:great-coach-effect_t-test}. The sample falls within the rejection region $W_{0.975}$, so it can be concluded that the regression coefficient $\gamma$ is significant, e.i. the impact of great coach Béla Károlyi for the USA gymnastics team is significant. On average, a great coach can increase the number of medals by 4 for the US gymnastics.
 \begin{table}[H]
@@ -1140,9 +1170,10 @@ The test results of regression coefficients were obtained and are summarized in 
 
 %一般国力雄厚的国家能够花费金钱聘请优秀教练，所以我们最好选择有一定实力但不是非常顶尖的国家。考虑到一代运动员的职业生涯一般为4届运动会，故统计2012、2016、2020、2024这四届奥林匹克运动会的奖牌总数总和，并排序，如图所示
 
-Generally, countries with strong national power can afford to hire excellent coaches, so we'd better choose countries that have certain strength but are not the very top ones. Considering that an athlete's career usually lasts for 4 Olympic Games, the total number of medals won in the 2012, 2016, 2020 and 2024 Olympic Games was calculated and ranked, seeing Figure \ref{fig:medal_count_by_noc}.
 
-From Figure \ref{fig:medal_count_by_noc}, the United States, China, and the United Kingdom occupy the TOP 3 positions in terms of medal counts. Japan, France, and Australia rank 4-6, respectively. Given that these latter three countries possess substantial national resources and demonstrate significant potential for improvement, We choose to offer investment suggestions for Japan, France and Australia.
+Generally, countries with strong national power can afford to hire excellent coaches, which enhances their ability to achieve success in international competitions. However, for the purpose of targeted investment recommendations, it is more strategic to focus on countries that have a certain level of strength but are not yet at the very top. Considering that an athlete's career typically spans four Olympic Games, we calculated and ranked the total number of medals won in the 2012, 2016, 2020, and 2024 Olympic Games, as shown in Figure \ref{fig:medal_count_by_noc}.
+
+From Figure \ref{fig:medal_count_by_noc}, the United States, China, and the United Kingdom dominate the top three positions in terms of medal counts, followed by Japan, France, and Australia, who rank 4th to 6th, respectively. These countries not only have substantial national resources but also show considerable potential for future improvement in Olympic performance. By investing in targeted strategies such as better athlete development programs, support for underrepresented sports, and the enhancement of coaching staff, Japan, France, and Australia can be better positioned to narrow the gap with the top-ranking nations. Therefore, we recommend offering investment suggestions for these three countries to maximize their chances of improving their Olympic performance in the upcoming Games.
 
 \begin{figure}[H]
 	\centering
@@ -1200,9 +1231,9 @@ The larger the $MRR$ is, the more people are involved in the single-person sport
 \end{table}
 \textbf{Investment Recommendations:}
 
-\begin{enumerate}
+\begin{enumerate}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
 	\item France
-	\begin{itemize}
+	\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
 		\item \textbf{Diving: } 
 		French diving lacks top athletes. The Chinese team dominates world diving with excellent coaches and advanced techniques. We suggest that France hire Chinese great diving coaches, estimating that there will be a \textbf{13.5\%} improvement.
 		\item \textbf{Badminton: }
@@ -1210,7 +1241,7 @@ The larger the $MRR$ is, the more people are involved in the single-person sport
 	\end{itemize}
 	
 	\item Japan
-	\begin{itemize}
+	\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
 		\item \textbf{Shooting: }
 		Japanese shooting performs inconsistently at the Olympics and World Championships. We recommend hiring top \textbf{South Korean coaches}, estimating that there will be a \textbf{12.9\%} improvement.
 		\item \textbf{Cycling: }
@@ -1218,7 +1249,7 @@ The larger the $MRR$ is, the more people are involved in the single-person sport
 	\end{itemize}
 	
 	\item Australia
-	\begin{itemize}
+	\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
 		\item \textbf{Artistic Gymnastics: }
 		Australian rhythmic gymnastics lacks top athletes, but shows potential in recent Commonwealth Games. Russian rhythmic gymnastics dominates globally. We recommend hiring great \textbf{Russian coaches}, estimating that there will be a \textbf{15.2\%} improvement.
 		\item \textbf{Judo: }
@@ -1227,9 +1258,80 @@ The larger the $MRR$ is, the more people are involved in the single-person sport
 	
 \end{enumerate}
 \section{Task 3}
+\subsection{Monopoly versus non-monopoly projects}
 
-	
-	
+By comparing the number of medals won by each country in a sport to the total number of medals in that sport, we calculate a ratio and rank them. If a country holds more than 20\% of the medals, it is considered to have a monopoly, and if multiple countries exceed 20\%, they all share the monopoly. Analyzing these monopolies helps the Olympic Committee identify dominant countries in certain sports, enabling strategies to enhance fairness by promoting non-monopoly sports, encouraging wider participation, and improving global competition balance. See Table \ref{table:Monopolized_vs_Non_monopolized_Sports} for selected sports.
+
+\begin{table}[H]
+	\centering
+	\caption{Monopolized vs Non-monopolized Sports}
+	\resizebox{\textwidth}{!}{
+		\begin{tabular}{l | l | l}
+			\toprule
+			\rowcolor{red!10} \textbf{Non-monopolized Sports} & \textbf{Monopolized Sports} & \textbf{Specific Monopolized Sports} \\
+			\midrule
+			\rowcolor{gray!10} 3x3 Basketball & Aeronautics & SUI \\
+			\rowcolor{white} Art Competitions & Alpinism & GER, SUI \\
+			\rowcolor{gray!10} Boxing & Artistic Swimming &  CHN \\
+			\rowcolor{white} Canoe Sprint & Baseball & CUB, JPN, USA \\
+			\rowcolor{gray!10} Cycling & Basketball & USA \\
+			\bottomrule
+		\end{tabular}
+	}
+	\label{table:Monopolized_vs_Non_monopolized_Sports}
+\end{table}
+
+\subsection{Trends in the ratio of women to men}
+
+  The number of female athletes increasing year by year (as shown in Figure \ref{fig:nannv}). By analysing the changes in the gender ratio at previous Olympic Games, the Olympic Committee can identify sports where there is an imbalance and adjust the selection policy. The Olympic Committee can promote women's participation in these sports to optimise the gender ratio, improve fairness and diversity, and ensure equal opportunities for athletes of all genders.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{C:/Users/Lenovo/Downloads/nannv}
+	\caption{Trends in male and female athletes at previous Olympic Games}
+	\label{fig:nannv}
+\end{figure}
+
+\subsection{Ranking of Individual Athletes' Medal Scores}
+
+\begin{figure}[htbp]
+	\centering
+	\begin{adjustbox}{minipage=0.55\textwidth,valign=t} % Increased minipage width
+		\centering
+		%        \scalebox{0.9}{
+			\begin{tabularx}{\textwidth}{p{4cm} |  >{\centering\arraybackslash}p{3cm}    }
+				\toprule
+				\rowcolor{red!10} \textbf{Name} & \textbf{Medals} \\
+				\midrule
+				\rowcolor{gray!10} Nikolay Andrianov & 17 \\
+				\rowcolor{white} Marios Georgiou & 14 \\
+				\rowcolor{gray!10} Mikhail Koudinov & 14 \\
+				\rowcolor{white} Robert Tvorogal & 14 \\
+				\rowcolor{gray!10} Simone Biles & 13 \\
+				\rowcolor{white} Jos Garca & 13 \\
+				\rowcolor{gray!10} Svetlana Boginskaya & 13 \\
+				\rowcolor{white} Paavo Aaltonen & 12 \\
+				\rowcolor{gray!10} Rebeca Andrade & 12 \\
+				\rowcolor{white} Robert Bodley & 11 \\
+				\bottomrule
+			\end{tabularx}
+		\label{table:Top_10_Athletes_Medal_Count}
+	\end{adjustbox}%
+	\hfill
+	\begin{adjustbox}{minipage=0.4\textwidth,valign=t} % Adjusted to make more space for the table
+		\vspace*{-1.2ex} % 精确垂直对齐补偿
+		\begin{itemize}
+			\item \textbf{Athletes Performance Analysis:} By analysing an athlete's historical performance, the Olympic Committee can identify the most promising athletes and possible "star athletes".
+			\item \textbf{Resource Allocation:} This helps to prioritise the allocation of resources and training programmes, ensuring the highest potential athletes receive the necessary support.
+		\end{itemize}
+	\end{adjustbox}
+\end{figure}
+
+
+
+\subsection{Analysis of projects with national strengths}
+For specific analyses, see \ref{meigui}, Based on data on the strengths of each country's programme, the Olympic Committee can better understand the strengths of different countries.This will help to provide countries with more personalised support or more targeted resources for their participation in specific sports.
+%	
 \section{Sensitivity Analysis}
 To assess the robustness of our LSTM model, we varied two key input variables—HHI and historical performance—by $\pm5\%$ (and $\pm10\%$ for HHI) to observe their impact on predicted medal counts. 
 
@@ -1243,7 +1345,7 @@ As illustrated by the purple bar charts, modest ($\pm5\%$) changes in either HHI
 
 	\begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth]{fig/lineplot.png}
+	\includegraphics[width=0.8\linewidth]{fig/lineplot.png}
 	\caption{Sensitivity analysis of history performance(example)}
 	\label{lineplot}
 \end{figure}
@@ -1253,7 +1355,7 @@ The line plot further confirms this stability: while $+10\%$ or $-10\%$ adjustme
 
 
 \subsection{Strength}
-\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=10pt, parsep=5pt]
+\begin{itemize}[itemsep=1pt, parsep=2pt, topsep=0pt] % Reduced itemsep value
 	\item \textbf{Long-Term Temporal Dependencies:} The model captures temporal dependencies, enabling future medal trend predictions.
 	\item \textbf{Uncertainty Quantification:} Monte Carlo Dropout enhances model reliability by providing prediction uncertainty estimates.
 	\item \textbf{High Accuracy:} Incorporating multiple features yields strong performance, with R² up to 0.93.
@@ -1261,15 +1363,15 @@ The line plot further confirms this stability: while $+10\%$ or $-10\%$ adjustme
 \end{itemize}
 
 \subsection{Weakness}
-\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=10pt, parsep=5pt]
+\begin{itemize}[itemsep=1pt, parsep=2pt, topsep=0pt] % Reduced itemsep value
 	\item \textbf{Data Dependency:} Requires large historical datasets, limiting its applicability for countries with limited data.
 	\item \textbf{Model Complexity:} High complexity and extensive training time are required, along with careful hyperparameter tuning.
 \end{itemize}
 
-	
+
 \section{Further Discussion}
 
-\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=10pt, parsep=5pt]
+\begin{itemize}[itemsep=1pt, parsep=2pt, topsep=0pt]
 	\item \textbf{Model Generalization:} The model could be extended to predict medal trends in non-summer events like the Winter Olympics or Youth Olympic Games, testing its adaptability and generalizability across different event types.
 	\item \textbf{Ethical Considerations:} It is important to address potential biases, such as the Matthew Effect, where wealthier nations dominate medal counts, and ensure that the model provides equitable predictions for all countries.
 \end{itemize}
@@ -1307,7 +1409,6 @@ The line plot further confirms this stability: while $+10\%$ or $-10\%$ adjustme
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%% 文献条目 %%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\newpage
 	\addcontentsline{toc}{section}{References} % 手动添加到目录
 	\printbibliography
 	
@@ -1317,10 +1418,10 @@ The line plot further confirms this stability: while $+10\%$ or $-10\%$ adjustme
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%% 附录 %%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\begin{appendices}
-		\section{First appendix}
-		\section{Second appendix}
-	\end{appendices}
+%	\begin{appendices}
+%		\section{First appendix}
+%		\section{Second appendix}
+%	\end{appendices}
 	
 	
 	
