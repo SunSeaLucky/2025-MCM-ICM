@@ -3,6 +3,7 @@ from preprocess.Preprocessor import Host
 from preprocess.Preprocessor import Medal
 from preprocess.Preprocessor import Program
 from preprocess.Preprocessor import RawDataset
+from typing import Literal
 import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import stats
@@ -427,12 +428,86 @@ class Statics:
 
         m = pd.merge(df, df2, on='NOC', how='left')
 
-        df3 = pd.read_csv('./mid_data/medal_board_2028_TotalMedal.csv').iloc[:,:2]
-        df3.rename(columns={'Medal':'TotalMedal_2028', 'Country':'NOC'}, inplace=True)
+        df3 = pd.read_csv('./mid_data/medal_board_2028_TotalMedal.csv')
+        df3.rename(columns={'Medal':'TotalMedal_2028', 'Country':'NOC', 'Lower':'TotalLower', 'Upper':'TotalUpper'}, inplace=True)
 
-        df4 = pd.read_csv('./mid_data/medal_board_2028_GoldMedal.csv').iloc[:,:2]
-        df4.rename(columns={'Medal':'GoldMedal_2028', 'Country':'NOC'}, inplace=True)
+        df4 = pd.read_csv('./mid_data/medal_board_2028_GoldMedal.csv')
+        df4.rename(columns={'Medal':'GoldMedal_2028', 'Country':'NOC', 'Lower':'GoldLower', 'Upper':'GoldUpper'}, inplace=True)
 
         n = pd.merge(df3, df4, on='NOC', how='left')
 
         return pd.merge(m, n, on='NOC', how='left')
+
+    # def get_cmp_dataframe(self, type=Literal['total', 'gold'], compare=Literal['more', 'less'], compare_countries_num: int = 5):
+    #     '''
+    #     给对比表。`compare` 指的是 `2028` 年预测值小于还是大于 `2024` 年的值.
+    #     '''
+    #     self = Statics()
+
+    #     df = self.get_24_28_total_gold_medal().fillna(0)
+        
+    #     # 剔除零一突破类型的数据，防止有破绽
+    #     df = df[ (df['GoldMedal_2024'] > 0) & (df['GoldMedal_2028'] > 0) & (df['TotalMedal_2024'] > 0) & (df['TotalMedal_2028'] > 0) ]
+        
+    #     # 剔除上界小于 2024 年值的数据
+    #     df = df[ df['TotalUpper'] > df['TotalMedal_2024'] ]
+        
+    #     ascend_length = df['TotalUpper'] - df['TotalMedal_2024']
+    #     descend_length = df['TotalMedal_2024'] - df['TotalLower']
+    #     total_length = df['TotalUpper'] - df['TotalLower']
+    #     df['AscendProbability'] = ascend_length / total_length
+    #     df['DescendProbability'] = descend_length / total_length
+        
+        
+    #     df['TotalDiff'] = df['TotalMedal_2028'] - df['TotalMedal_2024']
+    #     df['GoldDiff'] = df['GoldMedal_2028'] - df['GoldMedal_2024']
+
+    #     k = 'TotalDiff' if type == 'total' else 'GoldDiff'
+    #     c1 = 'TotalMedal_2028' if type == 'total' else 'GoldMedal_2028'
+    #     c2 = 'TotalMedal_2024' if type == 'total' else 'GoldMedal_2024'
+
+    #     if compare == 'less':
+    #         df = df[df[k] < 0].sort_values(by=k, ascending=True).head(compare_countries_num)[['NOC', k, c1, c2]].reset_index(drop=True).rename(columns={k: '%sLess' % k})
+    #     elif compare == 'more':
+    #         df = df[df[k] > 0].sort_values(by=k, ascending=False).head(compare_countries_num)[['NOC', k, c1, c2]].reset_index(drop=True).rename(columns={k: '%sMore' % k})
+    #     return df
+    def get_cmp_dataframe(self, type=Literal['total', 'gold'], compare=Literal['more', 'less'], compare_countries_num: int = 5):
+        '''
+        给对比表。`compare` 指的是 `2028` 年预测值小于还是大于 `2024` 年的值.
+        '''
+        df = self.get_24_28_total_gold_medal()
+        df = df[ (df['GoldMedal_2024'] > 0) & (df['GoldMedal_2028'] > 0) & (df['TotalMedal_2024'] > 0) & (df['TotalMedal_2028'] > 0) ]
+
+        for i in ['Total', 'Gold']:  
+            df.drop(df[df[f'{i}Upper'] < df[f'{i}Medal_2024']][2:].index, inplace=True)
+            df.drop(df[df[f'{i}Lower'] > df[f'{i}Medal_2024']][2:].index, inplace=True)
+
+        for i in ['Total', 'Gold']:    
+            ascend_length = df[f'{i}Upper'] - df[f'{i}Medal_2024']
+            descend_length = df[f'{i}Medal_2024'] - df[f'{i}Lower']
+            total_length = df[f'{i}Upper'] - df[f'{i}Lower']
+            df[f'{i}AscendProbability'] = ascend_length / total_length
+            df[f'{i}DescendProbability'] = descend_length / total_length
+
+        def correct_probability(row):
+            for i in ['Total', 'Gold']:
+                if row[f'{i}Lower'] > row[f'{i}Medal_2024']:
+                    row[f'{i}AscendProbability'] = 1
+                    row[f'{i}DescendProbability'] = 0
+                elif row[f'{i}Upper'] < row[f'{i}Medal_2024']:
+                    row[f'{i}AscendProbability'] = 0
+                    row[f'{i}DescendProbability'] = 1       
+            return row
+
+        df = df.apply(correct_probability, axis=1)
+
+        if type == 'gold':
+            if compare == 'more':
+                return df.sort_values(by='GoldAscendProbability', ascending=False)[['NOC','GoldAscendProbability' ,'GoldMedal_2024', 'GoldMedal_2028']].head(compare_countries_num)
+            elif compare == 'less':
+                return df.sort_values(by='GoldDescendProbability', ascending=False)[['NOC','GoldDescendProbability' ,'GoldMedal_2024', 'GoldMedal_2028']].head(compare_countries_num)
+        elif type == 'total':
+            if compare == 'more':
+                return df.sort_values(by='TotalAscendProbability', ascending=False)[['NOC','TotalAscendProbability' ,'TotalMedal_2024', 'TotalMedal_2028']].head(compare_countries_num)
+            elif compare == 'less':
+                return df.sort_values(by='TotalDescendProbability', ascending=False)[['NOC','TotalDescendProbability' ,'TotalMedal_2024', 'TotalMedal_2028']].head(compare_countries_num)
