@@ -1,4 +1,4 @@
-\documentclass[draft]{mcmthesis}
+\documentclass{mcmthesis}
 %[draft]
 \mcmsetup{
 	CTeX = false,
@@ -37,7 +37,20 @@
 	}{\end{tcolorbox}}
 % ================ 预声明hyperref选项 ================
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{colorlinks=true, linkcolor=blue, urlcolor=cyan, citecolor=magenta}{hyperref}
+%\PassOptionsToPackage{colorlinks=true, linkcolor=blue, urlcolor=cyan, citecolor=magenta}{hyperref}
+
+% 设置引用链接的颜色，增加链接跳转功能
+\definecolor{ccr}{RGB}{0,128,172}
+%\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,     % 启用链接颜色
+	linkcolor=ccr,       % 设置标号引用和内部链接的颜色
+	citecolor=ccr,       % 设置文献引用的颜色
+	pdfborder={0 0 0},   % 移除链接的边框
+	linktoc=none,        % 不改变目录链接的颜色
+	hidelinks            % 禁用所有链接的颜色（包括页眉链接）
+}
+
 
 % ================ 基础包配置 ================
 \usepackage{newtxtext}
@@ -301,12 +314,12 @@ The IOC records country names by session, but political changes or rebranding ca
 Host Effect refers to the phenomenon where a host country tends to perform better in large-scale international events (such as the Olympic Games or the World Cup) due to the advantages associated with competing on home soil. This often manifests in a significnt increase in the host country's medal count, competition results, and overall performance.
 
 	%为了验证东道主效应的显著性，我们采用了成对样本t检验。首先，我们选取每年的东道主的奖牌数$MT_{ti}$作为第一个样本，其次，为了消除奖牌数量的整体增长趋势的影响，选取东道主国家在前后两届奥运会中获得的奖牌数的平均值
-		\begin{figure}[H]
-		\centering
-		\includegraphics[width=0.8\linewidth]{fig/MT.png}
-		\caption{Schematic diagram of $MT_t^H$}
-		\label{MT}
-	\end{figure}
+%		\begin{figure}[H]
+%		\centering
+%		\includegraphics[width=0.8\linewidth]{fig/MT.png}
+%		\caption{Schematic diagram of $MT_t^H$}
+%		\label{MT}
+%	\end{figure}
 	To assess the significance of the host effect, we employed a paired samples  \textbf{t-Test}. First, we selected the medal count of the host country for each year, denoted as $MT_{t}$, as the first sample. To eliminate the influence of overall growth trends in medal counts, we used the average medal count from the two preceding Olympic Games as the second sample, as shown in equation (\ref{eq:H_t-test_MT_bar}),
 	\begin{equation}
 		MT^H_{t}=\frac{ MT_{t-1} + MT_{t+1} }{2}
@@ -1429,22 +1442,38 @@ The line plot further confirms this stability: while $+10\%$ or $-10\%$ adjustme
 	\newpage
 	\newcounter{lastpage}
 	\setcounter{lastpage}{\value{page}}
-	\thispagestyle{empty} 
+	\thispagestyle{empty}
 	
 	\section*{Report on Use of AI}
 	
 	\begin{enumerate}
-		\item OpenAI ChatGPT (Nov 5, 2023 version, ChatGPT-4,) 
+		\item OpenAI ChatGPT (Jan 26, 2025 version, ChatGPT-3.5,) 
 		\begin{description}
-			\item[Query1:] <insert the exact wording you input into the AI tool> 
-			\item[Output:] <insert the complete output from the AI tool>
+			\item[Query1:] What Béla Károlyi has contributed to USA Gymnastics?
+			\item[Output:] Béla Károlyi made significant contributions to USA Gymnastics, particularly through his coaching and development of elite gymnasts. Born in Romania, he immigrated to the United States in 1981, where he quickly became a central figure in American gymnastics. His most notable contributions include:
+			
+			1. Coaching Elite Gymnasts:
+			Károlyi coached some of the most iconic gymnasts in U.S. history, including Mary Lou Retton (1984 Olympic all-around gold medalist), Kerri Strug (famous for her vault in the 1996 Olympics, despite an injured ankle), and Dominique Moceanu (1996 Olympic team gold medalist). His athletes were known for their impressive technical skill, strength, and resilience, helping raise the level of gymnastics in the U.S. to international prominence.
+			
+			2. 1996 Olympics Success:
+			Under Károlyi's coaching, the U.S. women’s gymnastics team won gold in the 1996 Summer Olympics in Atlanta, often referred to as the "Magnificent Seven." This marked the first time the U.S. women's gymnastics team had won Olympic gold in the team competition, a groundbreaking achievement.
+			
+			3. National Team Coordinator (1999-2001):
+			Károlyi served as the National Team Coordinator for USA Gymnastics from 1999 to 2001. During his tenure, he helped shape the U.S. gymnastics program, setting high standards and focusing on the development of gymnasts at all levels.
+			
+			4. Systemic Changes to Training and Technique:
+			He introduced a rigorous and disciplined training program that focused on mental toughness and physical strength, along with technical skills. His method was sometimes controversial, particularly regarding the pressure he placed on athletes, but it was undeniably effective in developing champions.
+			
+			5. Mentoring the Next Generation of Coaches:
+			Károlyi also played a crucial role in mentoring other coaches, many of whom went on to have successful careers in gymnastics. His coaching philosophy influenced the training methods of many gymnasts and coaches who followed.
+			
+			6. Legacy in the U.S. Gymnastics System:
+			Despite controversies surrounding his methods and his involvement in the broader gymnastics culture (particularly in light of the sexual abuse scandal involving Larry Nassar), Károlyi's contributions to USA Gymnastics in terms of raising the profile of American gymnastics cannot be overlooked. He is widely regarded as one of the most successful and influential figures in U.S. gymnastics history.
+			
+			Though his legacy is complex, with debates over the nature of his coaching style and the broader culture he helped foster, Károlyi undeniably played a central role in shaping U.S. gymnastics into the powerhouse it is today.
 		\end{description}
 		
-		\item OpenAI ChatGPT (Nov 5, 2023 version, ChatGPT-4,) 
-		\begin{description}
-			\item[Query1:] <insert the exact wording you input into the AI tool> 
-			\item[Output:] <insert the complete output from the AI tool>
-		\end{description}
+	
 		
 	\end{enumerate}
 	

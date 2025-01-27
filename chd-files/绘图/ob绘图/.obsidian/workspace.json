@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "4edd25e792d27b28",
+        "id": "c9d6727895ddfa62",
         "type": "tabs",
         "children": [
           {
-            "id": "00260ba723fee36e",
+            "id": "3744cdab590f2408",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "摘要/未命名.md",
-                "mode": "source",
-                "source": true
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "未命名"
+              "title": "新标签页"
             }
           }
         ]
@@ -77,8 +73,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "f8ddb5d78ddccaeb",
@@ -164,13 +159,13 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "00260ba723fee36e",
+  "active": "3744cdab590f2408",
   "lastOpenFiles": [
+    "OurWork/OurWork.png",
+    "OurWork/OurWork.excalidraw.md",
     "摘要/未命名.md",
     "摘要",
-    "OurWork/OurWork.excalidraw.md",
     "OurWork/OurWork.png",
-    "OurWork/OurWork.excalidraw.png",
     "OurWork/OurWork.excalidraw 副本.md",
     "欢迎.md",
     "MT/MT.excalidraw.md",
