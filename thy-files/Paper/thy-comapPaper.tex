@@ -1,4 +1,5 @@
 \documentclass{mcmthesis}
+%[draft]
 \mcmsetup{
 	CTeX = false,
 	tcn = {2504496},
@@ -9,7 +10,7 @@
 	titlepage = false,
 	abstract = false
 }
-
+\setlength{\parindent}{2em} % 调整缩进宽度（例如 2em）
 \usepackage{tcolorbox}
 \usepackage{xcolor}
 \usepackage{enumitem}
@@ -241,20 +242,22 @@
 	
 	
 	
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	%%%%%%%%%%%%%%%%% 数据预处理 %%%%%%%%%%%%%%%%%
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\section{Data Pre-processing}
-	
-	\subsection{Outlier and Missing Value Handling}
-	As the \textbf{1906 Intercalated Games} lacked the medal data of various countries and the competition results were not recognized by the International Olympic Committee, the data of 1906 is not taken into account.
-	
-	In adition, \textbf{Skating} and \textbf{Ice Hockey} have been included in the Winter Olympics since 1920, so these two events are not within the scope of consideration. Otherwise, the "$\cdot$" is replaced by the number $0$. 
-	
-	It was noticed that \textbf{Jeu de Paume} and \textbf{Roque} sports in the {\bf summerOly\_programs.csv} do not have Codes. Upon researching information from {\color{blue}\url{https://en.wikipedia.org/wiki/Jeu_de_paume}} and {\color{blue}\url{https://en.wikipedia.org/wiki/Roque}}, it was found that only a few people are still engaged in these two sports, which have even not been held for 26 consecutive years in the Summer Olympics. Therefore, these two sports have been excluded.
-	
-	%\section{Descriptive statistical analysis}
-	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% 数据预处理 %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Data Pre-processing}
+
+\subsection{Outlier and Missing Value Handling}
+As the \textbf{1906 Intercalated Games} lacked the medal data of various countries and the competition results were not recognized by the International Olympic Committee, the data of 1906 is not taken into account.
+
+In adition, \textbf{Skating} and \textbf{Ice Hockey} have been included in the Winter Olympics since 1920, so these two events are not within the scope of consideration. Otherwise, the "$\cdot$" is replaced by the number $0$. 
+
+It was noticed that \textbf{Jeu de Paume} and \textbf{Roque} sports in the {\bf summerOly\_programs.csv} do not have Codes. Upon researching information from {\color{blue}\url{https://en.wikipedia.org/wiki/Jeu_de_paume}} and {\color{blue}\url{https://en.wikipedia.org/wiki/Roque}}, it was found that only a few people are still engaged in these two sports, which have even not been held for 26 consecutive years in the Summer Olympics. Therefore, these two sports have been excluded.
+
+\subsection{consistency}
+The International Olympic Committee (IOC) records country names by session on its official Olympic website.Names may change over time due to political changes or rebranding.For example, the Soviet Union competed under the name "USSR" before breaking up into an independent country; Germany fielded two teams in beach volleyball at the 2000 Olympics, labelled "Germany-1" and "Germany-2".Germany-2".For the sake of uniformity, we standardised the country names in all historical data based on the official IOC country lists, and cross-checked them with the records of previous Olympic Games to ensure consistency between the datasets.
+
+
 	
 	
 	
@@ -404,7 +407,7 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 
 	
 	\subsubsection{Prediction of Medal Count for Medal-Winning Countries Using LSTM}
-	In this study, we propose to utilise a Long Short-Term Memory (LSTM) network \cite{Gal2015DropoutAA} for Olympic medal prediction, exploiting both temporal dynamics and uncertainty quantification. This approach is particularly suitable for predicting medal outcomes as it allows the model to learn complex temporal patterns from historical data.To better illustrate how the LSTM model can be useful in medal prediction, the detailed workflow of the model is shown in Fig\ref{fig:LSTM}.
+	\hspace{1.5em}In this study, we propose to utilise a Long Short-Term Memory (LSTM) network \cite{Gal2015DropoutAA} for Olympic medal prediction, exploiting both temporal dynamics and uncertainty quantification. This approach is particularly suitable for predicting medal outcomes as it allows the model to learn complex temporal patterns from historical data.To better illustrate how the LSTM model can be useful in medal prediction, the detailed workflow of the model is shown in Fig\ref{fig:LSTM}.
 
 
 	\begin{figure}[H]
@@ -419,7 +422,7 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 	X(t,i) = \begin{bmatrix}
 		\underbrace{H(t,i)}_{\substack{\text{Host}\\ \text{Effect}}} & 
 		\underbrace{S(t)}_{\substack{\text{Strong}\\ \text{Events}}} & 
-		\underbrace{R(t,i)}_{\substack{\text{Percentage of}\\ \text{winners}}} \\
+		\underbrace{R(t,i)}_{\substack{\text{Percentage of}\\ \text{winners}}} \\[2ex] % 增加行间距
 		\underbrace{\text{HHI}(t,i)}_{\substack{\text{Medal Distribution}\\ \text{Concentration}}} & 
 		\underbrace{\widetilde{MT}(t,i)}_{\substack{\text{Historical}\\ \text{Performance}}} &
 		\underbrace{N_{\text{athletes}}(t,i)}_{\substack{\text{Number of}\\ \text{Athletes}}}
@@ -487,6 +490,7 @@ Key parameter configurations shown in Table \ref{tab:lstm_params} were determine
 % China and USA prediction visualization
 \begin{figure}[H]
 	\centering
+	% 第一行：美国金牌/总奖牌
 	\begin{subfigure}[b]{0.48\textwidth}
 		\includegraphics[width=\textwidth]{fig/USA Gold Metal Prediction vs. True Values.png}
 		\caption{USA Gold Medal Prediction Interval}
@@ -499,6 +503,7 @@ Key parameter configurations shown in Table \ref{tab:lstm_params} were determine
 		\label{fig:usa_total1}
 	\end{subfigure}
 	
+	% 第二行：中国金牌/总奖牌
 	\begin{subfigure}[b]{0.48\textwidth}
 		\includegraphics[width=\textwidth]{fig/CHN Gold Metal Prediction vs. True Values.png}
 		\caption{China Gold Medal Prediction Interval}
@@ -516,33 +521,21 @@ Key parameter configurations shown in Table \ref{tab:lstm_params} were determine
 \end{figure}
 
 %%模型评估
-Due to space constraints, we will only show the forecasts for the U.S. and China here.
 
-
-\textbf{Predicted Results of the United States’ Medal Count}
-
-The U.S. gold medal forecast shown in Fig. \ref{fig:usa_gold1} projects 44 medals by 2028 (10\% CAGR), reflecting stable growth in professional sports ecosystems. Total medals shown in Fig. \ref{fig:usa_total1} are predicted to hit a record 128 by 2028, with precise training-phase calibration (MAE=3.2) and test-phase sensitivity to global competition dynamics (MAE=7.8 post-2000). Prediction splits post-2020 show high temporal coherence (Pearson $r=0.89$), confirming adaptive event modeling capabilities.
-
-
-\textbf{Predicted Results of China’s Medal Count}
-
-Figure \ref{fig:chn_gold1} shows China's gold medal count rising steadily since 1980, with LSTM projections reaching 47 by 2028. The model demonstrates strong generalization (5\% deviation in 2010–2020) and robust temporal pattern recognition. Total medals shown in Figure \ref{fig:chn_total1} are forecast to surpass 96 by 2028 (5.4\% CAGR), supported by high historical fit ($R^2=0.93$ for 1960–2000) and consistent post-2000 trajectory alignment.
 
 
 \subsubsection{Uncertainty Quantification Modeling with Monte Carlo Dropout}
 %\label{subsec:uncertainty}
 
-In sports, there are often unexpected incidents such as injuries, which are full of uncertainties for Olympics. The Monte Carlo Dropout (MC Dropout) can quantify uncertainty of the model \cite{gal2016dropout}.
+ \hspace{1.5em}Olympic outcomes are inherently uncertain due to unforeseen events like athlete injuries. To quantify this uncertainty, we employ Monte Carlo Dropout (MC Dropout) \cite{gal2016dropout}, which activates dropout layers stochastically during inference to generate prediction distributions. The variance across multiple forward passes reflects model confidence.
 
-The uncertainty is estimated by generating the distribution of predicted values through multiple random activation of the Dropout layer during the inference stage. By conducting multiple forward passes, the variance of the model's output is used to measure the confidence of the prediction.
-
-To address temporal dependencies and uncertainty in Olympic medal predictions, we propose an embedding-enhanced LSTM-MCD framework shown in Figure \ref{fig:LSTM-MCD}. 
+To model temporal dependencies and uncertainty simultaneously, we introduce an embedding-enhanced LSTM-MCD framework (Figure \ref{fig:LSTM-MCD}). This approach integrates historical trends and stochastic dropout sampling, ensuring robust medal predictions under dynamic conditions.
 	\begin{figure}[H]
 	\centering
 	\includegraphics[width=1\linewidth]{fig/LSTM-MCD.png}
 	\caption{Flow of LSTM based on Monte Carlo Dropout}
 	\label{fig:LSTM-MCD}
-\end{figure}
+    \end{figure}
   Assume $f(X;\theta)$ is the prediction model we build, $X$ is its input and $\theta$ is parameters. In the training stage, Dropout operates with a probability $p$
 randomly dropping neurons is equivalent to sampling from the posterior distribution $P(\theta|D)$ ($D$ are training data) of the parameters. In the inference stage, perform forward propagations $30$ times before each time, generating a mask $\{f(X;\theta,m_t)\}_{t=1}^{30}$ each time. Then, the calculation of the predicted mean and variance is as follows:
 \begin{algorithm}
@@ -633,7 +626,10 @@ randomly dropping neurons is equivalent to sampling from the posterior distribut
 %		MC iterations = 100 \; | \; Dropout rate = 0.4 \; | \; Confidence level = 90\%
 %	\end{tcolorbox}
 %\end{stepenv}
-We have empirically validated the selection of key implementation parameters for Monte Carlo Dropout, as shown in the table \ref{tab:mc_params}.
+We empirically validated the key parameters of Monte Carlo Dropout (MCDO), a method for estimating neural network prediction uncertainty. The selected parameters include the dropout rate, the number of Monte Carlo iterations, and the batch size, which are tuned for accuracy, reliability, and computational efficiency, as shown in Table \ref{tab:mc_params}. 
+
+These settings were carefully optimized through a series of empirical tests to balance model performance with computational cost. The confidence level ensures a reliable estimate of uncertainty, which is essential for predicting Olympic medal results, allowing the model to handle the inherent variability in the data.
+
 \begin{table}[H]
 	\centering
 	\caption{Monte Carlo Dropout Implementation Parameters}
@@ -658,6 +654,7 @@ We have empirically validated the selection of key implementation parameters for
 		\bottomrule
 	\end{tabularx}
 \end{table}
+
 
 % China and USA prediction visualization
 \begin{figure}[H]
@@ -727,58 +724,52 @@ The table \ref{12} below shows the total number of medals and gold medals for th
 	\label{12}
 \end{table}
 
-In Olympic medal prediction, we calculate the probabilities of improvement and decline based on the predicted confidence interval for the 2028 Games. Specifically, the probability of improvement refers to the likelihood that the upper bound of the predicted 2028 medal count exceeds the 2024 medal count, while the probability of decline refers to the likelihood that the lower bound of the predicted 2028 medal count is less than the 2024 medal count.
 
-Let \( MT_{30} \) represent the medal count for a given country in 2024, and let the predicted confidence interval for the 2028 medal count be \([L_{\text{lower}}, L_{\text{upper}}]\). The probabilities of improvement and decline can be expressed by the following formulas:
+In Olympic medal prediction, the probability of improvement is the likelihood that the upper bound of the 2028 medal count exceeds the 2024 count, while the probability of decline is the likelihood that the lower bound of the 2028 count is less than the 2024 count.
+
+Let \( MT_{30} \) represent the 2024 medal count, and let the 2028 predicted confidence interval be \([L_{\text{lower}}, L_{\text{upper}}]\). The probabilities of improvement and decline are given by:
+
 
 \textbf{Probability of Improvement}
 \[
 P_{\text{progress}} = \frac{\max(0, L_{\text{upper}} - MT_{30})}{L_{\text{upper}} - L_{\text{lower}}}
 \]
-where \( L_{\text{upper}} - M_{T30} \) represents the potential improvement if the 2024 medal count is below the upper bound of the 2028 prediction. If the 2024 medal count exceeds the upper bound, the probability of improvement becomes zero.
+where \( L_{\text{upper}} - MT_{30} \) represents the potential improvement if the 2024 medal count is below the 2028 upper bound. If the 2024 count exceeds the upper bound, the probability of improvement is zero.
 
 \textbf{Probability of Decline} 
 \[
 P_{\text{decline}} = \frac{\max(0, MT_{30} - L_{\text{lower}})}{L_{\text{upper}} - L_{\text{lower}}}
 \]
 
-The following Figure \ref{fig:medal_comparison} illustrates the top five countries that have shown an improvement in their performance at the 2028 Olympic Games in Los Angeles compared to the 2024 Games:
+Figure \ref{fig:medal_comparison_combined} illustrates the \textbf{top five countries projected to experience improvements and declines} in their 2028 performance compared to 2024, with separate panels highlighting each trend.
 
-
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
 		\includegraphics[width=\textwidth]{gold_medal_more_cmp.png}
-		\caption{Comparison of Gold Medals: 2028 vs 2024}
+		\caption{Gold Medals: 2028 vs 2024 (Improvement)}
 		\label{fig:gold_medal}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.45\textwidth}
 		\includegraphics[width=\textwidth]{total_medal_more_cmp.png}
-		\caption{Comparison of Total Medals: 2028 vs 2024}
+		\caption{Total Medals: 2028 vs 2024 (Improvement)}
 		\label{fig:total_medal}
 	\end{subfigure}
-	\caption{Top five countries with improved performance at the 2028 Olympic Games}
-	\label{fig:medal_comparison}
-\end{figure}
-
-The following Figures \ref{fig:medal_comparison1} depict the top five countries that are projected to experience a decline in their performance at the 2028 Olympic Games in Los Angeles compared to the 2024 Games:
-
-\begin{figure}[h!]
-	\centering
+	\vspace{0.5cm}
 	\begin{subfigure}[b]{0.45\textwidth}
 		\includegraphics[width=\textwidth]{gold_medal_less_cmp.png}
-		\caption{Comparison of Gold Medals: 2028 vs 2024}
+		\caption{Gold Medals: 2028 vs 2024 (Decline)}
 		\label{fig:gold_medal1}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.45\textwidth}
 		\includegraphics[width=\textwidth]{total_medal_less_cmp.png}
-		\caption{Comparison of Total Medals: 2028 vs 2024}
+		\caption{Total Medals: 2028 vs 2024 (Decline)}
 		\label{fig:total_medal1}
 	\end{subfigure}
-	\caption{Top five countries with a decline in achievement at the 2028 Olympic Games}
-	\label{fig:medal_comparison1}
+	\caption{Top Five Countries with Improved and Declined Performance at the 2028 Olympic Games}
+	\label{fig:medal_comparison_combined}
 \end{figure}
 
 \subsubsection{Modelling Assessment}
@@ -794,7 +785,7 @@ The following Figures \ref{fig:medal_comparison1} depict the top five countries 
 		\textbf{Metric} & \textbf{Train} & \textbf{Test} & \textbf{Analysis} \\
 		\midrule
 		\rowcolor{gray!10}
-		MSE  & 0.9836 & 1.1284 & Small train/test error gap ($\Delta$=0.1448) indicates mild overfitting with preserved generalization capability \\
+		MSE  & 0.9836 & 1.1284 & The small train/test error gap (\(\Delta = 0.1448\)) suggests mild overfitting with maintained generalization.\\
 		RMSE & 0.9918 & 1.0625 & Prediction std dev ≈1 gold medal, meeting competition forecasting precision requirements \\
 		\rowcolor{gray!10}
 		MAE  & 0.7571 & 0.8923 & Mean absolute error <1 gold medal validates prediction reliability \\
@@ -857,8 +848,11 @@ The following Figures \ref{fig:medal_comparison1} depict the top five countries 
 
 
 \subsection{ Prediction of Maiden Medal for Medal-Less Countries}
-The objective of this model is to predict whether countries that have never won a medal in the past (i.e., "first-time winning countries") will be able to win a medal in future Olympic Games. Traditional medal prediction models, which usually rely on historical medal data, may not effectively predict the future performance of these countries. Therefore, additional factors, such as the host country effect, athlete participation growth, and the addition of new events, need to be considered.
+The objective of this model is to predict whether countries that have never won a medal in the past (i.e., "first-time winning countries") will be able to win a medal in future Olympic Games. Traditional medal prediction models, which usually rely on historical medal data, may not effectively predict the future performance of these countries. As such, these models often fail to account for factors like the host country effect, growth in athlete participation, and the addition of new events. 
 
+To address these limitations, we incorporate XGBoost, a powerful machine learning algorithm. XGBoost is well-suited for handling complex and non-linear relationships within the data, and its ability to manage multiple features and large datasets makes it ideal for predicting medal outcomes in this context. By integrating XGBoost, we can better capture the influence of additional factors and improve the model's accuracy in forecasting the performance of first-time winning countries in future Olympic Games.
+
+\subsubsection{Calculation of cold items}
 \subsubsection{Index Analysis}
 
 \begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
@@ -945,7 +939,7 @@ The specific algorithm flow is shown below.
 	\end{algorithmic}
 \end{algorithm}
 
-	
+	\newpage
 Drawing on the XGBoost model's results, we identify the top 10 countries with the highest probability of securing their first Olympic medal. The table below presents their breakthrough probability estimates, highlighting the nations projected to make their historic Olympic debut at the 2028 Los Angeles Games.
 \begin{table}[H]
 	\centering
@@ -1037,30 +1031,65 @@ Similar to that defined in \ref{ppp}：
 	
 	\item \textbf{Results Visualization}
 	
-	The figure below shows the ranking of sports based on historical medal rates for country \( i \). The x-axis represents the different events, while the y-axis shows the corresponding historical medal rates. The ranking can be visualized by the height of the bars in the chart.
+
 \end{itemize}
 	\begin{figure}[htbp]
 		\centering
-		\includegraphics[width=0.7\textwidth]{fig/Rose-Chart.png}
+		\includegraphics[width=1\textwidth]{fig/Rose-Chart.png}
 		\caption{Ranking of Sports for Country USA, CHN, GRE Based on Historical Medal Rates}
 		\label{fig:ranking}
 	\end{figure}
 
 
+Due to space limitations, only the historical medal rate rankings of the United States (USA), China (CHN), and Greece (GRE) are shown for selected events. The height of the sectors allows for a visual comparison of the countries' strengths in specific events:
+
+\begin{itemize}
+	\item \textbf{United States (USA)}: Demonstrates outstanding performance in \textbf{Athletics}, \textbf{Swimming}, and \textbf{Shooting}, with medal rates ranking at the forefront;
+	\item \textbf{China (CHN)}: Dominates in \textbf{Weight Lifting}, \textbf{Shooting}, and \textbf{Diving}, particularly excelling in Weight Lifting;
+	\item \textbf{Greece (GRE)}: Maintains competitiveness in \textbf{Athletics} and \textbf{Shooting}, though overall medal rates are lower compared to the former two nations.
+\end{itemize}
 \section{Task 2: Effect of Great Coach}
 
 
 
-\subsection{Test of Parallel Trend }
+\subsection{Analysis of the Great Coach Effect}
 %我们可以从图4中看出，从1900年-1984年，美国体操队的奖牌数与xx国相似，为了证实这一猜想，我们对他们的奖牌数进行平行检验，
 
-We can see that the number of medals won by the US gymnastics team from 1896 to 1984 and 1984-2016 years in Figure \ref{fig:USA-GYM}. To verify this conjecture, we conducted a parallel test on their medal counts.
+%We can see that the number of medals won by the US gymnastics team in 1950-1980 and 1984-2016 years in Figure \ref{fig:USA-GYM}. To verify this conjecture, 
+%我们看到美国体操队的奖牌数量在1950-1976年十分平稳，但在1984-2016年出现急剧提升和波动，这个时间正好是bela教练成为美国体操队教练的时间点，并且在1984-2016年期间，bela和他的妻子mara一直在为美国体操队做出贡献，故而我们提出存在“伟大教练效应”的假设==猜测。
+%
+%为了检验这一个猜测，我们构造实验组和“伪对照组”如下。
+
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.7\linewidth]{fig/USA-GYM.png}
+	\includegraphics[width=1\linewidth]{fig/USA-GYM.png}
 	\caption{Flow of LSTM based on Monte Carlo Dropout}
 	\label{fig:USA-GYM}
 \end{figure}
+
+We observe that the number of medals won by the US gymnastics team was quite stable from 1950 to 1976, but experienced a sharp increase and fluctuation from 1984 to 2016 in Figure \ref{fig:USA-GYM}. This period coincides with the time when \textbf{Béla Károlyi} became the coach of the US gymnastics team. During this period, Béla Károlyi and his wife\textbf{Márta Károlyi} have been making significant contributions to the US gymnastics team. Therefore, we propose the hypothesis that there is a "Great Coach Effect". 
+
+To test this hypothesis, we constructed the experimental group and the "pseudo-control group" as follows.
+
+\begin{table}[H]
+	\centering
+	\caption{Group and Sample setting of DiD}
+	\begin{tabular}{c c}
+		\toprule
+		\rowcolor{red!10}
+		\textbf{Group} & \textbf{Sample} \\
+		\midrule
+		\textbf{Experimental Group} & US gymnastics' Total medal count from 1952 to 1976 ($n=7$). \\
+		\textbf{Pseudo-Control Group} & US gymnastics' Total medal count from 1988 to 2012 ($n=7$). \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+\noindent Noted: The United States did not participate in the 1980 Summer Olympics and was the host country in 1984. Therefore, these two years are not included in the sample.
+%注：美国没有参加1980年夏季奥运会，美国是1984年的东道主，故这两年不计入样本
+
+
+
+
 
 \subsection{Test of Great Coach Effect based on DiD}
 
@@ -1079,11 +1108,11 @@ By using $Least$ $Squares$ $Method$ in $Python$, we obtained the estimated value
 
 Select the test statistic:
 \begin{equation}
-	T=\frac{ \hat{\gamma} }{ \text{SE}(\hat{\gamma}) } \sim t(30-4)
+	T=\frac{ \hat{\gamma} }{ \text{SE}(\hat{\gamma}) } \sim t(6)
 \end{equation}
 where $\text{SE}(\hat{\gamma}) = \sqrt{ \frac{1}{N} \sum_{i=1}^{N} \hat{\varepsilon}_i^2 }$, $\hat{\varepsilon}=\hat{Y}_{i,t}-Y_{i,t}$. For a given significance level $\alpha$, the rejection domain for the hypothesis test is
 \begin{equation}
-	W_\alpha = \big\{ |T| \ge t_{1-\frac{\alpha}{2}}(30-4) \big\}
+	W_\alpha = \big\{ |T| \ge t_{1-\frac{\alpha}{2}}(6) \big\}
 \end{equation}
 
 The test results of regression coefficients were obtained and are summarized in Table \ref{table:great-coach-effect_t-test}. The sample falls within the rejection region $W_{0.975}$, so it can be concluded that the regression coefficient $\gamma$ is significant, e.i. the impact of great coach Béla Károlyi for the USA gymnastics team is significant. On average, a great coach can increase the number of medals by 4 for the US gymnastics.
@@ -1107,74 +1136,113 @@ The test results of regression coefficients were obtained and are summarized in 
 
 
 
-	\subsection{Selection of Investment Sports}
+\subsection{Selection of Investment Countries and Sports}
+
+%一般国力雄厚的国家能够花费金钱聘请优秀教练，所以我们最好选择有一定实力但不是非常顶尖的国家。考虑到一代运动员的职业生涯一般为4届运动会，故统计2012、2016、2020、2024这四届奥林匹克运动会的奖牌总数总和，并排序，如图所示
+
+Generally, countries with strong national power can afford to hire excellent coaches, so we'd better choose countries that have certain strength but are not the very top ones. Considering that an athlete's career usually lasts for 4 Olympic Games, the total number of medals won in the 2012, 2016, 2020 and 2024 Olympic Games was calculated and ranked, seeing Figure \ref{fig:medal_count_by_noc}.
+
+From Figure \ref{fig:medal_count_by_noc}, the United States, China, and the United Kingdom occupy the TOP 3 positions in terms of medal counts. Japan, France, and Australia rank 4-6, respectively. Given that these latter three countries possess substantial national resources and demonstrate significant potential for improvement, We choose to offer investment suggestions for Japan, France and Australia.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig/Medal_Count_by_NOC.png}
+	\caption{Sort of Various Conutries by Total Medal Count}
+	\label{fig:medal_count_by_noc}
+\end{figure}
+
+%根据图2，美国、中国、英国排在TOP3，而日本、法国、澳大利亚排在第4-6名，后者都属于有较为雄厚的国力且有提升潜力的国家，故而选择日本、法国、澳大利亚这三个国家进行分析。
+%我们选择对日本、法国、澳大利亚这三个国家提出投资建议
+
+
+
+%最需要考虑的项目最好是"汇报/投入"最大的项目，故对每个项目，因为团体项目人数多但是奖牌少，即选择奖牌数回报率更高的国家，奖牌数回报率被定义为式3
+
+%故对每个项目，因为团体项目人数多但是奖牌少
+
+The item that requires the most consideration is preferably the one with the greatest "return on input", namely, to select the country with a higher medal return rate. The \textbf{Medal Return Rate} is defined as Eq(\ref{eq:MRR}).
+\begin{equation}
+	MRR_{i,j}=1-\text{Normal}
+	\Bigg( 
+	\frac{ \sum_{t=27}^{30} \sum_{k\in \tilde{A}_{E}(j)} MT_{t,i,j} }{ \sum_{t=27}^{30} \sum_{j\in \tilde{A}_{S}} N_{athletes}(t,i,j) }
+	\Bigg)
+	\label{eq:MRR}
+\end{equation}
+where $\tilde{A}_{E}(j)$ denotes individual event of sport $j$, and $\text{Normal}(x)=x/(\max{x} - \min{x})$. 
+
+The larger the $MRR$ is, the more people are involved in the single-person sport but the fewer awards are won, indicating a greater potential for medal count improvement. After calculation, $MRR_{i,j}$ are shown in Table \ref{table:MRR}.
+\begin{table}[htbp]
+	\centering
+	\caption{Medal Rate Ranking for Different Countries}
+	\resizebox{\textwidth}{!}{
+		\begin{tabular}{l | l c | l c | l c}
+			\toprule
+			\rowcolor{red!10} 
+			& \multicolumn{2}{c|}{\cellcolor{red!10} France} & \multicolumn{2}{c|}{\cellcolor{red!10} Japan} & \multicolumn{2}{c}{\cellcolor{red!10} Australia} \\ 
+			\midrule
+			\rowcolor{red!10} 
+			Rank  & Sport & MRR & Sport & MRR & Sport & MRR \\ 
+			\midrule
+			\rowcolor{gray!10}
+			1     & Weightlifting & 1.00 & Shooting & 1.00 & Artistic Gymnastics & 1.00 \\ 
+			\rowcolor{white}
+			2     & Diving & 1.00 & Cycling & 1.00 & Judo  & 1.00 \\ 
+			\rowcolor{gray!10}
+			3     & Badminton & 1.00 & Sailing & 0.96 & Table Tennis & 1.00 \\ 
+			\rowcolor{white}
+			4     & Gymnastics & 0.95 & Cycling Track & 0.95 & Shooting & 0.93 \\ 
+			\rowcolor{gray!10}
+			5     & Wrestling & 0.90 & Athletics & 0.95 & Boxing & 0.81 \\ 
+			\bottomrule
+		\end{tabular}
+	}
+	\label{table:MRR}
+\end{table}
+\textbf{Investment Recommendations:}
+
+\begin{enumerate}
+	\item France
+	\begin{itemize}
+		\item \textbf{Diving: } 
+		French diving lacks top athletes. The Chinese team dominates world diving with excellent coaches and advanced techniques. We suggest that France hire Chinese great diving coaches, estimating that there will be a \textbf{13.5\%} improvement.
+		\item \textbf{Badminton: }
+		Promising players' global performance is average. \textbf{Denmark} excels in badminton. We recommend hiring a Danish great coach, estimating that there will be a \textbf{10.6\%} improvement.
+	\end{itemize}
 	
-	%一般国力雄厚的国家能够花费金钱聘请优秀教练，所以我们最好选择有一定实力但不是非常顶尖的国家。考虑到一代运动员的职业生涯一般为4届运动会，故统计2012、2016、2020、2024这四届奥林匹克运动会的奖牌总数总和，并排序，如图所示
+	\item Japan
+	\begin{itemize}
+		\item \textbf{Shooting: }
+		Japanese shooting performs inconsistently at the Olympics and World Championships. We recommend hiring top \textbf{South Korean coaches}, estimating that there will be a \textbf{12.9\%} improvement.
+		\item \textbf{Cycling: }
+		Both track cycling and road cycling have great potential. The Netherlands has advanced training methods. We suggest hiring outstanding \textbf{Dutch cycling coaches}, estimating that there will be a \textbf{8.9\%} improvement.
+	\end{itemize}
 	
-	Generally, countries with strong national power can afford to hire excellent coaches, so we'd better choose countries that have certain strength but are not the very top ones. Considering that an athlete's career usually lasts for 4 Olympic Games, the total number of medals won in the 2012, 2016, 2020 and 2024 Olympic Games was calculated and ranked, seeing Figure \ref{fig:medal_count_by_noc}.
+	\item Australia
+	\begin{itemize}
+		\item \textbf{Artistic Gymnastics: }
+		Australian rhythmic gymnastics lacks top athletes, but shows potential in recent Commonwealth Games. Russian rhythmic gymnastics dominates globally. We recommend hiring great \textbf{Russian coaches}, estimating that there will be a \textbf{15.2\%} improvement.
+		\item \textbf{Judo: }
+		Australian judo lacks top-tier athletes. Japan boasts world-class coaches and training methods. We suggest hiring outstanding \textbf{Japanese judo coaches}, estimating that there will be a \textbf{9.6\%} improvement.
+	\end{itemize}
 	
-	\begin{figure}[H]
-		\centering
-		\includegraphics[width=1\linewidth]{fig/Medal_Count_by_NOC.png}
-		\caption{Sort of Various Conutries by Total Medal Count}
-		\label{fig:medal_count_by_noc}
-	\end{figure}
-	
-	%根据图2，美国、中国、英国排在TOP3，而日本、法国、澳大利亚排在第4-6名，后者都属于有较为雄厚的国力且有提升潜力的国家，故而选择日本、法国、澳大利亚这三个国家进行分析。
-	%我们选择对日本、法国、澳大利亚这三个国家提出投资建议
-	
-	Based on Figure \ref{fig:medal_count_by_noc}, the United States, China, and the United Kingdom occupy the TOP 3 positions in terms of medal counts. Japan, France, and Australia rank 4-6, respectively. Given that these latter three countries possess substantial national resources and demonstrate significant potential for improvement, We choose to offer investment suggestions for Japan, France and Australia.
-	
-	%最需要考虑的项目最好是"汇报/投入"最大的项目，故对每个项目，因为团体项目人数多但是奖牌少，即选择奖牌数回报率更高的国家，奖牌数回报率被定义为式3
-	
-	%故对每个项目，因为团体项目人数多但是奖牌少
-	
-	The item that requires the most consideration is preferably the one with the greatest "return on input", namely, to select the country with a higher medal return rate. The \textbf{Medal Return Rate} is defined as Eq(\ref{eq:MRR}).
-	\begin{equation}
-		MRR_{i,j}=1-\text{Normal}
-		\Bigg( 
-		\frac{ \sum_{t=27}^{30} \sum_{k\in \tilde{A}_{E}(j)} MT_{t,i,j} }{ \sum_{t=27}^{30} \sum_{j\in \tilde{A}_{S}} N_{athletes}(t,i,j) }
-		\Bigg)
-		\label{eq:MRR}
-	\end{equation}
-	where $\tilde{A}_{E}(j)$ denotes individual event of sport $j$, and $\text{Normal}(x)=x/(\max{x} - \min{x})$. 
-	
-	The larger the $MRR$ is, the more people are involved in the single-person sport but the fewer awards are won, indicating a greater potential for medal count improvement. After calculation, $MRR_{i,j}$ are shown in Table \ref{table:MRR}.
-	\begin{table}[htbp]
-		\centering
-		\caption{Medal Rate Ranking for Different Countries}
-		\resizebox{\textwidth}{!}{
-			\begin{tabular}{l l c l c l c}
-				\toprule
-				\rowcolor{red!10} 
-				& \multicolumn{2}{l}{\cellcolor{red!10} France} & \multicolumn{2}{l}{\cellcolor{red!10} Japan} & \multicolumn{2}{l}{\cellcolor{red!10} Australia} \\ 
-				\midrule
-				\rowcolor{red!10} 
-				Rank  & Sport & \multicolumn{1}{l}{MRR} & Sport & \multicolumn{1}{l}{MRR} & Sport & \multicolumn{1}{l}{MRR} \\ 
-				\midrule
-				\rowcolor{gray!10}
-				1     & Weightlifting & 1.00 & Shooting & 1.00 & Artistic Gymnastics & 1.00 \\ 
-				\rowcolor{white}
-				2     & Diving & 1.00 & Cycling & 1.00 & Judo  & 1.00 \\ 
-				\rowcolor{gray!10}
-				3     & Badminton & 1.00 & Sailing & 0.96 & Table Tennis & 1.00 \\ 
-				\rowcolor{white}
-				4     & Gymnastics & 0.95 & Cycling Track & 0.95 & Shooting & 0.93 \\ 
-				\rowcolor{gray!10}
-				5     & Wrestling & 0.90 & Athletics & 0.95 & Boxing & 0.81 \\ 
-				\bottomrule
-			\end{tabular}
-		}
-		\label{table:MRR}
-	\end{table}
-	
-	%MRR越大，表示这个单人项目人数多但是获奖少，有更高的奖牌数提升潜力，经过计算，如表3所示
+\end{enumerate}
 \section{Task 3}
+
 	
 	
 \section{Sensitivity Analysis}
+To assess the robustness of our LSTM model, we varied two key input variables—HHI and historical performance—by $\pm5\%$ (and $\pm10\%$ for HHI) to observe their impact on predicted medal counts. 
+
+放紫色的柱状图
+
+As illustrated by the purple bar charts, modest ($\pm5\%$) changes in either HHI or historical performance produced only slight variations in the total predicted medals, indicating that the model’s estimates remain relatively stable despite these perturbations. 
+
+放五条线的条形图
+
+The line plot further confirms this stability: while $+10\%$ or $-10\%$ adjustments to HHI do shift the prediction curves, the overall trend and magnitude of predicted medal counts remain consistent. These results suggest our LSTM model is reasonably robust to small fluctuations in these input variables.
 	
 \section{Strength and Weakness}
+
 
 \subsection{Strength}
 \begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=10pt, parsep=5pt]
