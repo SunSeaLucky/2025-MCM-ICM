@@ -11,10 +11,14 @@
             "id": "00260ba723fee36e",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "摘要/未命名.md",
+                "mode": "source",
+                "source": true
+              },
               "icon": "lucide-file",
-              "title": "新标签页"
+              "title": "未命名"
             }
           }
         ]
@@ -73,7 +77,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "f8ddb5d78ddccaeb",
@@ -161,6 +166,8 @@
   },
   "active": "00260ba723fee36e",
   "lastOpenFiles": [
+    "摘要/未命名.md",
+    "摘要",
     "OurWork/OurWork.excalidraw.md",
     "OurWork/OurWork.png",
     "OurWork/OurWork.excalidraw.png",
@@ -190,7 +197,6 @@
     "Excalidraw/Drawing 2025-01-26 00.09.07.excalidraw.md",
     "LSTM",
     "Excalidraw/Drawing 2025-01-26 00.08.45.excalidraw.md",
-    "Drawing 2025-01-25 21.09.50.excalidraw.pdf",
     "Excalidraw/Drawing 2025-01-25 21.09.50.excalidraw.md"
   ]
 }
