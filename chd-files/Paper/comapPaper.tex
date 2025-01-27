@@ -632,15 +632,37 @@ The test results of regression coefficients were obtained and are summarized in 
 
 %一般国力雄厚的国家能够花费金钱聘请优秀教练，所以我们最好选择有一定实力但不是非常顶尖的国家。考虑到一代运动员的职业生涯一般为4届运动会，故统计2012、2016、2020、2024这四届奥林匹克运动会的奖牌总数总和，并排序，如图所示
 
-Generally, countries with strong national power can afford to hire excellent coaches, so we'd better choose countries that have certain strength but are not the very top ones. Considering that an athlete's career usually lasts for 4 Olympic Games, the total number of medals won in the 2012, 2016, 2020 and 2024 Olympic Games was calculated and ranked as shown in the Figure \ref{fig:choose3_rank}.
+Generally, countries with strong national power can afford to hire excellent coaches, so we'd better choose countries that have certain strength but are not the very top ones. Considering that an athlete's career usually lasts for 4 Olympic Games, the total number of medals won in the 2012, 2016, 2020 and 2024 Olympic Games was calculated and ranked, seeing Figure \ref{fig:medal_count_by_noc}.
 
-分析、选择国家
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{fig/Medal_Count_by_NOC.png}
+	\caption{Sort of Various Conutries by Total Medal Count}
+	\label{fig:medal_count_by_noc}
+\end{figure}
 
-插图
+%根据图2，美国、中国、英国排在TOP3，而日本、法国、澳大利亚排在第4-6名，后者都属于有较为雄厚的国力且有提升潜力的国家，故而选择日本、法国、澳大利亚这三个国家进行分析。
+%我们选择对日本、法国、澳大利亚这三个国家提出投资建议
 
+Based on Figure \ref{fig:medal_count_by_noc}, the United States, China, and the United Kingdom occupy the TOP 3 positions in terms of medal counts. Japan, France, and Australia rank 4-6, respectively. Given that these latter three countries possess substantial national resources and demonstrate significant potential for improvement, We choose to offer investment suggestions for Japan, France and Australia.
 
+%最需要考虑的项目最好是"汇报/投入"最大的项目，故对每个项目，因为团体项目人数多但是奖牌少，即选择奖牌数回报率更高的国家，奖牌数回报率被定义为式3
 
+%故对每个项目，因为团体项目人数多但是奖牌少
 
+The item that requires the most consideration is preferably the one with the greatest "return on input", namely, to select the country with a higher medal return rate. The \textbf{Medal Return Rate} is defined as Eq(\ref{eq:MRR}).
+\begin{equation}
+MRR_{i,j}=1-\text{Normal}
+\Bigg( 
+\frac{ \sum_{t=27}^{30} \sum_{k\in \tilde{A}_{E}(j)} MT_{t,i,j} }{ \sum_{t=27}^{30} \sum_{j\in \tilde{A}_{S}} N_{athletes}(t,i,j) }
+\Bigg)
+\label{eq:MRR}
+\end{equation}
+where $\tilde{A}_{E}(j)$ denotes individual event of sport $j$, and $\text{Normal}(x)=x/(\max{x} - \min{x})$. 
+
+The larger the $MRR$ is, the more people are involved in the single-person sport but the fewer awards are won, indicating a greater potential for medal count improvement. After calculation, $MRR_{i,j}$ are shown in Table \ref{table:MRR}.
+
+%MRR越大，表示这个单人项目人数多但是获奖少，有更高的奖牌数提升潜力，经过计算，如表3所示
 
 
 

@@ -141,7 +141,6 @@
 		Extract the less-attended-to patterns from the model and provide strategic \textbf{suggestions} for the Olympic Committee.
 	\end{enumerate}
 	
-	For Task 1, we selected seven indicators and established an LSTM-based medal quantity prediction model, and provided interval predictions using Bayesian estimation. As for countries that have never won medals, we built an SVM-based "first medal breakthrough" prediction model based on the new events, the number of athletes, and historical participation trends.
 	
 	
 	%对于Task1，我们选取7个指标，建立了基于LSTM的奖牌数量预测模型，并使用贝叶斯估计给出了区间预测，而对于从未获奖的国家，我们根据新增的event、运动员数量、历史参与趋势，建立了基于SVM的“首奖突破”预测模型。
@@ -185,26 +184,26 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%% 模型假设 %%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\section{Assumptions and Justification}
+\section{Assumptions and Justification}
+
+\begin{enumerate}[leftmargin=0.15in, labelsep=0.1in, itemsep=10pt, parsep=5pt]
+	\item \textbf{Historical medal data exhibits temporal dependencies that reflect future medal trends. }
 	
-	To simplify the problem and make it convenient for us to simulate real-life 
-	conditions, we make the following basic assumptions, each of which is properly 
-	justified.
+	This suggests that historical performance can offer insights into future outcomes, and thus, should be treated as a time series when making predictions.
 	
-	\begin{itemize}
-		\item {\bf 1}. ...
-		\item {\bf 2}. ...	
-	\end{itemize}
+	\item \textbf{Monte Carlo Dropout approximates Bayesian inference by quantifying prediction uncertainty through multiple stochastic samplings.}
 	
+	This technique provides a robust mechanism for estimating confidence intervals and is useful in scenarios with incomplete or noisy data.
 	
+	\item \textbf{Historical data distributions of non-medal-winning countries align with those of future potential medal-winning nations.} 
 	
+	This assumption supports the idea that non-medal-winning countries have similar characteristics to those that may perform well in future Olympics, making them a valuable reference for predicting future medal potential.
 	
+	\item \textbf{The impact of coaching remains independent of confounding variables (e.g., athlete training conditions, changes in international competition rules).} 
 	
-	
-	
-	
-	
-	
+	This assumption isolates the effect of coaching from other factors that might influence performance, ensuring that coaching effects can be accurately assessed.
+\end{enumerate}
+
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%% 符号说明 %%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -216,6 +215,7 @@
 		\midrule 
 		$A_{C},A_{S}$ & Set of country, all sports in Olympic.\\
 		$A_{T}$ & $\{1,\dots,30\}$, representing the ordinal number of year Olympic held. \\
+		$A_E(j)$ & Represents the set of events inside the sport j.\\
 		$A_{H}(t)$ & Set of host country in year $t$. \\
 		$MG_{t,i,j,k}$ & Number of gold medals country $i$ won in sport $j$ at event $k$ in year t. \\
 		$MS_{t,i,j,k}$ & Number of silver medals country $i$ won in sport $j$ at event $k$ in year t. \\
@@ -272,6 +272,7 @@
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%% Task 1 %%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
 	\section{Task 1: How Many Medal Count in 2028? }
 	\subsection{Medal-Winning Countries' Medal Count Prediction using LSTM-MCD}
 	
@@ -327,6 +328,7 @@ Host Effect refers to the phenomenon where a host country tends to perform bette
 \end{table}
 	
 \subsubsection{Analysis of Key Indices}
+\label{ppp}
 \begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
 	\item \textbf{Host Effect}
 	
@@ -1006,28 +1008,23 @@ The optimized XGBoost model demonstrates strong performance, achieving an overal
 
 	
 \subsection{Analysis of Event Influence on Medal Distribution}
-
+Similar to that defined in \ref{ppp}：
 \begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=1pt, parsep=0pt]
-	\item \textbf{New Event Held}
+	\item \textbf{Event Held}
 	
 	\[
-	\tilde{V}(t) = \left( v_1(t), v_2(t), \dots, v_M(t) \right)^T
+	V(t) = \left( v_1(t), v_2(t), \dots, v_M(t) \right)^T
 	\]
 	
-	\item \textbf{New Dominance of Event}
+
 	
+	\item \textbf{Historical Medal Rate for Country \( i \) in Event \( j \)}
 	\[
-	\tilde{D}_j(t) = \frac{\sum_{q=1}^{t-1} \tilde{V}_j(q) \cdot MT_{q,i,k,j}}{\sum_{q=1}^{t-1} \tilde{V}_j(q) \cdot \sum_{k=1}^{N} \sum_{i=1}^{M} MT_{q,i,k,j}}
+	\tilde{D}_{i,j} = \frac{\sum_{q \in \mathcal{Q}_i} V_j(q) \cdot MT_{q,i,j}}{\sum_{q \in \mathcal{Q}_i} V_j(q) \cdot \sum_{k=1}^{N} \sum_{i=1}^{M} MT_{q,i,k,j}},
 	\]
-	
-	\item \textbf{Historical Medal Rate for Each Sport}
-	
-	Let \( D_{i,j} \) represent the historical medal rate for country \( i \) in event \( j \). This can be calculated as the ratio of the total number of medals won by country \( i \) in event \( j \) over the total number of participations in that event across all years:
-	
-	\[
-	D_{i,j} = \frac{\sum_{q=1}^{t-1} MT_{q,i,j}}{\sum_{q=1}^{t-1} P_{q,i,j}},
-	\]
-	where \( MT_{q,i,j} \) is the number of medals won by country \( i \) in event \( j \) during year \( q \), and \( P_{q,i,j} \) is the total number of participations by country \( i \) in event \( j \) during year \( q \).
+	where \( \mathcal{Q}_i \) represents the set of years in which country \( i \) participated.
+
+
 	
 	\item \textbf{Ranking of Sports within Each Country}
 	
@@ -1036,25 +1033,25 @@ The optimized XGBoost model demonstrates strong performance, achieving an overal
 	\[
 	R_{i,j} = \text{Rank}(D_{i,1}, D_{i,2}, \dots, D_{i,M}),
 	\]
-	where \( \text{Rank}(\cdot) \) represents the ranking function that orders the historical medal rates for country \( i \) in all events. The event with the highest medal rate will be ranked first, and so on.
+	where \( \text{Rank}(\cdot) \) represents the ranking function that orders the historical medal rates for country \( i \) in all events.
 	
 	\item \textbf{Results Visualization}
 	
 	The figure below shows the ranking of sports based on historical medal rates for country \( i \). The x-axis represents the different events, while the y-axis shows the corresponding historical medal rates. The ranking can be visualized by the height of the bars in the chart.
-	
+\end{itemize}
 	\begin{figure}[htbp]
 		\centering
 		\includegraphics[width=0.7\textwidth]{fig/Rose-Chart.png}
-		\caption{Ranking of Sports for Country \( i \) Based on Historical Medal Rates}
+		\caption{Ranking of Sports for Country USA, CHN, GRE Based on Historical Medal Rates}
 		\label{fig:ranking}
 	\end{figure}
-\end{itemize}
-
-\subsection{Effect of Great Coach}
 
 
+\section{Task 2: Effect of Great Coach}
 
-\subsubsection{Test of Parallel Trend }
+
+
+\subsection{Test of Parallel Trend }
 %我们可以从图4中看出，从1900年-1984年，美国体操队的奖牌数与xx国相似，为了证实这一猜想，我们对他们的奖牌数进行平行检验，
 
 We can see that the number of medals won by the US gymnastics team from 1896 to 1984 and 1984-2016 years in Figure \ref{fig:USA-GYM}. To verify this conjecture, we conducted a parallel test on their medal counts.
@@ -1065,7 +1062,7 @@ We can see that the number of medals won by the US gymnastics team from 1896 to 
 	\label{fig:USA-GYM}
 \end{figure}
 
-\subsubsection{Test of Great Coach Effect based on DiD}
+\subsection{Test of Great Coach Effect based on DiD}
 
 To seek evidence of the existence of the great coach effect, we employ the Difference-in-Differences (DiD) model to examine its impact.
 
@@ -1108,37 +1105,119 @@ The test results of regression coefficients were obtained and are summarized in 
 
 
 
-\subsubsection{Selection of Investment Sports}
+
+
+	\subsection{Selection of Investment Sports}
 	
-	\section{Task 5}
+	%一般国力雄厚的国家能够花费金钱聘请优秀教练，所以我们最好选择有一定实力但不是非常顶尖的国家。考虑到一代运动员的职业生涯一般为4届运动会，故统计2012、2016、2020、2024这四届奥林匹克运动会的奖牌总数总和，并排序，如图所示
 	
-	\section{Sensitivity Analysis}
+	Generally, countries with strong national power can afford to hire excellent coaches, so we'd better choose countries that have certain strength but are not the very top ones. Considering that an athlete's career usually lasts for 4 Olympic Games, the total number of medals won in the 2012, 2016, 2020 and 2024 Olympic Games was calculated and ranked, seeing Figure \ref{fig:medal_count_by_noc}.
 	
-	\section{Strength and Weakness}
-	\subsection{Strength}
-	\subsection{Weakness}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{fig/Medal_Count_by_NOC.png}
+		\caption{Sort of Various Conutries by Total Medal Count}
+		\label{fig:medal_count_by_noc}
+	\end{figure}
 	
-	\section{Further Discussion}
+	%根据图2，美国、中国、英国排在TOP3，而日本、法国、澳大利亚排在第4-6名，后者都属于有较为雄厚的国力且有提升潜力的国家，故而选择日本、法国、澳大利亚这三个国家进行分析。
+	%我们选择对日本、法国、澳大利亚这三个国家提出投资建议
+	
+	Based on Figure \ref{fig:medal_count_by_noc}, the United States, China, and the United Kingdom occupy the TOP 3 positions in terms of medal counts. Japan, France, and Australia rank 4-6, respectively. Given that these latter three countries possess substantial national resources and demonstrate significant potential for improvement, We choose to offer investment suggestions for Japan, France and Australia.
+	
+	%最需要考虑的项目最好是"汇报/投入"最大的项目，故对每个项目，因为团体项目人数多但是奖牌少，即选择奖牌数回报率更高的国家，奖牌数回报率被定义为式3
+	
+	%故对每个项目，因为团体项目人数多但是奖牌少
+	
+	The item that requires the most consideration is preferably the one with the greatest "return on input", namely, to select the country with a higher medal return rate. The \textbf{Medal Return Rate} is defined as Eq(\ref{eq:MRR}).
+	\begin{equation}
+		MRR_{i,j}=1-\text{Normal}
+		\Bigg( 
+		\frac{ \sum_{t=27}^{30} \sum_{k\in \tilde{A}_{E}(j)} MT_{t,i,j} }{ \sum_{t=27}^{30} \sum_{j\in \tilde{A}_{S}} N_{athletes}(t,i,j) }
+		\Bigg)
+		\label{eq:MRR}
+	\end{equation}
+	where $\tilde{A}_{E}(j)$ denotes individual event of sport $j$, and $\text{Normal}(x)=x/(\max{x} - \min{x})$. 
+	
+	The larger the $MRR$ is, the more people are involved in the single-person sport but the fewer awards are won, indicating a greater potential for medal count improvement. After calculation, $MRR_{i,j}$ are shown in Table \ref{table:MRR}.
+	\begin{table}[htbp]
+		\centering
+		\caption{Medal Rate Ranking for Different Countries}
+		\resizebox{\textwidth}{!}{
+			\begin{tabular}{l l c l c l c}
+				\toprule
+				\rowcolor{red!10} 
+				& \multicolumn{2}{l}{\cellcolor{red!10} France} & \multicolumn{2}{l}{\cellcolor{red!10} Japan} & \multicolumn{2}{l}{\cellcolor{red!10} Australia} \\ 
+				\midrule
+				\rowcolor{red!10} 
+				Rank  & Sport & \multicolumn{1}{l}{MRR} & Sport & \multicolumn{1}{l}{MRR} & Sport & \multicolumn{1}{l}{MRR} \\ 
+				\midrule
+				\rowcolor{gray!10}
+				1     & Weightlifting & 1.00 & Shooting & 1.00 & Artistic Gymnastics & 1.00 \\ 
+				\rowcolor{white}
+				2     & Diving & 1.00 & Cycling & 1.00 & Judo  & 1.00 \\ 
+				\rowcolor{gray!10}
+				3     & Badminton & 1.00 & Sailing & 0.96 & Table Tennis & 1.00 \\ 
+				\rowcolor{white}
+				4     & Gymnastics & 0.95 & Cycling Track & 0.95 & Shooting & 0.93 \\ 
+				\rowcolor{gray!10}
+				5     & Wrestling & 0.90 & Athletics & 0.95 & Boxing & 0.81 \\ 
+				\bottomrule
+			\end{tabular}
+		}
+		\label{table:MRR}
+	\end{table}
+	
+	%MRR越大，表示这个单人项目人数多但是获奖少，有更高的奖牌数提升潜力，经过计算，如表3所示
+\section{Task 3}
+	
+	
+\section{Sensitivity Analysis}
+	
+\section{Strength and Weakness}
+
+\subsection{Strength}
+\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=10pt, parsep=5pt]
+	\item \textbf{Long-Term Temporal Dependencies:} The model captures temporal dependencies, enabling future medal trend predictions.
+	\item \textbf{Uncertainty Quantification:} Monte Carlo Dropout enhances model reliability by providing prediction uncertainty estimates.
+	\item \textbf{High Accuracy:} Incorporating multiple features yields strong performance, with R² up to 0.93.
+	\item \textbf{Efficient Classification:} XGBoost is effective for classifying first-time medal winners with an AUC of 0.90.
+\end{itemize}
+
+\subsection{Weakness}
+\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=10pt, parsep=5pt]
+	\item \textbf{Data Dependency:} Requires large historical datasets, limiting its applicability for countries with limited data.
+	\item \textbf{Model Complexity:} High complexity and extensive training time are required, along with careful hyperparameter tuning.
+\end{itemize}
+
+	
+\section{Further Discussion}
+
+\begin{itemize}[leftmargin=0.15in, labelsep=0.1in, itemsep=10pt, parsep=5pt]
+	\item \textbf{Model Generalization:} The model could be extended to predict medal trends in non-summer events like the Winter Olympics or Youth Olympic Games, testing its adaptability and generalizability across different event types.
+	\item \textbf{Ethical Considerations:} It is important to address potential biases, such as the Matthew Effect, where wealthier nations dominate medal counts, and ensure that the model provides equitable predictions for all countries.
+\end{itemize}
+
 	
 	
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%% Memo信 %%%%%%%%%%%%%%%%%
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\newpage
-	\section*{Memo} % 无编号标题
-	\addcontentsline{toc}{section}{Memorandum} % 手动添加到目录
-	
-	\begin{letter}{Enjoy Your Bath Time!}
+%	\newpage
+%	\section*{Memo} % 无编号标题
+%	\addcontentsline{toc}{section}{Memorandum} % 手动添加到目录
+%	
+%	\begin{letter}{Enjoy Your Bath Time!}
 		
-		
-		\vspace{\parskip}
-		
-		Sincerely yours,
-		
-		Your friends
-		
-	\end{letter}
+%		
+%		\vspace{\parskip}
+%		
+%		Sincerely yours,
+%		
+%		Your friends
+%		
+%	\end{letter}
 	
 	
 	
